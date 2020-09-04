@@ -41,13 +41,25 @@ export const d3Nodes = (svg, nodes) => {
 
   const d3nodes = selection
     .append('foreignObject')
-    .attr('class', 'mindmap-node')
-    .attr('width', node => node.width)
+    // .attr('class', 'mindmap-node')
+    .attr('width', node => {
+      if (!node.isButtonNode)
+        return (node.width + 6)
+      else
+        return node.width})
     .attr('height', node => {
       if (node.isButtonNode)
         return (node.height + 20)
+      else if(node.parentId === -1)
+        return (node.height + 30)
       else
-        return node.height
+        return node.height+6
+    })
+    .attr('class', node => {
+      if (node.isButtonNode)
+        return "mindmap-node btn-node"
+      else
+        return "mindmap-node img-node"
     })
     .html(node => node.html)
 
@@ -183,7 +195,7 @@ export const d3PanZoom = el => {
         // console.log(event)
         // console.log(event.transform)
 
-        if (event.sourceEvent.deltaY) {
+        if (event.sourceEvent && event.sourceEvent.deltaY) {
           let deltaY = parseFloat(localStorage.getItem("deltaY"));
           deltaY += event.sourceEvent.deltaY
           localStorage.setItem("deltaY", deltaY)

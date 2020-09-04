@@ -13,6 +13,8 @@
     "element-ui": "^2.13.2",
     "file-saver": "^2.0.2",
     "jszip": "^3.5.0",
+    "sass-loader": "^9.0.3",
+    "umd": "^3.0.3",
     "vue": "^2.6.11",
     "vue-mindmap": "0.0.4"
   },

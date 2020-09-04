@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="expand-animation" ref="expandAnimationDiv">
+      <img src="/test.png" />
+    </div>
     <div class="select-root-container" v-show="!hasSelectRoot">
       <div class="header">
         <span class="logo">
@@ -39,7 +42,7 @@
           v-loading="loadingStart"
           element-loading-text="拼命加载中"
           element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(43, 42, 47, 0.8)"
+          element-loading-background="rgba(43, 42, 47, 0)"
         >
           <img
             v-for="(item, index) in startChoices"
@@ -91,45 +94,68 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <mindmap :nodes="nodes" :connections="connections" :editable="true" :clickNode="onClickNode" />
+      <mindmap
+        :nodes="nodes"
+        :connections="connections"
+        :editable="true"
+        :clickBlank="onClickSvgBlank"
+      />
       <div class="close">
         <img id="close-btn" @click="onClose" src="/icon/btn_close_n.png" alt="close" class="icon" />
       </div>
       <div class="scale">
-        <img
-          id="global-btn"
-          @click="resetViewBox"
-          src="/icon/btn_global_n.png"
-          class="icon"
-          alt="global"
-        />
-        <img id="in-btn" @click="zoomIn" src="/icon/btn_in_n.png" class="icon" alt="zoom in" />
-        <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
+        <div class="icon-container">
+          <img
+            id="global-btn"
+            @click="resetViewBox"
+            src="/icon/btn_global_n.png"
+            class="icon"
+            alt="global"
+          />
+          <span class="icon-tooltip">查看全部</span>
+        </div>
+        <div class="icon-container">
+          <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
+          <span class="icon-tooltip">缩小脑图</span>
+        </div>
+        <div class="icon-container">
+          <img id="in-btn" @click="zoomIn" src="/icon/btn_in_n.png" class="icon" alt="zoom in" />
+          <span class="icon-tooltip">放大脑图</span>
+        </div>
       </div>
       <div class="edit">
-        <img
-          :id="undoStack.isEmpty()?'disabled':'undo-btn'"
-          @click="onUndo"
-          :src="undoStack.isEmpty()?'/icon/btn_undo_d.png':'/icon/btn_undo_n.png'"
-          alt="undo"
-          class="icon"
-        />
-        <img
-          :id="redoStack.isEmpty()?'disabled':'redo-btn'"
-          @click="onRedo"
-          :src="redoStack.isEmpty()?'/icon/btn_redo_d.png':'/icon/btn_redo_n.png'"
-          alt="redo"
-          class="icon"
-          :class="redoStack.isEmpty()?'disabled':''"
-        />
-        <img
-          :id="currentNodeId===-1?'disabled':'clear-btn'"
-          @click="onDelete"
-          :src="currentNodeId===-1?'/icon/btn_clear_d.png':'/icon/btn_clear_n.png'"
-          alt="delete"
-          class="icon"
-          :class="currentNodeId===-1?'disabled':''"
-        />
+        <div class="icon-container">
+          <img
+            :id="undoStack.isEmpty()?'disabled':'undo-btn'"
+            @click="onUndo"
+            :src="undoStack.isEmpty()?'/icon/btn_undo_d.png':'/icon/btn_undo_n.png'"
+            alt="undo"
+            class="icon"
+          />
+          <span class="icon-tooltip">撤销</span>
+        </div>
+        <div class="icon-container">
+          <img
+            :id="redoStack.isEmpty()?'disabled':'redo-btn'"
+            @click="onRedo"
+            :src="redoStack.isEmpty()?'/icon/btn_redo_d.png':'/icon/btn_redo_n.png'"
+            alt="redo"
+            class="icon"
+            :class="redoStack.isEmpty()?'disabled':''"
+          />
+          <span class="icon-tooltip">重做</span>
+        </div>
+        <div class="icon-container">
+          <img
+            :id="currentNodeId===-1?'disabled':'clear-btn'"
+            @click="onDelete"
+            :src="currentNodeId===-1?'/icon/btn_clear_d.png':'/icon/btn_clear_n.png'"
+            alt="delete"
+            class="icon"
+            :class="currentNodeId===-1?'disabled':''"
+          />
+          <span class="icon-tooltip">删除</span>
+        </div>
       </div>
       <div class="select" v-show="isSelectingExpand">
         <div class="desc">
@@ -156,23 +182,6 @@
           />
         </div>
       </div>
-      <!-- <ul class="expand-button-panel" v-show="currentNodeId !== -1" ref="expandButtonPanel">
-        <li>
-          <button @click="onExpand" data-type="temperature" class="expand-button">冷暖色</button>
-        </li>
-        <li>
-          <button @click="onExpand" data-type="sharpness" class="expand-button">清晰度</button>
-        </li>
-        <li>
-          <button @click="onExpand" data-type="complexity" class="expand-button">复杂度</button>
-        </li>
-        <li>
-          <button @click="onExpand" data-type="richness" class="expand-button">色彩丰富度</button>
-        </li>
-        <li>
-          <button @click="onExpand" data-type="similarity" class="expand-button">相似</button>
-        </li>
-      </ul>-->
     </div>
 
     <div id="right-menu">
@@ -193,6 +202,7 @@ import { getViewBox } from "./components/vue-mindmap/utils/dimensions";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { dateFormat, downloadFile } from "./utils/utils";
+// import { filter } from 'vue/types/umd';
 // import download from "./components/vue-mindmap/utils/download";
 
 export default {
@@ -381,6 +391,19 @@ export default {
       // console.log(event)
       // console.log(bg)
     },
+    onClickSvgBlank() {
+      // console.log(d3.event);
+      const event = d3.event;
+      if (!event.srcElement.classList.contains("btn-node")) {
+        this.isSelectingExpand = false;
+      }
+      if (event.srcElement._prevClass === "mindmap-svg") {
+        this.connections = [];
+        this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+        this.initialConnections();
+        this.currentNodeId = -1;
+      }
+    },
     onClose() {
       // console.log(this.nodes);
       this.$confirm("此操作会删除全部节点，是否继续?", "提示", {
@@ -393,6 +416,8 @@ export default {
           this.hasSelectRoot = false;
           this.connections = [];
           this.nodes = [];
+          this.undoStack.clear();
+          this.redoStack.clear();
           // localStorage.removeItem("transform");
           this.$message({
             type: "success",
@@ -481,18 +506,28 @@ export default {
       let nodes = document.getElementsByTagName("foreignObject");
       // console.log(nodes);
       for (let i = 0; i < nodes.length; i++) {
-        let nodeId = parseInt(nodes[i].firstChild.id);
+        let imgDiv = nodes[i].getElementsByClassName("img-div")[0];
+        // console.log(imgDiv)
+        let nodeId = parseInt(imgDiv.id);
+        // let nodeId = parseInt(nodes[i].firstChild.id);
         let node = this.nodes.find((item) => item.id === nodeId);
         if (node.isButtonNode) {
           continue;
         }
         // nodes[i].style.width = this.width;
         // nodes[i].style.height = this.height;
+        if (i === 0) {
+          nodes[i].children[1].style.width = this.width + "px";
+          nodes[i].children[1].style.height = this.height + "px";
+          nodes[i].children[1].children[0].style.width = this.width + "px";
+          nodes[i].children[1].children[0].style.height = this.height + "px";
+        } else {
+          nodes[i].children[0].style.width = this.width + "px";
+          nodes[i].children[0].style.height = this.height + "px";
+          nodes[i].children[0].children[0].style.width = this.width + "px";
+          nodes[i].children[0].children[0].style.height = this.height + "px";
+        }
 
-        nodes[i].children[0].style.width = this.width + "px";
-        nodes[i].children[0].style.height = this.height + "px";
-        nodes[i].children[0].children[0].style.width = this.width + "px";
-        nodes[i].children[0].children[0].style.height = this.height + "px";
         // nodes[i].childNodes[0].childNodes[0].style.width = this.width;
         // nodes[i].childNodes[0].childNodes[0].style.height = this.height;
       }
@@ -533,7 +568,8 @@ export default {
             this.loadStartChoices();
             this.hasSelectRoot = false;
             // 删除操作入栈
-            this.undoStack.push(this.nodes.slice());
+            // this.undoStack.push(this.nodes.slice());
+            this.undoStack.clear();
             this.redoStack.clear();
             this.recursionDelete(this.currentNodeId);
             // localStorage.removeItem("transform");
@@ -618,6 +654,7 @@ export default {
       let currentButtonNode = this.nodes.find(
         (item) => this.currentNodeId === item.id
       );
+      // 根据点击的图片相对于原图的位置设置不同的pathText，左边的设置(0,2)，右边的设置(2,4)
       let pathText =
         parseInt(event.srcElement.dataset["index"]) <
         this.expandChoices.length / 2
@@ -626,40 +663,61 @@ export default {
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
-      // console.log(pathText)
-      // console.log(parseInt(event.srcElement.dataset["index"]))
-      // console.log(this.expandChoices.length / 2)
-      // console.log(currentButtonNode.text.substring(0, 2))
-      // console.log(currentButtonNode.text.substring(2, 4))
+      // 获取被点击的拓展图片在nodes中的数据
+      let expandItem = this.expandChoices.find(
+        (item) => item.image === event.target.src
+      );
+
+      let randomDis = 10 + Math.random() * 20;
       let node = {
         id: this.nodes[this.nodes.length - 1].id + 1,
         parentId: currentButtonNode.parentId,
         text: currentButtonNode.text,
         pathText: pathText,
         url: "",
-        imgSrc: event.target.src,
+        imgSrc: expandItem.image,
+        dlatent: expandItem.dlatent,
         fx:
           currentButtonNode.fx +
-          this.nodeRelativeLocations[currentButtonNode.locationIndex].fx,
+          this.nodeRelativeLocations[currentButtonNode.locationIndex].fx +
+          randomDis,
         fy:
           currentButtonNode.fy +
-          this.nodeRelativeLocations[currentButtonNode.locationIndex].fy,
+          this.nodeRelativeLocations[currentButtonNode.locationIndex].fy +
+          randomDis,
       };
-      // let node = {
-      //   id: this.nodes[this.nodes.length - 1].id + 1,
-      //   parentId: this.currentNodeId,
-      //   text: this.expandType,
-      //   url: "",
-      //   imgSrc: event.target.src
-      // };
-      this.connections = [];
-      // this.nodes.pop();
-      this.addNode(node);
-      this.nodes = this.nodes.filter((item) => !item.isButtonNode);
-      this.initialConnections();
-      // this.nodes[this.nodes.length-1].isButtonNode = false;
-      // this.nodes[this.nodes.length-1].imgSrc = event.target.src;
-      this.currentNodeId = -1;
+
+      // 点击拓展图片后的动画
+      let aniDiv = this.$refs.expandAnimationDiv;
+      let mainNode = document.getElementById(this.nodes[0].id);
+      let mainNodeRect = mainNode.getBoundingClientRect();
+      let clickedExpandItem = event.target;
+      let clickedExpandItemRect = clickedExpandItem.getBoundingClientRect();
+      let startX = clickedExpandItemRect.x;
+      let startY = clickedExpandItemRect.y;
+      let endX = node.fx - mainNodeRect.width / 2;
+      let endY = node.fy - mainNodeRect.height / 2;
+      aniDiv.style.display = "block";
+      aniDiv.style.left = startX + "px";
+      aniDiv.style.top = startY + "px";
+      aniDiv.firstElementChild.style.width = clickedExpandItemRect.width + "px";
+      aniDiv.firstElementChild.style.height = clickedExpandItemRect.height + "px";
+      aniDiv.firstElementChild.src = expandItem.image;
+      console.log(startX,startY, endX, endY)
+      setTimeout(() => {
+        aniDiv.style.transform =
+          "translate(" + (endX - startX) + "px," + (endY - startY) + "px) scale(+"+(mainNodeRect.width/clickedExpandItemRect.width)+")";
+      }, 150);
+      aniDiv.addEventListener("transitionend", () => {
+        aniDiv.style.display = "none";
+
+        // 完成动画后再更新脑图
+        this.connections = [];
+        this.addNode(node);
+        this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+        this.initialConnections();
+        this.currentNodeId = -1;
+      });
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
@@ -669,11 +727,16 @@ export default {
       // console.log("click node");
       // console.log(event);
       let lastNodeId = this.currentNodeId;
-      if(event.srcElement.innerText === "智能拓展"){
+      if (event.srcElement.innerText === "智能拓展") {
         lastNodeId = this.lastNodeId;
-        event = this.event
-      }else{
-        this.currentNodeId = parseInt(event.target.firstChild.id);
+        event = this.event;
+        if (event.target.nodeName !== "foreignObject") {
+          return;
+        }
+        // if(event.target)
+      } else {
+        let imgDiv = event.target.getElementsByClassName("img-div")[0];
+        this.currentNodeId = parseInt(imgDiv.id);
       }
       let lastNode = document.getElementById(lastNodeId);
       let currentNode = document.getElementById(this.currentNodeId);
@@ -814,37 +877,6 @@ export default {
       });
     },
     moveCurrentNodeToCenter() {
-      // console.log(event);
-      // const d3_svg = d3.select(".mindmap-svg");
-      // const nodes = d3.selectAll("foreignObject");
-      // let wheelEvent = new WheelEvent("wheel", {
-      //   deltaY: 0 - parseFloat(localStorage.getItem("deltaY")),
-      //   clientX: document.body.clientWidth / 2,
-      //   clientY: document.body.clientHeight / 2,
-      // });
-      // document
-      //   .getElementsByClassName("mindmap-svg")[0]
-      //   .dispatchEvent(wheelEvent);
-      // localStorage.setItem("deltaY", "0");
-      // d3.zoom().transform(d3_svg, d3.zoomIdentity);
-      // d3.selectAll("g").attr("transform", "");
-      // let mouseMoveEvent1 = new MouseEvent("mousemove", {
-      //   clientX: event.clientX,
-      //   clientY: event.clientY,
-      // });
-      // let mouseMoveEvent2 = new MouseEvent("mousemove", {
-      //   clientX: document.body.clientWidth / 2,
-      //   clientY: document.body.clientHeight / 2,
-      // });
-      // document
-      //   .getElementsByClassName("mindmap-svg")[0]
-      //   .dispatchEvent(mouseMoveEvent1);
-      // document
-      //   .getElementsByClassName("mindmap-svg")[0]
-      //   .dispatchEvent(mouseMoveEvent2);
-      // let currentNodeData = this.nodes.find(
-      //   (item) => this.currentNodeId === item.id
-      // );
       let currentNode = document.getElementById(this.currentNodeId);
       let rect = currentNode.getBoundingClientRect();
       let x = rect.x;
@@ -940,12 +972,16 @@ export default {
     onSelectRoot(event) {
       // console.log(event);
       this.hasSelectRoot = true;
+      let expandItem = this.startChoices.find(
+        (item) => item.image === event.target.src
+      );
       this.addNode({
         id: 0,
         parentId: -1,
         text: "",
         url: "",
-        imgSrc: event.target.src,
+        imgSrc: expandItem.image,
+        dlatent: expandItem.dlatent,
         fx: window.screen.availWidth / 2,
         fy: window.innerHeight / 2,
       });
@@ -978,7 +1014,9 @@ export default {
       // console.log(nodes);
       for (let i = 0; i < nodes.length; i++) {
         nodes[i].onclick = this.onClickNode;
-        let nodeId = parseInt(nodes[i].firstChild.id);
+        let imgDiv = nodes[i].getElementsByClassName("img-div")[0];
+        // console.log(imgDiv)
+        let nodeId = parseInt(imgDiv.id);
         let node = this.nodes.find((item) => item.id === nodeId);
         let nodeWidth = this.width;
         let nodeHeight = this.height;
@@ -1001,14 +1039,40 @@ export default {
         }
         // nodes[i].style.width = nodeWidth;
         // nodes[i].style.height = nodeHeight;
-
-        nodes[i].children[0].style.width = nodeWidth + "px";
-        // console.log(nodes[i].children[0].style.width)
-        nodes[i].children[0].style.height = nodeHeight + "px";
-        nodes[i].children[0].children[0].style.width = nodeWidth + "px";
-        nodes[i].children[0].children[0].style.height = nodeHeight + "px";
+        if (i === 0) {
+          // console.log(nodes[i])
+          nodes[i].children[1].style.width = nodeWidth + "px";
+          // console.log(nodes[i].children[0].style.width)
+          nodes[i].children[1].style.height = nodeHeight + "px";
+          nodes[i].children[1].children[0].style.width = nodeWidth + "px";
+          nodes[i].children[1].children[0].style.height = nodeHeight + "px";
+        } else {
+          nodes[i].children[0].style.width = nodeWidth + "px";
+          // console.log(nodes[i].children[0].style.width)
+          nodes[i].children[0].style.height = nodeHeight + "px";
+          nodes[i].children[0].children[0].style.width = nodeWidth + "px";
+          nodes[i].children[0].children[0].style.height = nodeHeight + "px";
+        }
       }
       // console.log(nodes);
+    },
+    addConnectionHover() {
+      let connections = document.getElementsByTagName("path");
+      for (let i = 0; i < connections.length; i++) {
+        connections[i].onmouseover = this.mouseoverPath;
+        connections[i].onmouseout = this.mouseoutPath;
+      }
+    },
+    mouseoverPath(event) {
+      let pathId = event.target.id;
+      let pathLabelId = pathId.substring(0, 4) + "Label" + pathId.substring(4);
+      console.log(pathLabelId);
+      document.getElementById(pathLabelId).style.visibility = "visible";
+    },
+    mouseoutPath(event) {
+      let pathId = event.target.id;
+      let pathLabelId = pathId.substring(0, 4) + "Label" + pathId.substring(4);
+      document.getElementById(pathLabelId).style.visibility = "hidden";
     },
     // 新增node
     addNode(node) {
@@ -1017,6 +1081,7 @@ export default {
       this.undoStack.push(this.nodes.slice());
       this.redoStack.clear();
       this.nodes.push(node);
+
       // if (node.parentId !== -1) {
       //   this.connections.push({
       //     source: node.parentId,
@@ -1067,13 +1132,6 @@ export default {
         // see FileSaver.js
         saveAs(content, "xiaohui-images.zip");
       });
-
-      /*
-    Results in a zip containing
-    Hello.txt
-    images/
-        smile.gif
-    */
     },
     Stack() {
       let items = [];
@@ -1117,8 +1175,15 @@ export default {
     },
     loadStartChoices() {
       this.loadingStart = true;
+      // eslint-disable-next-line no-unused-vars
+      var reqData = {
+        "number": 10,
+        "size": "small",
+        "ifDlatents": true
+      }
       this.$ajax
         .get("/json/random.json")
+        // .post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
         .then((res) => {
           // console.log(res);
           this.startChoices = res.data.result;
@@ -1133,19 +1198,34 @@ export default {
           console.log("加载失败");
           this.loadingStart = false;
         });
-    },
+    },    
     loadExpandChoices(expandType, parentNodeData) {
       this.loadingExpand = true;
       const expandTypeMap = {
         柔和尖锐: "sharpness",
         冷色暖色: "temperature",
         淡雅多彩: "colorful",
-        相似图片: "complexity",
+        相似图片: "similarity",
         简单复杂: "complexity",
         模糊清晰: "clearness",
       };
+
+      
+      var reqData = {
+        "dlatentsData": parentNodeData.dlatent,
+        "style": expandTypeMap[expandType],
+        "number": 4,
+        "size": "small",
+        "styleScale": 2,
+        "ifDlatents": true
+      }
+
+      if (reqData.style=="similarity")
+         reqData.number = reqData.number*2
+
       this.$ajax
         .get("/json/" + expandTypeMap[expandType] + ".json")
+        // .post("http://10.110.146.100:11354/apicore/art/style-gan-withtag/1.0.0",reqData)
         .then((res) => {
           this.expandChoices = res.data.result;
           for (let i = 0; i < this.expandChoices.length; i++) {
@@ -1161,7 +1241,7 @@ export default {
           console.log("加载失败", res);
           this.loadingExpand = false;
         });
-    },
+    }
   },
   created: function () {
     this.initialConnections();
@@ -1172,8 +1252,9 @@ export default {
   mounted: function () {
     window.oncontextmenu = (event) => {
       this.lastNodeId = this.currentNodeId;
-      this.currentNodeId = parseInt(event.target.firstChild.id);
-      this.event=event
+      let imgDiv = event.target.getElementsByClassName("img-div")[0];
+      this.currentNodeId = parseInt(imgDiv.id);
+      this.event = event;
       // console.log(this.currentNodeId)
       event.preventDefault(); //阻止浏览器自带的右键菜单显示
       let menu = document.getElementById("right-menu");
@@ -1188,11 +1269,13 @@ export default {
       menu.style.display = "none";
     };
     this.addNodeClick();
+    this.addConnectionHover();
   },
   updated: function () {
     // console.log("updated");
     // 给新加的node节点添加点击事件,并设置宽高
     this.addNodeClick();
+    this.addConnectionHover();
     if (this.currentNodeId >= 0) {
       let currentNode = document.getElementById(this.currentNodeId);
       if (!currentNode) {
@@ -1216,6 +1299,11 @@ body {
   margin: 0;
   overflow: hidden;
   background: rgba(43, 42, 47, 1);
+}
+.expand-animation {
+  position: fixed;
+  transition: transform 0.5s;
+  display: none;
 }
 .bg {
   /* width: 1920px;
@@ -1458,6 +1546,49 @@ body {
 .scale #out-btn:hover {
   content: url("/icon/btn_out_h.png");
 }
+.icon-container {
+  position: relative;
+}
+.scale .icon-container:hover .icon-tooltip {
+  display: inline;
+}
+.scale .icon-container .icon-tooltip {
+  position: absolute;
+  right: -94px;
+  bottom: 6px;
+  background: #f5f5f5;
+  padding: 5px 15px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  display: none;
+
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #2b2a2f;
+  line-height: 20px;
+
+  opacity: 1;
+}
+.edit .icon-container:hover .icon-tooltip {
+  display: inline;
+}
+.edit .icon-container .icon-tooltip {
+  position: absolute;
+  right: -62px;
+  bottom: 5.5px;
+  background: #f5f5f5;
+  padding: 5px 15px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  display: none;
+
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #2b2a2f;
+  line-height: 20px;
+}
 .edit {
   position: fixed;
   left: 1.77%;
@@ -1530,19 +1661,21 @@ body {
   justify-content: center;
   /* position: absolute; */
   margin: 3px;
+  transition: transform 10s;
   /* bottom: 0; */
 }
 .select .img-container img {
   /* width: 10%; */
   height: 103px;
   margin: 3px;
+  transition: transform 10s;
   /* padding: 5px; */
 }
 .select .img-container img:hover {
   /* width: 10%; */
   height: 103px;
   margin: 3px;
-  border: 2px solid rgba(255, 255, 255, 1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   /* padding: 5px; */
 }
 .select .img-container img:active {

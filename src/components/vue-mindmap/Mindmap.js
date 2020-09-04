@@ -34,7 +34,7 @@ export default {
       type: Boolean,
       default: false
     },
-    clickNode: {
+    clickBlank: {
       type: Function,
       default() { }
     }
@@ -84,7 +84,13 @@ export default {
     // prepareEditor(svg, conns, nodes, subnodes) {
     prepareEditor(svg, conns, nodes, pathLabels) {
       nodes
-        .attr('class', 'mindmap-node mindmap-node--editable')
+        // .attr('class', 'mindmap-node mindmap-node--editable')
+        .attr('class', node => {
+          if (node.isButtonNode)
+            return "mindmap-node mindmap-node--editable btn-node"
+          else
+            return "mindmap-node mindmap-node--editable img-node"
+        })
         .on('dbclick', (node) => {
           node.fx = null
           node.fy = null
@@ -154,24 +160,13 @@ export default {
         .attr("font-size", 20)
         .attr("fill", "rgba(255,255,255,0.7)")
         .attr('text-anchor', "middle")
-      // .attr({
-      //   'class': 'pathLabel',
-      //   'id': function (d, i) { return 'pathLabel' + i },
-      //   'dx': 80,
-      //   'dy': 0,
-      //   'font-size': 10,
-      //   'fill': '#aaa'
-      // });
+
 
       pathLabels.append('textPath')
         .attr('xlink:href', function (d, i) { return '#path' + i })
         .style("pointer-events", "none")
         .text(function (d) { return d.pathText });
 
-      // nodes.append('text').text(node => node.text)
-      //   .attr('fill', 'white')
-      //   .attr('x', 20)
-      //   .attr('y', 20)
 
       // Bind nodes and connections to the simulation
       this.simulation
@@ -201,6 +196,7 @@ export default {
       //   .on('dbClick.zoom', null)
       svg.call(d3PanZoom(svg))
         .on('dbClick.zoom', null)
+        .on('click', this.clickBlank)
       // svg.selectAll('g').attr("transform", localStorage.getItem("transform"))
     }
   },

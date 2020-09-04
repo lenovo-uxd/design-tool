@@ -17,6 +17,21 @@ export default (node) => {
   //   emoji = ''
   // }
 
+  // if(node.parentId === -1){
+  //   return `<div class="triangle"></div>
+  //   <div id="${node.id}" class="img-div">
+  //   <img class="node-img" src="${node.imgSrc}"/>  
+  // </div>`
+  // }
+
+  if(node.parentId === -1){
+    return `<div class="circle"></div>
+    <div id="${node.id}" class="img-div">
+    <img class="node-img" src="${node.imgSrc}"/>  
+  </div>`
+  }
+  
+
   // return `<a id="node-${node.index}" ${href}>${node.text || ''} ${emoji}</a>`
   return `<div id="${node.id}" class="img-div">
     <img class="node-img" src="${node.imgSrc}"/>  
