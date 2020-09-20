@@ -50,6 +50,7 @@
             :src="item.image"
             @click="onSelectRoot"
             @mouseover="changeBg"
+            @mouseout="resetZIndex"
           />
         </div>
       </div>
@@ -94,6 +95,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <div class="mask2" />
       <mindmap
         :nodes="nodes"
         :connections="connections"
@@ -382,14 +384,19 @@ export default {
       }
     },
     changeBg(event) {
+      // event.srcElement.style['z-index']=9999;
       let src = event.srcElement.attributes.src.value;
       // console.log(src);
       document.documentElement.style.setProperty(
         "--background",
         "transparent url(" + src + ") center center no-repeat"
       );
-      // console.log(event)
+      event.target.style["z-index"] = 11;
+      console.log(event);
       // console.log(bg)
+    },
+    resetZIndex(event) {
+      event.target.style["z-index"] = 10;
     },
     onClickSvgBlank() {
       // console.log(d3.event);
@@ -697,27 +704,45 @@ export default {
       let startY = clickedExpandItemRect.y;
       let endX = node.fx - mainNodeRect.width / 2;
       let endY = node.fy - mainNodeRect.height / 2;
-      aniDiv.style.display = "block";
+      
       aniDiv.style.left = startX + "px";
       aniDiv.style.top = startY + "px";
       aniDiv.firstElementChild.style.width = clickedExpandItemRect.width + "px";
-      aniDiv.firstElementChild.style.height = clickedExpandItemRect.height + "px";
+      aniDiv.firstElementChild.style.height =
+        clickedExpandItemRect.height + "px";
       aniDiv.firstElementChild.src = expandItem.image;
-      console.log(startX,startY, endX, endY)
-      setTimeout(() => {
-        aniDiv.style.transform =
-          "translate(" + (endX - startX) + "px," + (endY - startY) + "px) scale(+"+(mainNodeRect.width/clickedExpandItemRect.width)+")";
-      }, 150);
-      aniDiv.addEventListener("transitionend", () => {
-        aniDiv.style.display = "none";
+      console.log(startX, startY, endX, endY);
+      // setTimeout(() => {
+      //   aniDiv.style.visibility = "visible";
+      // }, 80);
+      // setTimeout(() => {
+      //   aniDiv.style.transform =
+      //     "translate(" +
+      //     (endX - startX) +
+      //     "px," +
+      //     (endY - startY) +
+      //     "px) scale(+" +
+      //     mainNodeRect.width / clickedExpandItemRect.width +
+      //     ")";
+      // }, 150);
+      // aniDiv.style.display = "block";
+      // aniDiv.style.visibility = "visible";
+      // aniDiv.addEventListener("transitionend", (e) => {
+        // if (e.target === e.currentTarget) {
+          // aniDiv.style.display = "none";
+          // aniDiv.style.visibility = "hidden";
 
-        // 完成动画后再更新脑图
-        this.connections = [];
-        this.addNode(node);
-        this.nodes = this.nodes.filter((item) => !item.isButtonNode);
-        this.initialConnections();
-        this.currentNodeId = -1;
-      });
+          // 完成动画后再更新脑图
+          this.connections = [];
+          this.addNode(node);
+          console.log(this.nodes);
+          this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+          this.initialConnections();
+          this.currentNodeId = -1;
+          console.log("动画完成");
+        // }
+      // });
+      console.log("点击完成");
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
@@ -906,8 +931,12 @@ export default {
       );
       svg.dispatchEvent(mousedown);
 
-      const finalX = document.body.clientWidth / 2 - rect.width / 2;
-      const finalY = document.body.clientHeight / 2 - rect.height / 2;
+      let finalX = 1.5*document.body.clientWidth / 2 - rect.width / 2;
+      let finalY = 1.5*document.body.clientHeight / 2 - rect.height / 2;
+      // finalX *= 1.5;
+      // finalY *= 1.5;
+      x*=1.5;
+      y*=1.5;
       const disX = finalX - x;
       const disY = finalY - y;
       let _x = x;
@@ -1177,10 +1206,10 @@ export default {
       this.loadingStart = true;
       // eslint-disable-next-line no-unused-vars
       var reqData = {
-        "number": 10,
-        "size": "small",
-        "ifDlatents": true
-      }
+        number: 10,
+        size: "small",
+        ifDlatents: true,
+      };
       this.$ajax
         .get("/json/random.json")
         // .post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
@@ -1198,7 +1227,7 @@ export default {
           console.log("加载失败");
           this.loadingStart = false;
         });
-    },    
+    },
     loadExpandChoices(expandType, parentNodeData) {
       this.loadingExpand = true;
       const expandTypeMap = {
@@ -1210,18 +1239,16 @@ export default {
         模糊清晰: "clearness",
       };
 
-      
       var reqData = {
-        "dlatentsData": parentNodeData.dlatent,
-        "style": expandTypeMap[expandType],
-        "number": 4,
-        "size": "small",
-        "styleScale": 2,
-        "ifDlatents": true
-      }
+        dlatentsData: parentNodeData.dlatent,
+        style: expandTypeMap[expandType],
+        number: 4,
+        size: "small",
+        styleScale: 2,
+        ifDlatents: true,
+      };
 
-      if (reqData.style=="similarity")
-         reqData.number = reqData.number*2
+      if (reqData.style == "similarity") reqData.number = reqData.number * 2;
 
       this.$ajax
         .get("/json/" + expandTypeMap[expandType] + ".json")
@@ -1241,7 +1268,7 @@ export default {
           console.log("加载失败", res);
           this.loadingExpand = false;
         });
-    }
+    },
   },
   created: function () {
     this.initialConnections();
@@ -1303,7 +1330,8 @@ body {
 .expand-animation {
   position: fixed;
   transition: transform 0.5s;
-  display: none;
+  /* display: none; */
+  visibility: hidden;
 }
 .bg {
   /* width: 1920px;
@@ -1338,6 +1366,15 @@ body {
   background-size: cover;
 }
 .mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.74);
+  z-index: -1;
+}
+.mask2 {
   position: fixed;
   top: 0;
   left: 0;
@@ -1438,6 +1475,8 @@ body {
   /* padding: 5px; */
 }
 .select-root .img-container img:hover {
+  position: relative;
+  z-index: 10;
   transform: scale(1.32);
 }
 /* .select-root .img-container img:active {
