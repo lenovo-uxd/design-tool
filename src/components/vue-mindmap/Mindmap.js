@@ -37,6 +37,10 @@ export default {
     clickBlank: {
       type: Function,
       default() { }
+    },
+    removeBtnNodes:{
+      type: Function,
+      default() {}
     }
   },
   data() {
@@ -96,7 +100,7 @@ export default {
           node.fy = null
         })
 
-      nodes.call(d3Drag(this.simulation, svg, nodes))
+      nodes.call(d3Drag(this.simulation, svg, nodes, this.removeBtnNodes))
 
       // Tick the simulation 100 times
       for (let i = 0; i < 100; i += 1) {
@@ -198,7 +202,7 @@ export default {
         .on('dbClick.zoom', null)
         .on('click', this.clickBlank)
       // svg.selectAll('g').attr("transform", localStorage.getItem("transform"))
-    }
+    },
   },
   mounted() {
     this.renderMap()

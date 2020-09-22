@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <div class="expand-animation" ref="expandAnimationDiv">
-      <img src="/test.png" />
-    </div>
     <div class="select-root-container" v-show="!hasSelectRoot">
       <div class="header">
         <span class="logo">
@@ -21,6 +18,8 @@
       </div>
       <div class="bg" />
       <div class="mask" />
+      <div class="select-root-wrapper">
+      <div class="select-root-father">
       <div class="select-root">
         <div class="desc">
           <span class="main">选择一张图继续</span>
@@ -39,11 +38,13 @@
 
         <div
           class="img-container"
-          v-loading="loadingStart"
-          element-loading-text="拼命加载中"
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(43, 42, 47, 0)"
         >
+          <div class="loading-start" v-if="loadingStart">
+            <div class="gif-container">
+              <img src="/icon/loading_bg.png" class="gif-bg"/>
+              <img src="/icon/loading_2.gif" class="gif"/>
+            </div>
+          </div>
           <img
             v-for="(item, index) in startChoices"
             :key="index"
@@ -78,6 +79,8 @@
           <span>2:1</span>
         </el-radio>
       </el-radio-group>
+      </div>
+      </div>
       <div class="footer">
         <p>Designed by Lenovo Research UXD</p>
       </div>
@@ -101,6 +104,7 @@
         :connections="connections"
         :editable="true"
         :clickBlank="onClickSvgBlank"
+        :removeBtnNodes="removeBtnNodes"
       />
       <div class="close">
         <img id="close-btn" @click="onClose" src="/icon/btn_close_n.png" alt="close" class="icon" />
@@ -117,12 +121,12 @@
           <span class="icon-tooltip">查看全部</span>
         </div>
         <div class="icon-container">
-          <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
-          <span class="icon-tooltip">缩小脑图</span>
-        </div>
-        <div class="icon-container">
           <img id="in-btn" @click="zoomIn" src="/icon/btn_in_n.png" class="icon" alt="zoom in" />
           <span class="icon-tooltip">放大脑图</span>
+        </div>
+        <div class="icon-container">
+          <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
+          <span class="icon-tooltip">缩小脑图</span>
         </div>
       </div>
       <div class="edit">
@@ -163,10 +167,10 @@
         <div class="desc">
           <p>
             <span>{{leftText}}</span>
-            &harr;
+            <span v-if="rightText!=''">&harr;</span>
             <span>{{rightText}}</span>
           </p>
-          <!-- <img src="/icon/btn_close_n.png" alt="cancel" class="icon" @click="onCancelSelect" /> -->
+          <img src="/icon/btn_close_n.png" alt="cancel" class="icon" @click="onCancelSelect" />
         </div>
         <div
           class="img-container"
@@ -411,6 +415,12 @@ export default {
         this.currentNodeId = -1;
       }
     },
+    removeBtnNodes(){
+      this.connections = [];
+      this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+      this.initialConnections();
+      this.currentNodeId = -1;
+    },
     onClose() {
       // console.log(this.nodes);
       this.$confirm("此操作会删除全部节点，是否继续?", "提示", {
@@ -620,7 +630,7 @@ export default {
       this.loadExpandChoices(currentNodeData.text, parentNodeData);
       this.leftText = currentNodeData.text.slice(0, 2);
       this.rightText =
-        this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "相似";
+        this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "";
       this.isSelectingExpand = true;
       // console.log(this.nodes.filter(item=>(item.id === this.currentNodeId || !item.isButtonNode)))
 
@@ -665,8 +675,8 @@ export default {
       let pathText =
         parseInt(event.srcElement.dataset["index"]) <
         this.expandChoices.length / 2
-          ? currentButtonNode.text.substring(0, 2)
-          : currentButtonNode.text.substring(2, 4);
+          ? currentButtonNode.text.substring(2, 4)
+          : currentButtonNode.text.substring(0, 2);
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
@@ -675,7 +685,7 @@ export default {
         (item) => item.image === event.target.src
       );
 
-      let randomDis = 10 + Math.random() * 20;
+      let randomDis = Math.random() * Math.random() * 150;
       let node = {
         id: this.nodes[this.nodes.length - 1].id + 1,
         parentId: currentButtonNode.parentId,
@@ -693,56 +703,15 @@ export default {
           this.nodeRelativeLocations[currentButtonNode.locationIndex].fy +
           randomDis,
       };
-
-      // 点击拓展图片后的动画
-      let aniDiv = this.$refs.expandAnimationDiv;
-      let mainNode = document.getElementById(this.nodes[0].id);
-      let mainNodeRect = mainNode.getBoundingClientRect();
-      let clickedExpandItem = event.target;
-      let clickedExpandItemRect = clickedExpandItem.getBoundingClientRect();
-      let startX = clickedExpandItemRect.x;
-      let startY = clickedExpandItemRect.y;
-      let endX = node.fx - mainNodeRect.width / 2;
-      let endY = node.fy - mainNodeRect.height / 2;
-      
-      aniDiv.style.left = startX + "px";
-      aniDiv.style.top = startY + "px";
-      aniDiv.firstElementChild.style.width = clickedExpandItemRect.width + "px";
-      aniDiv.firstElementChild.style.height =
-        clickedExpandItemRect.height + "px";
-      aniDiv.firstElementChild.src = expandItem.image;
-      console.log(startX, startY, endX, endY);
-      // setTimeout(() => {
-      //   aniDiv.style.visibility = "visible";
-      // }, 80);
-      // setTimeout(() => {
-      //   aniDiv.style.transform =
-      //     "translate(" +
-      //     (endX - startX) +
-      //     "px," +
-      //     (endY - startY) +
-      //     "px) scale(+" +
-      //     mainNodeRect.width / clickedExpandItemRect.width +
-      //     ")";
-      // }, 150);
-      // aniDiv.style.display = "block";
-      // aniDiv.style.visibility = "visible";
-      // aniDiv.addEventListener("transitionend", (e) => {
-        // if (e.target === e.currentTarget) {
-          // aniDiv.style.display = "none";
-          // aniDiv.style.visibility = "hidden";
-
-          // 完成动画后再更新脑图
-          this.connections = [];
-          this.addNode(node);
-          console.log(this.nodes);
-          this.nodes = this.nodes.filter((item) => !item.isButtonNode);
-          this.initialConnections();
-          this.currentNodeId = -1;
-          console.log("动画完成");
-        // }
-      // });
-      console.log("点击完成");
+      this.connections = [];
+      this.addNode(node);
+      console.log(this.nodes);
+      this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+      this.initialConnections();
+      this.currentNodeId = -1;
+      setTimeout(()=>{
+        this.moveNodeToCenter(node.id)
+      }, 100)
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
@@ -802,7 +771,7 @@ export default {
           this.connections = [];
           this.addButtonNode(event);
           this.initialConnections();
-          this.moveCurrentNodeToCenter(event);
+          this.moveNodeToCenter(this.currentNodeId);
           // this.currentNodeId = -1;
         }
       }
@@ -901,8 +870,8 @@ export default {
         locationIndex: 5,
       });
     },
-    moveCurrentNodeToCenter() {
-      let currentNode = document.getElementById(this.currentNodeId);
+    moveNodeToCenter(nodeId) {
+      let currentNode = document.getElementById(nodeId);
       let rect = currentNode.getBoundingClientRect();
       let x = rect.x;
       let y = rect.y;
@@ -931,12 +900,12 @@ export default {
       );
       svg.dispatchEvent(mousedown);
 
-      let finalX = 1.5*document.body.clientWidth / 2 - rect.width / 2;
-      let finalY = 1.5*document.body.clientHeight / 2 - rect.height / 2;
+      let finalX = document.body.clientWidth / 2 - rect.width / 2;
+      let finalY = document.body.clientHeight / 2 - rect.height / 2;
       // finalX *= 1.5;
       // finalY *= 1.5;
-      x*=1.5;
-      y*=1.5;
+      // x*=1.5;
+      // y*=1.5;
       const disX = finalX - x;
       const disY = finalY - y;
       let _x = x;
@@ -1327,12 +1296,6 @@ body {
   overflow: hidden;
   background: rgba(43, 42, 47, 1);
 }
-.expand-animation {
-  position: fixed;
-  transition: transform 0.5s;
-  /* display: none; */
-  visibility: hidden;
-}
 .bg {
   /* width: 1920px;
   height: 1080px; */
@@ -1402,9 +1365,19 @@ body {
 .select-root-container {
   width: 100%;
 }
+.select-root-wrapper{
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+.select-root-father{
+  width: 100%;
+}
 .select-root {
   /* display: none; */
-  margin-top: 8%;
+  /* margin-top: 8%; */
   /* margin-top: 20%; */
   /* background: #efefef; */
 }
@@ -1474,6 +1447,37 @@ body {
   /* margin: 2px; */
   /* padding: 5px; */
 }
+.select-root .img-container .loading-start {
+  position: absolute;
+  z-index: 2000;
+  background-color: rgba(43, 42, 47, 0);
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: opacity .3s;
+}
+.select-root .img-container .loading-start .gif-container {
+  top: 50%;
+  margin-top: -34px;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+}
+.select-root .img-container .loading-start .gif-bg {
+  width: 68px;
+  height: 68px;
+}
+.select-root .img-container .loading-start .gif {
+  width: 60px;
+  height: 60px;
+  margin-left: -64px;
+  margin-top: -4px;
+}
+img[src=""], img:not([src]){
+  opacity: 0;
+}
 .select-root .img-container img:hover {
   position: relative;
   z-index: 10;
@@ -1509,11 +1513,10 @@ body {
 }
 .footer {
   position: absolute;
+  display: flex;
+  justify-content: center;
   bottom: 15px;
-  /* text-align: center; */
-  left: 50%;
-  width: 220px;
-  margin-left: -110px;
+  width: 100%;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -1662,7 +1665,7 @@ body {
   bottom: 70%;
   left: 0;
   width: 100%;
-  height: 158px;
+  /* height: 158px; */
   background: rgba(63, 62, 70, 1);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49);
@@ -1670,6 +1673,7 @@ body {
 .select .desc {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 37px;
   color: rgba(255, 255, 255, 0.8);
   /* margin: 6px; */
@@ -1677,7 +1681,7 @@ body {
   margin-block-end: 0;
 }
 .select .desc p {
-  margin: 6px;
+  margin: 10px;
   margin-block-start: 0;
   margin-block-end: 0;
 }
@@ -1689,32 +1693,33 @@ body {
   line-height: 20px;
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
 }
-/* .select .desc img {
-  position: absolute;
-  right: 0;
-  margin-right: 20px;
-  margin: 10px 20px 10px 20px;
-} */
+.select .desc img {
+  margin: 10px;
+  cursor: pointer;
+}
 .select .img-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   /* position: absolute; */
   margin: 3px;
-  transition: transform 10s;
+  margin-bottom: 10px;
+  /* transition: transform 10s; */
   /* bottom: 0; */
 }
 .select .img-container img {
-  /* width: 10%; */
-  height: 103px;
-  margin: 3px;
-  transition: transform 10s;
+  width: 10.5%;
+  /* height: 103px; */
+  margin: 4px;
+  /* transition: transform 10s; */
   /* padding: 5px; */
 }
 .select .img-container img:hover {
-  /* width: 10%; */
-  height: 103px;
-  margin: 3px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 10.5%;
+  /* height: 103px; */
+  /* margin: 3px; */
+  /* border: 2px solid rgba(255, 255, 255, 0.5); */
+  outline: 2px solid rgba(255, 255, 255, 0.5);
   /* padding: 5px; */
 }
 .select .img-container img:active {

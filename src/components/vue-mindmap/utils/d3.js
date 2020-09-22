@@ -49,7 +49,7 @@ export const d3Nodes = (svg, nodes) => {
         return node.width})
     .attr('height', node => {
       if (node.isButtonNode)
-        return (node.height + 20)
+        return (node.height + 22)
       else if(node.parentId === -1)
         return (node.height + 30)
       else
@@ -152,27 +152,43 @@ export const onTick = (conns, nodes, pathLabels) => {
  * Return drag behavior to use on d3.selection.call().
  */
 // eslint-disable-next-line no-unused-vars
-export const d3Drag = (simulation, svg, nodes) => {
+export const d3Drag = (simulation, svg, nodes, removeBtnNodes) => {
+  // eslint-disable-next-line no-unused-vars
+  let active = 0
   const dragStart = (node) => {
     if (!event.active) {
       simulation.alphaTarget(0.2).restart()
     }
-
+    active = event.active
+    console.log(event)
+    console.log("drag start")
     node.fx = node.x
     node.fy = node.y
+    
   }
 
   const dragged = (node) => {
     // console.log(event)
-    node.fx = event.x
-    node.fy = event.y
+    // if(active != event.active){
+      // console.log("draging")
+      // removeBtnNodes()
+    // }
+
+    if(Math.abs(event.dx)+Math.abs(event.dy) < 100){  
+      // console.log("run")
+      // console.log(event)
+      node.fx = event.x
+      node.fy = event.y
+    }
+    active = event.active
   }
 
   const dragEnd = () => {
     if (!event.active) {
       simulation.alphaTarget(0)
     }
-
+    console.log(event) 
+    console.log("drag end")
     // svg.attr('viewBox', getViewBox(nodes.data()))
   }
 
