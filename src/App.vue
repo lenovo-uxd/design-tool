@@ -45,14 +45,17 @@
               <img src="/icon/loading_2.gif" class="gif"/>
             </div>
           </div>
-          <img
+          <div class="img-box"
             v-for="(item, index) in startChoices"
             :key="index"
+          >
+          <img
             :src="item.image"
             @click="onSelectRoot"
             @mouseover="changeBg"
             @mouseout="resetZIndex"
           />
+          </div>
         </div>
       </div>
       <!-- <el-radio-group v-model="ratio">
@@ -395,12 +398,12 @@ export default {
         "--background",
         "transparent url(" + src + ") center center no-repeat"
       );
-      event.target.style["z-index"] = 11;
+      event.target.parentElement.style["z-index"] = 11;
       console.log(event);
       // console.log(bg)
     },
     resetZIndex(event) {
-      event.target.style["z-index"] = 10;
+      event.target.parentElement.style["z-index"] = 10;
     },
     onClickSvgBlank() {
       // console.log(d3.event);
@@ -462,7 +465,27 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg.transition().duration(700).attr("viewBox", getViewBox(nodes.data()));
+      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
+      setTimeout(()=>{
+        this.resetViewBox2()
+      },600)
+      
+    },
+    resetViewBox2() {
+      const svg = d3.select(".mindmap-svg");
+      const nodes = d3.selectAll("foreignObject");
+      let wheelEvent = new WheelEvent("wheel", {
+        deltaY: 0 - parseFloat(localStorage.getItem("deltaY")),
+        clientX: document.body.clientWidth / 2,
+        clientY: document.body.clientHeight / 2,
+      });
+      document
+        .getElementsByClassName("mindmap-svg")[0]
+        .dispatchEvent(wheelEvent);
+      localStorage.setItem("deltaY", "0");
+      d3.zoom().transform(svg, d3.zoomIdentity);
+      d3.selectAll("g").attr("transform", "");
+      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
     },
     zoomIn() {
       let wheelEvent = new WheelEvent("wheel", {
@@ -1437,12 +1460,35 @@ body {
   justify-content: center;
   /* margin: 30px; */
   width: 100%;
-  min-height: 200px;
+  /* min-height: 200px; */
   margin-top: 30px;
 }
-.select-root .img-container img {
+.select-root .img-container .img-box{
   width: 17.6%;
+  position:relative;
   transition: transform 0.5s;
+}
+.select-root .img-container .img-box:hover {
+  position: relative;
+  z-index: 10;
+  transform: scale(1.32);
+}
+.select-root .img-container .img-box::before{
+  content: "";
+  display: inline-block;
+  padding-bottom: 50%;
+  width: 0.01px;    /*必须要有数值，否则无法把高度撑起来*/
+}
+.select-root .img-container img {
+  /* width: 17.6%;
+  transition: transform 0.5s; */
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  width:100%;
+  margin:auto;
   /* height: 300px; */
   /* margin: 2px; */
   /* padding: 5px; */
@@ -1478,11 +1524,7 @@ body {
 img[src=""], img:not([src]){
   opacity: 0;
 }
-.select-root .img-container img:hover {
-  position: relative;
-  z-index: 10;
-  transform: scale(1.32);
-}
+
 /* .select-root .img-container img:active {
   box-shadow: inset 0 0 1000px rgba(252, 1, 1, 0.5);
 } */
@@ -1732,20 +1774,18 @@ img[src=""], img:not([src]){
 
 #right-menu {
   position: absolute;
-  width: 200px;
+  width: 112px;
   height: auto;
-  border: 1px #ccc solid;
   display: none;
-  padding: 2px 0;
-  /* box-shadow: 5px 5px 5px #ccc; */
-  background: rgba(63, 62, 100, 1);
+  background: #3F3E46;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
 .menu-item {
-  height: 25px;
-  margin: 4px 0;
-  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38.5px;
   cursor: pointer;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -1754,11 +1794,11 @@ img[src=""], img:not([src]){
   line-height: 20px;
 }
 .menu-item:hover {
-  /* background-color: #ccc; */
-  background: rgba(89, 88, 96, 1);
+  border-radius: 4px;
+  background: #595860;
 }
 .menu-item-separator {
-  border-top: 1px #ccc solid;
+  border-top: 1px #525158 solid;
   height: 1px;
 }
 </style>
