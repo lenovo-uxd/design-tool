@@ -734,7 +734,7 @@ export default {
       this.currentNodeId = -1;
       setTimeout(()=>{
         this.moveNodeToCenter(node.id)
-      }, 100)
+      }, 200)
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
@@ -922,13 +922,14 @@ export default {
         null
       );
       svg.dispatchEvent(mousedown);
-
+      let ratio = this.getRatio();
+      console.log(ratio)
       let finalX = document.body.clientWidth / 2 - rect.width / 2;
       let finalY = document.body.clientHeight / 2 - rect.height / 2;
-      // finalX *= 1.5;
-      // finalY *= 1.5;
-      // x*=1.5;
-      // y*=1.5;
+      finalX *= ratio;
+      finalY *= ratio;
+      x*=ratio;
+      y*=ratio;
       const disX = finalX - x;
       const disY = finalY - y;
       let _x = x;
@@ -990,6 +991,31 @@ export default {
         }
       }, 5);
     },
+    //获取浏览器显示比例
+ getRatio()
+{
+    var ratio=0;
+    var screen=window.screen;
+    var ua=navigator.userAgent.toLowerCase();
+
+    if(window.devicePixelRatio !== undefined)
+    {
+        ratio=window.devicePixelRatio;    
+    }
+    else if(~ua.indexOf('msie'))
+    {
+        if(screen.deviceXDPI && screen.logicalXDPI)
+        {
+            ratio=screen.deviceXDPI/screen.logicalXDPI;        
+        }
+    
+    }
+    else if(window.outerWidth !== undefined && window.innerWidth !== undefined)
+    {
+        ratio=window.outerWidth/window.innerWidth;
+    }
+    return ratio;
+},
     onSelectRoot(event) {
       // console.log(event);
       this.hasSelectRoot = true;
@@ -1723,7 +1749,7 @@ img[src=""], img:not([src]){
   margin-block-end: 0;
 }
 .select .desc p {
-  margin: 10px;
+  margin: 0 1%;
   margin-block-start: 0;
   margin-block-end: 0;
 }
@@ -1736,7 +1762,7 @@ img[src=""], img:not([src]){
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
 }
 .select .desc img {
-  margin: 10px;
+  margin: 0 1%;
   cursor: pointer;
 }
 .select .img-container {
