@@ -1227,12 +1227,13 @@ export default {
         number: 10,
         size: "small",
         ifDlatents: true,
+        ratio:"(2:1)"
       };
       this.$ajax
         //.get("/json/random.json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-random",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=fd4b811b-b9be-4a29-ab6d-87433f98e3ac",reqData)
+        .post("https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
           .then((res) => {
           // console.log(res);
           this.startChoices = res.data.result;
@@ -1266,6 +1267,7 @@ export default {
         size: "small",
         styleScale: 2,
         ifDlatents: true,
+        ratio:"(2:1)"
       };
 
       if (reqData.style == "similarity") reqData.number = reqData.number * 2;
@@ -1274,7 +1276,7 @@ export default {
         //.get("/json/" + expandTypeMap[expandType] + ".json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-withtag/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-extend",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=fd4b811b-b9be-4a29-ab6d-87433f98e3ac",reqData)
+        .post("https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
           .then((res) => {
           this.expandChoices = res.data.result;
           for (let i = 0; i < this.expandChoices.length; i++) {
