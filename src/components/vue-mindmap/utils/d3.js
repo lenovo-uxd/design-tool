@@ -160,8 +160,8 @@ export const d3Drag = (simulation, svg, nodes, removeBtnNodes) => {
       simulation.alphaTarget(0.2).restart()
     }
     active = event.active
-    console.log(event)
-    console.log("drag start")
+    // console.log(event)
+    // console.log("drag start")
     node.fx = node.x
     node.fy = node.y
     
@@ -187,8 +187,8 @@ export const d3Drag = (simulation, svg, nodes, removeBtnNodes) => {
     if (!event.active) {
       simulation.alphaTarget(0)
     }
-    console.log(event) 
-    console.log("drag end")
+    // console.log(event) 
+    // console.log("drag end")
     // svg.attr('viewBox', getViewBox(nodes.data()))
   }
 

@@ -19,70 +19,78 @@
       <div class="bg" />
       <div class="mask" />
       <div class="select-root-wrapper">
-      <div class="select-root-father">
-      <div class="select-root">
-        <div class="desc">
-          <span class="main">选择一张图继续</span>
-          <span class="sub">点击图片后对其进行多维度智能拓展</span>
-          <!-- <span class="right" @click="onRefresh">
+        <div class="select-root-father">
+          <div class="select-root">
+            <div class="desc">
+              <span class="main">选择一张图继续</span>
+              <span class="sub">点击图片后对其进行多维度智能拓展</span>
+              <!-- <span class="right" @click="onRefresh">
             <img src="./assets/refresh.png" alt="cancel" class="icon" />
             <span>换一批</span>
           </span>-->
-        </div>
-        <el-button
-          class="refresh-button"
-          @click="onRefresh"
-          icon="el-icon-refresh-left"
-          type="text"
-        >换一批</el-button>
+            </div>
+            <el-button
+              class="refresh-button"
+              @click="onRefresh"
+              icon="el-icon-refresh-left"
+              type="text"
+              >换一批</el-button
+            >
 
-        <div
-          class="img-container"
-        >
-          <div class="loading-start" v-if="loadingStart">
-            <div class="gif-container">
-              <img src="/icon/loading_bg.png" class="gif-bg"/>
-              <img src="/icon/loading_2.gif" class="gif"/>
+            <div class="img-container">
+              <div class="loading-start" v-if="loadingStart">
+                <div class="gif-container">
+                  <img src="/icon/loading_bg.png" class="gif-bg" />
+                  <img src="/icon/loading_2.gif" class="gif" />
+                </div>
+              </div>
+              <div
+                class="img-box"
+                v-for="(item, index) in startChoices"
+                :key="index"
+              >
+                <img
+                  :src="item.image"
+                  @click="onSelectRoot"
+                  @mouseover="changeBg"
+                  @mouseout="resetZIndex"
+                />
+              </div>
             </div>
           </div>
-          <div class="img-box"
-            v-for="(item, index) in startChoices"
-            :key="index"
-          >
-          <img
-            :src="item.image"
-            @click="onSelectRoot"
-            @mouseover="changeBg"
-            @mouseout="resetZIndex"
-          />
-          </div>
-        </div>
-      </div>
-      <!-- <el-radio-group v-model="ratio">
+          <!-- <el-radio-group v-model="ratio">
         <el-radio-button label="1:1"></el-radio-button>
         <el-radio-button label="4:3"></el-radio-button>
         <el-radio-button label="16:9"></el-radio-button>
         <el-radio-button label="2:1"></el-radio-button>
       </el-radio-group>-->
-      <el-radio-group class="radio-group" v-model="ratio" @change="setRatio">
-        <el-radio label="1:1">
-          <img class="radio-icon" ref="size1" src="/icon/btn_size1_n.png" />
-          <span>1:1</span>
-        </el-radio>
-        <el-radio label="4:3">
-          <img class="radio-icon" ref="size2" src="/icon/btn_size2_n.png" />
-          <span>4:3</span>
-        </el-radio>
-        <el-radio label="16:9">
-          <img class="radio-icon" ref="size3" src="/icon/btn_size3_n.png" />
-          <span>16:9</span>
-        </el-radio>
-        <el-radio label="2:1">
-          <img class="radio-icon" ref="size4" src="/icon/btn_size4_n_selected.png" />
-          <span>2:1</span>
-        </el-radio>
-      </el-radio-group>
-      </div>
+          <el-radio-group
+            class="radio-group"
+            v-model="ratio"
+            @change="setRatio"
+          >
+            <el-radio label="1:1">
+              <img class="radio-icon" ref="size1" src="/icon/btn_size1_n.png" />
+              <span>1:1</span>
+            </el-radio>
+            <el-radio label="4:3">
+              <img class="radio-icon" ref="size2" src="/icon/btn_size2_n.png" />
+              <span>4:3</span>
+            </el-radio>
+            <el-radio label="16:9">
+              <img class="radio-icon" ref="size3" src="/icon/btn_size3_n.png" />
+              <span>16:9</span>
+            </el-radio>
+            <el-radio label="2:1">
+              <img
+                class="radio-icon"
+                ref="size4"
+                src="/icon/btn_size4_n_selected.png"
+              />
+              <span>2:1</span>
+            </el-radio>
+          </el-radio-group>
+        </div>
       </div>
       <div class="footer">
         <p>Designed by Lenovo Research UXD</p>
@@ -96,7 +104,9 @@
             <img src="/icon/btn_menu_n.png" />
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="downloadAll()">下载全部图片</el-dropdown-item>
+            <el-dropdown-item @click.native="downloadAll()"
+              >下载全部图片</el-dropdown-item
+            >
             <el-dropdown-item>调整图片比例</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -110,7 +120,13 @@
         :removeBtnNodes="removeBtnNodes"
       />
       <div class="close">
-        <img id="close-btn" @click="onClose" src="/icon/btn_close_n.png" alt="close" class="icon" />
+        <img
+          id="close-btn"
+          @click="onClose"
+          src="/icon/btn_close_n.png"
+          alt="close"
+          class="icon"
+        />
       </div>
       <div class="scale">
         <div class="icon-container">
@@ -124,20 +140,36 @@
           <span class="icon-tooltip">查看全部</span>
         </div>
         <div class="icon-container">
-          <img id="in-btn" @click="zoomIn" src="/icon/btn_in_n.png" class="icon" alt="zoom in" />
+          <img
+            id="in-btn"
+            @click="zoomIn"
+            src="/icon/btn_in_n.png"
+            class="icon"
+            alt="zoom in"
+          />
           <span class="icon-tooltip">放大脑图</span>
         </div>
         <div class="icon-container">
-          <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
+          <img
+            id="out-btn"
+            @click="zoomOut"
+            src="/icon/btn_out_n.png"
+            class="icon"
+            alt="zoom out"
+          />
           <span class="icon-tooltip">缩小脑图</span>
         </div>
       </div>
       <div class="edit">
         <div class="icon-container">
           <img
-            :id="undoStack.isEmpty()?'disabled':'undo-btn'"
+            :id="undoStack.isEmpty() ? 'disabled' : 'undo-btn'"
             @click="onUndo"
-            :src="undoStack.isEmpty()?'/icon/btn_undo_d.png':'/icon/btn_undo_n.png'"
+            :src="
+              undoStack.isEmpty()
+                ? '/icon/btn_undo_d.png'
+                : '/icon/btn_undo_n.png'
+            "
             alt="undo"
             class="icon"
           />
@@ -145,23 +177,31 @@
         </div>
         <div class="icon-container">
           <img
-            :id="redoStack.isEmpty()?'disabled':'redo-btn'"
+            :id="redoStack.isEmpty() ? 'disabled' : 'redo-btn'"
             @click="onRedo"
-            :src="redoStack.isEmpty()?'/icon/btn_redo_d.png':'/icon/btn_redo_n.png'"
+            :src="
+              redoStack.isEmpty()
+                ? '/icon/btn_redo_d.png'
+                : '/icon/btn_redo_n.png'
+            "
             alt="redo"
             class="icon"
-            :class="redoStack.isEmpty()?'disabled':''"
+            :class="redoStack.isEmpty() ? 'disabled' : ''"
           />
           <span class="icon-tooltip">重做</span>
         </div>
         <div class="icon-container">
           <img
-            :id="currentNodeId===-1?'disabled':'clear-btn'"
+            :id="currentNodeId === -1 ? 'disabled' : 'clear-btn'"
             @click="onDelete"
-            :src="currentNodeId===-1?'/icon/btn_clear_d.png':'/icon/btn_clear_n.png'"
+            :src="
+              currentNodeId === -1
+                ? '/icon/btn_clear_d.png'
+                : '/icon/btn_clear_n.png'
+            "
             alt="delete"
             class="icon"
-            :class="currentNodeId===-1?'disabled':''"
+            :class="currentNodeId === -1 ? 'disabled' : ''"
           />
           <span class="icon-tooltip">删除</span>
         </div>
@@ -169,11 +209,16 @@
       <div class="select" v-show="isSelectingExpand">
         <div class="desc">
           <p>
-            <span>{{leftText}}</span>
-            <span v-if="rightText!=''">&harr;</span>
-            <span>{{rightText}}</span>
+            <span>{{ leftText }}</span>
+            <span v-if="rightText != ''">&harr;</span>
+            <span>{{ rightText }}</span>
           </p>
-          <img src="/icon/btn_close_n.png" alt="cancel" class="icon" @click="onCancelSelect" />
+          <img
+            src="/icon/btn_close_n.png"
+            alt="cancel"
+            class="icon"
+            @click="onCancelSelect"
+          />
         </div>
         <div
           class="img-container"
@@ -399,7 +444,7 @@ export default {
         "transparent url(" + src + ") center center no-repeat"
       );
       event.target.parentElement.style["z-index"] = 11;
-      console.log(event);
+      // console.log(event);
       // console.log(bg)
     },
     resetZIndex(event) {
@@ -418,7 +463,7 @@ export default {
         this.currentNodeId = -1;
       }
     },
-    removeBtnNodes(){
+    removeBtnNodes() {
       this.connections = [];
       this.nodes = this.nodes.filter((item) => !item.isButtonNode);
       this.initialConnections();
@@ -466,10 +511,9 @@ export default {
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
       svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
-      setTimeout(()=>{
-        this.resetViewBox2()
-      },600)
-      
+      setTimeout(() => {
+        this.resetViewBox2();
+      }, 600);
     },
     resetViewBox2() {
       const svg = d3.select(".mindmap-svg");
@@ -728,13 +772,13 @@ export default {
       };
       this.connections = [];
       this.addNode(node);
-      console.log(this.nodes);
+      // console.log(this.nodes);
       this.nodes = this.nodes.filter((item) => !item.isButtonNode);
       this.initialConnections();
       this.currentNodeId = -1;
-      setTimeout(()=>{
-        this.moveNodeToCenter(node.id)
-      }, 200)
+      setTimeout(() => {
+        this.moveNodeToCenter(node.id);
+      }, 200);
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
@@ -923,15 +967,30 @@ export default {
       );
       svg.dispatchEvent(mousedown);
       let ratio = this.getRatio();
-      console.log(ratio)
-      let finalX = document.body.clientWidth / 2 - rect.width / 2;
-      let finalY = document.body.clientHeight / 2 - rect.height / 2;
-      finalX *= ratio;
-      finalY *= ratio;
-      x*=ratio;
-      y*=ratio;
+      console.log(ratio);
+      let windowWidth = document.body.clientWidth
+      let windowHeight = document.body.clientHeight
+      // windowWidth = window.screen.availWidth
+      // windowHeight = window.screen.availHeight
+      let finalX = ratio*(windowWidth / 2) - rect.width / 2 ;
+      let finalY = ratio*(windowHeight / 2) - rect.height / 2 ;
+      // let finalX = windowWidth / 2;
+      // let finalY = windowHeight / 2;
+      // finalX *= ratio;
+      // finalY *= ratio;
+      // x *= ratio;
+      // y *= ratio;
       const disX = finalX - x;
       const disY = finalY - y;
+      console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
+      console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
+      console.log("node rect",rect)
+      console.log("finalX,Y",finalX,finalY)
+      console.log("ratio:",ratio)
+      console.log("x,y",x,y)
+      console.log("disX,Y:",disX,disY)
+      console.log(" ")
+      console.log(" ")
       let _x = x;
       let _y = y;
       // console.log(finalX, finalY);
@@ -955,8 +1014,8 @@ export default {
           0,
           null
         );
-        _x += disX / 20;
-        _y += disY / 20;
+        _x += disX / 200;
+        _y += disY / 200;
         svg.dispatchEvent(mousemove);
         // console.log(_x, _y);
         // svg.dispatchEvent(mousemove);
@@ -989,33 +1048,34 @@ export default {
           //   }
           // }, 1000);
         }
-      }, 5);
+      }, 1);
     },
     //获取浏览器显示比例
- getRatio()
-{
-    var ratio=0;
-    var screen=window.screen;
-    var ua=navigator.userAgent.toLowerCase();
-
-    if(window.devicePixelRatio !== undefined)
-    {
-        ratio=window.devicePixelRatio;    
-    }
-    else if(~ua.indexOf('msie'))
-    {
-        if(screen.deviceXDPI && screen.logicalXDPI)
-        {
-            ratio=screen.deviceXDPI/screen.logicalXDPI;        
+    getRatio() {
+      var ratio = 0;
+      var screen = window.screen;
+      var ua = navigator.userAgent.toLowerCase();
+      // console.log(window.screen)
+      // console.log(navigator.userAgent.toLowerCase())
+      // console.log(window.devicePixelRatio)
+      // console.log(screen.deviceXDP)
+      // console.log(screen.logicalXDPI)
+      // console.log(window.outerWidth)
+      // console.log(window.innerWidth)
+      if (window.devicePixelRatio !== undefined) {
+        ratio = window.devicePixelRatio;
+      } else if (~ua.indexOf("msie")) {
+        if (screen.deviceXDPI && screen.logicalXDPI) {
+          ratio = screen.deviceXDPI / screen.logicalXDPI;
         }
-    
-    }
-    else if(window.outerWidth !== undefined && window.innerWidth !== undefined)
-    {
-        ratio=window.outerWidth/window.innerWidth;
-    }
-    return ratio;
-},
+      } else if (
+        window.outerWidth !== undefined &&
+        window.innerWidth !== undefined
+      ) {
+        ratio = window.outerWidth / window.innerWidth;
+      }
+      return ratio;
+    },
     onSelectRoot(event) {
       // console.log(event);
       this.hasSelectRoot = true;
@@ -1113,7 +1173,7 @@ export default {
     mouseoverPath(event) {
       let pathId = event.target.id;
       let pathLabelId = pathId.substring(0, 4) + "Label" + pathId.substring(4);
-      console.log(pathLabelId);
+      // console.log(pathLabelId);
       document.getElementById(pathLabelId).style.visibility = "visible";
     },
     mouseoutPath(event) {
@@ -1414,14 +1474,14 @@ body {
 .select-root-container {
   width: 100%;
 }
-.select-root-wrapper{
+.select-root-wrapper {
   position: absolute;
   display: flex;
   height: 100%;
   width: 100%;
   align-items: center;
 }
-.select-root-father{
+.select-root-father {
   width: 100%;
 }
 .select-root {
@@ -1489,9 +1549,9 @@ body {
   /* min-height: 200px; */
   margin-top: 30px;
 }
-.select-root .img-container .img-box{
+.select-root .img-container .img-box {
   width: 17.6%;
-  position:relative;
+  position: relative;
   transition: transform 0.5s;
 }
 .select-root .img-container .img-box:hover {
@@ -1499,22 +1559,22 @@ body {
   z-index: 10;
   transform: scale(1.32);
 }
-.select-root .img-container .img-box::before{
+.select-root .img-container .img-box::before {
   content: "";
   display: inline-block;
   padding-bottom: 50%;
-  width: 0.01px;    /*必须要有数值，否则无法把高度撑起来*/
+  width: 0.01px; /*必须要有数值，否则无法把高度撑起来*/
 }
 .select-root .img-container img {
   /* width: 17.6%;
   transition: transform 0.5s; */
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  width:100%;
-  margin:auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: auto;
   /* height: 300px; */
   /* margin: 2px; */
   /* padding: 5px; */
@@ -1528,7 +1588,7 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 .select-root .img-container .loading-start .gif-container {
   top: 50%;
@@ -1547,7 +1607,8 @@ body {
   margin-left: -64px;
   margin-top: -4px;
 }
-img[src=""], img:not([src]){
+img[src=""],
+img:not([src]) {
   opacity: 0;
 }
 
@@ -1803,7 +1864,7 @@ img[src=""], img:not([src]){
   width: 112px;
   height: auto;
   display: none;
-  background: #3F3E46;
+  background: #3f3e46;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
