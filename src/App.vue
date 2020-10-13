@@ -940,8 +940,10 @@ export default {
     moveNodeToCenter(nodeId) {
       let currentNode = document.getElementById(nodeId);
       let rect = currentNode.getBoundingClientRect();
-      let x = rect.x;
-      let y = rect.y;
+      let x = rect.left;
+      let y = rect.top;
+      // let x = currentNode.offsetLeft;
+      // let y = currentNode.offsetTop;
       // console.log(rect);
       let svg = document.getElementsByClassName("mindmap-svg")[0];
       let mousedown = document.createEvent("MouseEvents");
@@ -954,8 +956,8 @@ export default {
         true,
         window,
         0,
-        x,
-        y,
+        0,
+        0,
         x,
         y,
         false,
@@ -972,8 +974,12 @@ export default {
       let windowHeight = document.body.clientHeight
       // windowWidth = window.screen.availWidth
       // windowHeight = window.screen.availHeight
-      let finalX = ratio*(windowWidth / 2) - rect.width / 2 ;
-      let finalY = ratio*(windowHeight / 2) - rect.height / 2 ;
+      // let nodeWidth = rect.width/ratio;
+      // let nodeHeight = rect.height/ratio;
+      let nodeWidth = currentNode.offsetWidth/ratio;
+      let nodeHeight = currentNode.offsetHeight/ratio;
+      let finalX = ratio*(windowWidth / 2) - nodeWidth / 2 ;
+      let finalY = ratio*(windowHeight / 2) - nodeHeight / 2 ;
       // let finalX = windowWidth / 2;
       // let finalY = windowHeight / 2;
       // finalX *= ratio;
@@ -985,6 +991,7 @@ export default {
       console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
       console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
       console.log("node rect",rect)
+      console.log("nodeWidth,height:",nodeWidth,nodeHeight);
       console.log("finalX,Y",finalX,finalY)
       console.log("ratio:",ratio)
       console.log("x,y",x,y)
@@ -994,8 +1001,11 @@ export default {
       let _x = x;
       let _y = y;
       // console.log(finalX, finalY);
+      const times = 40;
+      let times_index = 0;
       let interval = setInterval(function () {
         // console.log(d3.event)
+        times_index += 1;
         let mousemove = document.createEvent("MouseEvents");
         mousemove.initMouseEvent(
           "mousemove",
@@ -1003,8 +1013,8 @@ export default {
           true,
           window,
           0,
-          _x,
-          _y,
+          0,
+          0,
           _x,
           _y,
           false,
@@ -1014,12 +1024,12 @@ export default {
           0,
           null
         );
-        _x += disX / 100;
-        _y += disY / 100;
+        _x += disX / times;
+        _y += disY / times;
         svg.dispatchEvent(mousemove);
         // console.log(_x, _y);
         // svg.dispatchEvent(mousemove);
-        if (Math.abs(finalX - _x) < 3) {
+        if (times_index >= times) {
           clearInterval(interval);
           let mouseup = document.createEvent("MouseEvents");
           mouseup.initMouseEvent(
@@ -1040,7 +1050,8 @@ export default {
             null
           );
           svg.dispatchEvent(mouseup);
-
+          let rect1 = document.getElementById(nodeId).getBoundingClientRect();
+          console.log(rect1)
           // setTimeout(function () {
           //   if (svg.className.indexOf("btn_ok") > -1) {
           //     console.log(svg.className);
