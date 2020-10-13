@@ -1014,8 +1014,8 @@ export default {
           0,
           null
         );
-        _x += disX / 200;
-        _y += disY / 200;
+        _x += disX / 100;
+        _y += disY / 100;
         svg.dispatchEvent(mousemove);
         // console.log(_x, _y);
         // svg.dispatchEvent(mousemove);
