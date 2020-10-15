@@ -950,6 +950,41 @@ export default {
       // let x = currentNodeData.fx;
       // let y = currentNodeData.fy;
       // console.log(x,y)
+      
+      let windowWidth = document.body.clientWidth
+      let windowHeight = document.body.clientHeight
+      // windowWidth = window.screen.availWidth
+      // windowHeight = window.screen.availHeight
+      // let nodeWidth = rect.width/ratio;
+      // let nodeHeight = rect.height/ratio;
+      let nodeWidth = currentNode.offsetWidth;
+      let nodeHeight = currentNode.offsetHeight;
+      let finalX = windowWidth / 2 - nodeWidth / 2 ;
+      let finalY = windowHeight / 2 - nodeHeight / 2 ;
+      // let finalX = windowWidth / 2;
+      // let finalY = windowHeight / 2;
+      // let ratio = this.getRatio();
+      // console.log(ratio);
+      // finalX /= ratio;
+      // finalY /= ratio;
+      // x /= ratio;
+      // y /= ratio;
+      const disX = finalX - x;
+      const disY = finalY - y;
+      if(Math.abs(disX)<windowWidth*0.015 && Math.abs(disY)<windowHeight*0.015){
+        return;
+      }
+      // console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
+      // console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
+      // console.log("node rect",rect)
+      // console.log("nodeWidth,height:",nodeWidth,nodeHeight);
+      // console.log("finalX,Y",finalX,finalY)
+      // console.log("ratio:",ratio)
+      // console.log("x,y",x,y)
+      // console.log("disX,Y:",disX,disY)
+      // console.log(" ")
+      // console.log(" ")
+      
       mousedown.initMouseEvent(
         "mousedown",
         true,
@@ -968,44 +1003,60 @@ export default {
         null
       );
       svg.dispatchEvent(mousedown);
-      let ratio = this.getRatio();
-      console.log(ratio);
-      let windowWidth = document.body.clientWidth
-      let windowHeight = document.body.clientHeight
-      // windowWidth = window.screen.availWidth
-      // windowHeight = window.screen.availHeight
-      // let nodeWidth = rect.width/ratio;
-      // let nodeHeight = rect.height/ratio;
-      let nodeWidth = currentNode.offsetWidth/ratio;
-      let nodeHeight = currentNode.offsetHeight/ratio;
-      let finalX = ratio*(windowWidth / 2) - nodeWidth / 2 ;
-      let finalY = ratio*(windowHeight / 2) - nodeHeight / 2 ;
-      // let finalX = windowWidth / 2;
-      // let finalY = windowHeight / 2;
-      // finalX *= ratio;
-      // finalY *= ratio;
-      // x *= ratio;
-      // y *= ratio;
-      const disX = finalX - x;
-      const disY = finalY - y;
-      console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
-      console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
-      console.log("node rect",rect)
-      console.log("nodeWidth,height:",nodeWidth,nodeHeight);
-      console.log("finalX,Y",finalX,finalY)
-      console.log("ratio:",ratio)
-      console.log("x,y",x,y)
-      console.log("disX,Y:",disX,disY)
-      console.log(" ")
-      console.log(" ")
+      
+      
       let _x = x;
       let _y = y;
       // console.log(finalX, finalY);
-      const times = 40;
+      const times = 20;
       let times_index = 0;
+      finalX = Math.floor(finalX)
+      finalY = Math.floor(finalY)
       let interval = setInterval(function () {
         // console.log(d3.event)
+        
         times_index += 1;
+        let rect = document.getElementById(nodeId).getBoundingClientRect();
+        let curX = Math.floor(rect.left);
+        let curY = Math.floor(rect.top);
+        _x = Math.floor(_x)
+        _y = Math.floor(_y)
+
+        console.log(_x,_y)
+        console.log(curX,curY)
+        console.log(finalX,finalY)
+        console.log(" ")
+        if (times_index > times+1 || (Math.abs(finalX-_x)<windowWidth*0.01 && Math.abs(finalY-_y)<windowHeight*0.01)) {
+          clearInterval(interval);
+          let mouseup = document.createEvent("MouseEvents");
+          mouseup.initMouseEvent(
+            "mouseup",
+            true,
+            true,
+            window,
+            0,
+            0,
+            0,
+            _x,
+            _y,
+            false,
+            false,
+            false,
+            false,
+            0,
+            null
+          );
+          svg.dispatchEvent(mouseup);
+          let rect1 = document.getElementById(nodeId).getBoundingClientRect();
+          console.log(rect1)
+          // setTimeout(function () {
+          //   if (svg.className.indexOf("btn_ok") > -1) {
+          //     console.log(svg.className);
+          //     document.getElementById("verify").click();
+          //   }
+          // }, 1000);
+        }
+
         let mousemove = document.createEvent("MouseEvents");
         mousemove.initMouseEvent(
           "mousemove",
@@ -1029,36 +1080,6 @@ export default {
         svg.dispatchEvent(mousemove);
         // console.log(_x, _y);
         // svg.dispatchEvent(mousemove);
-        if (times_index >= times) {
-          clearInterval(interval);
-          let mouseup = document.createEvent("MouseEvents");
-          mouseup.initMouseEvent(
-            "mouseup",
-            true,
-            true,
-            window,
-            0,
-            finalX,
-            finalY,
-            finalX,
-            finalY,
-            false,
-            false,
-            false,
-            false,
-            0,
-            null
-          );
-          svg.dispatchEvent(mouseup);
-          let rect1 = document.getElementById(nodeId).getBoundingClientRect();
-          console.log(rect1)
-          // setTimeout(function () {
-          //   if (svg.className.indexOf("btn_ok") > -1) {
-          //     console.log(svg.className);
-          //     document.getElementById("verify").click();
-          //   }
-          // }, 1000);
-        }
       }, 1);
     },
     //获取浏览器显示比例

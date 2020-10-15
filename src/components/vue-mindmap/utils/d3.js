@@ -1,4 +1,4 @@
-import { drag, event, zoom, easeExpOut } from 'd3'
+import { drag, event, zoom, easeExpOut, easeLinear } from 'd3'
 // import { getViewBox } from './dimensions'
 
 /**
@@ -208,7 +208,7 @@ export const d3PanZoom = el => {
   return (
     zoom().scaleExtent([0.3, 5])
       .on('zoom', () => {
-        // console.log(event)
+        console.log(event)
         // console.log(event.transform)
 
         if (event.sourceEvent && event.sourceEvent.deltaY) {
@@ -216,8 +216,12 @@ export const d3PanZoom = el => {
           deltaY += event.sourceEvent.deltaY
           localStorage.setItem("deltaY", deltaY)
         }
-        return el.selectAll('svg > g').transition()
+        if(event.sourceEvent.type == "wheel"){
+          return el.selectAll('svg > g').transition()
           .duration(500).ease(easeExpOut).attr('transform', event.transform)
+        }
+        return el.selectAll('svg > g').transition()
+        .duration(100).ease(easeLinear).attr('transform', event.transform)
       })
   )
 } 
