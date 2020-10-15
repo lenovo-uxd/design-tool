@@ -1594,7 +1594,7 @@ body {
 .select-root .img-container .img-box::before {
   content: "";
   display: inline-block;
-  padding-bottom: 50%;
+  padding-bottom: 48%;
   width: 0.01px; /*必须要有数值，否则无法把高度撑起来*/
 }
 .select-root .img-container img {

@@ -221,7 +221,7 @@ export const d3PanZoom = el => {
           .duration(500).ease(easeExpOut).attr('transform', event.transform)
         }
         return el.selectAll('svg > g').transition()
-        .duration(100).ease(easeLinear).attr('transform', event.transform)
+        .duration(0).ease(easeLinear).attr('transform', event.transform)
       })
   )
 } 
