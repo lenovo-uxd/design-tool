@@ -220,13 +220,13 @@
             @click="onCancelSelect"
           />
         </div>
-        <div
-          class="img-container"
-          v-loading="loadingExpand"
-          element-loading-text="拼命加载中"
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(43, 42, 47, 0.8)"
-        >
+        <div class="img-container">
+          <div class="loading-start" v-if="loadingExpand">
+            <div class="gif-container">
+              <img src="/icon/loading_bg.png" class="gif-bg" />
+              <img src="/icon/loading_2.gif" class="gif" />
+            </div>
+          </div>
           <img
             v-for="(item, index) in expandChoices"
             :key="index"
@@ -285,67 +285,8 @@ export default {
       loadingExpand: true,
       undoStack: new this.Stack(),
       redoStack: new this.Stack(),
-      expandChoices: [
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-      ],
-      startChoices: [
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-        {
-          src: "/test.png",
-        },
-        {
-          src: "/test2.png",
-        },
-      ],
+      expandChoices: [],
+      startChoices: [],
       curves: [
         {
           x: 0,
@@ -401,39 +342,8 @@ export default {
     };
   },
   methods: {
-    addText: function () {
+    addText: function() {
       console.log("添加文本");
-    },
-    addMainImg: function () {
-      console.log("添加主图");
-      console.log(this.nodes);
-      if (this.nodes.length > 0) {
-        console.log(this.nodes);
-        this.$confirm("此操作会删除全部节点，是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            this.loadStartChoices();
-            this.hasSelectRoot = false;
-            this.connections = [];
-            this.nodes = [];
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      } else {
-        this.loadStartChoices();
-        this.hasSelectRoot = false;
-      }
     },
     changeBg(event) {
       // event.srcElement.style['z-index']=9999;
@@ -479,11 +389,13 @@ export default {
         .then(() => {
           this.loadStartChoices();
           this.hasSelectRoot = false;
+          this.isSelectingExpand = false;
+          // Object.assign(this.$data, this.$options.data())
           this.connections = [];
           this.nodes = [];
           this.undoStack.clear();
           this.redoStack.clear();
-          // localStorage.removeItem("transform");
+          localStorage.removeItem("transform");
           this.$message({
             type: "success",
             message: "删除成功!",
@@ -510,7 +422,10 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
+      svg
+        .transition()
+        .duration(300)
+        .attr("viewBox", getViewBox(nodes.data()));
       setTimeout(() => {
         this.resetViewBox2();
       }, 600);
@@ -529,7 +444,10 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
+      svg
+        .transition()
+        .duration(300)
+        .attr("viewBox", getViewBox(nodes.data()));
     },
     zoomIn() {
       let wheelEvent = new WheelEvent("wheel", {
@@ -551,7 +469,7 @@ export default {
         .getElementsByClassName("mindmap-svg")[0]
         .dispatchEvent(wheelEvent);
     },
-    setRatio: function () {
+    setRatio: function() {
       switch (this.ratio) {
         case "1:1": {
           // this.width = this.height;
@@ -650,9 +568,11 @@ export default {
         })
           .then(() => {
             this.loadStartChoices();
+            this.isSelectingExpand = false;
+            // Object.assign(this.$data, this.$options.data())
             this.hasSelectRoot = false;
             // 删除操作入栈
-            // this.undoStack.push(this.nodes.slice());
+            this.undoStack.push(this.nodes.slice());
             this.undoStack.clear();
             this.redoStack.clear();
             this.recursionDelete(this.currentNodeId);
@@ -709,27 +629,27 @@ export default {
 
       // console.log(d3.select(""))
 
-      let g = d3.select("#mindmap-connections-container");
-      // console.log(g);
-      let dx = 10,
-        dy = 100,
-        x1 = document.body.clientWidth / 2,
-        y1 = document.body.clientHeight / 2,
-        x2 = x1 + 299,
-        y2 = y1 + 90;
-      let path = d3.path();
-      let cpx1 = x1 - dx;
-      let cpy1 = y1 + dy;
-      let cpx2 = x2 + dx;
-      let cpy2 = y2 - dy;
-      path.moveTo(x1, y1);
-      path.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
+      // let g = d3.select("#mindmap-connections-container");
+      // // console.log(g);
+      // let dx = 10,
+      //   dy = 100,
+      //   x1 = document.body.clientWidth / 2,
+      //   y1 = document.body.clientHeight / 2,
+      //   x2 = x1 + 299,
+      //   y2 = y1 + 90;
+      // let path = d3.path();
+      // let cpx1 = x1 - dx;
+      // let cpy1 = y1 + dy;
+      // let cpx2 = x2 + dx;
+      // let cpy2 = y2 - dy;
+      // path.moveTo(x1, y1);
+      // path.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
 
-      g.append("path")
-        .attr("d", path.toString())
-        .style("fill", "none")
-        .style("stroke", "red")
-        .style("stroke-width", "1");
+      // g.append("path")
+      //   .attr("d", path.toString())
+      //   .style("fill", "none")
+      //   .style("stroke", "red")
+      //   .style("stroke-width", "1");
       // console.log(g);
     },
     onSelectExpand(event) {
@@ -838,7 +758,10 @@ export default {
           this.connections = [];
           this.addButtonNode(event);
           this.initialConnections();
-          this.moveNodeToCenter(this.currentNodeId);
+          setTimeout(()=>{
+            this.moveNodeToCenter(this.currentNodeId);
+          },200)
+          // this.moveNodeToCenter(this.currentNodeId);
           // this.currentNodeId = -1;
         }
       }
@@ -946,34 +869,49 @@ export default {
       // let y = currentNode.offsetTop;
       // console.log(rect);
       let svg = document.getElementsByClassName("mindmap-svg")[0];
-      let mousedown = document.createEvent("MouseEvents");
+      let ratio = this.getRatio();
       // let x = currentNodeData.fx;
       // let y = currentNodeData.fy;
       // console.log(x,y)
-      
-      let windowWidth = document.body.clientWidth
-      let windowHeight = document.body.clientHeight
+
+      let windowWidth = document.body.clientWidth;
+      let windowHeight = document.body.clientHeight;
       // windowWidth = window.screen.availWidth
       // windowHeight = window.screen.availHeight
       // let nodeWidth = rect.width/ratio;
       // let nodeHeight = rect.height/ratio;
       let nodeWidth = currentNode.offsetWidth;
       let nodeHeight = currentNode.offsetHeight;
-      let finalX = windowWidth / 2 - nodeWidth / 2 ;
-      let finalY = windowHeight / 2 - nodeHeight / 2 ;
+      let finalX = windowWidth / 2 - nodeWidth / 2;
+      let finalY = windowHeight / 2 - nodeHeight / 2;
+      // ratio=ratio*ratio
+      finalX = Math.floor(finalX);
+      finalY = Math.floor(finalY);
+      x = Math.floor(x/ratio);
+      y = Math.floor(y/ratio);
+      // finalX = Math.floor(finalX*ratio);
+      // finalY = Math.floor(finalY*ratio);
+      // x = Math.floor(x*ratio);
+      // y = Math.floor(y*ratio);
       // let finalX = windowWidth / 2;
       // let finalY = windowHeight / 2;
-      // let ratio = this.getRatio();
+      
       // console.log(ratio);
       // finalX /= ratio;
       // finalY /= ratio;
       // x /= ratio;
       // y /= ratio;
-      const disX = finalX - x;
-      const disY = finalY - y;
-      if(Math.abs(disX)<windowWidth*0.015 && Math.abs(disY)<windowHeight*0.015){
-        return;
-      }
+      // const disX = finalX - x;
+      // const disY = finalY - y;
+      // console.log(disX, disY);
+      // let gs = d3.select("g")
+      // console.log(gs.attr("x"),gs.attr("y"))
+      // if (
+      //   Math.abs(disX) < windowWidth * 0.015 &&
+      //   Math.abs(disY) < windowHeight * 0.015
+      // ) {
+      //   return;
+      // }
       // console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
       // console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
       // console.log("node rect",rect)
@@ -984,7 +922,7 @@ export default {
       // console.log("disX,Y:",disX,disY)
       // console.log(" ")
       // console.log(" ")
-      
+      let mousedown = document.createEvent("MouseEvents");
       mousedown.initMouseEvent(
         "mousedown",
         true,
@@ -1003,84 +941,167 @@ export default {
         null
       );
       svg.dispatchEvent(mousedown);
+
+      // let _x = x;
+      // let _y = y;
+      // // console.log(finalX, finalY);
+      // const times = 20;
+      // let times_index = 0;
       
       
-      let _x = x;
-      let _y = y;
-      // console.log(finalX, finalY);
-      const times = 20;
-      let times_index = 0;
-      finalX = Math.floor(finalX)
-      finalY = Math.floor(finalY)
-      let interval = setInterval(function () {
-        // console.log(d3.event)
-        
-        times_index += 1;
-        let rect = document.getElementById(nodeId).getBoundingClientRect();
-        let curX = Math.floor(rect.left);
-        let curY = Math.floor(rect.top);
-        _x = Math.floor(_x)
-        _y = Math.floor(_y)
+      let mousemove1 = document.createEvent("MouseEvents");
+      mousemove1.initMouseEvent(
+        "mousemove",
+        true,
+        true,
+        window,
+        0,
+        0,
+        0,
+        x,
+        y,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null
+      );
 
-        console.log(_x,_y)
-        console.log(curX,curY)
-        console.log(finalX,finalY)
-        console.log(" ")
-        if (times_index > times+1 || (Math.abs(finalX-_x)<windowWidth*0.01 && Math.abs(finalY-_y)<windowHeight*0.01)) {
-          clearInterval(interval);
-          let mouseup = document.createEvent("MouseEvents");
-          mouseup.initMouseEvent(
-            "mouseup",
-            true,
-            true,
-            window,
-            0,
-            0,
-            0,
-            _x,
-            _y,
-            false,
-            false,
-            false,
-            false,
-            0,
-            null
-          );
-          svg.dispatchEvent(mouseup);
-          let rect1 = document.getElementById(nodeId).getBoundingClientRect();
-          console.log(rect1)
-          // setTimeout(function () {
-          //   if (svg.className.indexOf("btn_ok") > -1) {
-          //     console.log(svg.className);
-          //     document.getElementById("verify").click();
-          //   }
-          // }, 1000);
-        }
+      svg.dispatchEvent(mousemove1);
+      let mousemove2 = document.createEvent("MouseEvents");
+      mousemove2.initMouseEvent(
+        "mousemove",
+        true,
+        true,
+        window,
+        0,
+        0,
+        0,
+        (x+finalX)/2,
+        (y+finalY)/2,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null
+      );
 
-        let mousemove = document.createEvent("MouseEvents");
-        mousemove.initMouseEvent(
-          "mousemove",
-          true,
-          true,
-          window,
-          0,
-          0,
-          0,
-          _x,
-          _y,
-          false,
-          false,
-          false,
-          false,
-          0,
-          null
-        );
-        _x += disX / times;
-        _y += disY / times;
-        svg.dispatchEvent(mousemove);
-        // console.log(_x, _y);
-        // svg.dispatchEvent(mousemove);
-      }, 1);
+      svg.dispatchEvent(mousemove2);
+      let mousemove3 = document.createEvent("MouseEvents");
+      mousemove3.initMouseEvent(
+        "mousemove",
+        true,
+        true,
+        window,
+        0,
+        0,
+        0,
+        finalX,
+        finalY,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null
+      );
+
+      svg.dispatchEvent(mousemove3);
+      let mouseup = document.createEvent("MouseEvents");
+      mouseup.initMouseEvent(
+        "mouseup",
+        true,
+        true,
+        window,
+        0,
+        0,
+        0,
+        finalX,
+        finalY,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null
+      );
+      svg.dispatchEvent(mouseup);
+      // let interval = setInterval(function() {
+      //   // console.log(d3.event)
+
+      //   times_index += 1;
+      //   let rect = document.getElementById(nodeId).getBoundingClientRect();
+      //   let curX = Math.floor(rect.left);
+      //   let curY = Math.floor(rect.top);
+      //   _x = Math.floor(_x);
+      //   _y = Math.floor(_y);
+
+      //   console.log(_x, _y);
+      //   console.log(curX, curY);
+      //   console.log(finalX, finalY);
+      //   console.log(" ");
+      //   if (
+      //     times_index > times + 1 ||
+      //     (Math.abs(finalX - _x) < windowWidth * 0.01 &&
+      //       Math.abs(finalY - _y) < windowHeight * 0.01)
+      //   ) {
+      //     clearInterval(interval);
+      //     let mouseup = document.createEvent("MouseEvents");
+      //     mouseup.initMouseEvent(
+      //       "mouseup",
+      //       true,
+      //       true,
+      //       window,
+      //       0,
+      //       0,
+      //       0,
+      //       _x,
+      //       _y,
+      //       false,
+      //       false,
+      //       false,
+      //       false,
+      //       0,
+      //       null
+      //     );
+      //     svg.dispatchEvent(mouseup);
+      //     let rect1 = document.getElementById(nodeId).getBoundingClientRect();
+      //     console.log(rect1);
+      //     // setTimeout(function () {
+      //     //   if (svg.className.indexOf("btn_ok") > -1) {
+      //     //     console.log(svg.className);
+      //     //     document.getElementById("verify").click();
+      //     //   }
+      //     // }, 1000);
+      //   }
+
+      //   let mousemove = document.createEvent("MouseEvents");
+      //   mousemove.initMouseEvent(
+      //     "mousemove",
+      //     true,
+      //     true,
+      //     window,
+      //     0,
+      //     0,
+      //     0,
+      //     _x,
+      //     _y,
+      //     false,
+      //     false,
+      //     false,
+      //     false,
+      //     0,
+      //     null
+      //   );
+
+      //   svg.dispatchEvent(mousemove);
+      //   _x += disX / times;
+      //   _y += disY / times;
+      //   // console.log(_x, _y);
+      //   // svg.dispatchEvent(mousemove);
+      // }, 1);
     },
     //获取浏览器显示比例
     getRatio() {
@@ -1267,7 +1288,7 @@ export default {
       // console.log("downloadAll")
       // img.file("smile.gif", imgData, { base64: true });
 
-      zip.generateAsync({ type: "blob" }).then(function (content) {
+      zip.generateAsync({ type: "blob" }).then(function(content) {
         // see FileSaver.js
         saveAs(content, "xiaohui-images.zip");
       });
@@ -1275,37 +1296,37 @@ export default {
     Stack() {
       let items = [];
       // 向栈添加新元素
-      this.push = function (element) {
+      this.push = function(element) {
         items.push(element);
       };
 
       // 从栈内弹出一个元素
-      this.pop = function () {
+      this.pop = function() {
         return items.pop();
       };
 
       // 返回栈顶的元素
-      this.peek = function () {
+      this.peek = function() {
         return items[items.length - 1];
       };
 
       // 判断栈是否为空
-      this.isEmpty = function () {
+      this.isEmpty = function() {
         return items.length === 0;
       };
 
       // 返回栈的长度
-      this.size = function () {
+      this.size = function() {
         return items.length;
       };
 
       // 清空栈
-      this.clear = function () {
+      this.clear = function() {
         items = [];
       };
 
       // 打印栈内的所有元素
-      this.print = function () {
+      this.print = function() {
         console.log(items.toString());
       };
     },
@@ -1369,6 +1390,13 @@ export default {
             this.expandChoices[i].image =
               "data:image/png;base64," + this.expandChoices[i].image;
           }
+          if (
+            expandType === "淡雅多彩" ||
+            expandType === "简单复杂" ||
+            expandType === "模糊清晰"
+          ) {
+            this.expandChoices.reverse();
+          }
           this.expandChoices.splice(this.expandChoices.length / 2, 0, {
             image: parentNodeData.imgSrc,
           });
@@ -1380,13 +1408,13 @@ export default {
         });
     },
   },
-  created: function () {
+  created: function() {
     this.initialConnections();
     localStorage.setItem("deltaY", "0");
     this.loadStartChoices();
     // window.addEventListener("beforeunload", this.clearLocalStorage);
   },
-  mounted: function () {
+  mounted: function() {
     window.oncontextmenu = (event) => {
       this.lastNodeId = this.currentNodeId;
       let imgDiv = event.target.getElementsByClassName("img-div")[0];
@@ -1400,7 +1428,7 @@ export default {
       menu.style.top = event.clientY + "px";
     };
     // eslint-disable-next-line no-unused-vars
-    window.onclick = function (e) {
+    window.onclick = function(e) {
       //点击窗口，右键菜单隐藏
       let menu = document.getElementById("right-menu");
       menu.style.display = "none";
@@ -1408,7 +1436,7 @@ export default {
     this.addNodeClick();
     this.addConnectionHover();
   },
-  updated: function () {
+  updated: function() {
     // console.log("updated");
     // 给新加的node节点添加点击事件,并设置宽高
     this.addNodeClick();
@@ -1422,7 +1450,7 @@ export default {
       }
     }
   },
-  destroyed: function () {
+  destroyed: function() {
     // window.removeEventListener("beforeunload", this.clearLocalStorage);
   },
 };
@@ -1613,7 +1641,7 @@ body {
 }
 .select-root .img-container .loading-start {
   position: absolute;
-  z-index: 2000;
+  z-index: 20;
   background-color: rgba(43, 42, 47, 0);
   margin: 0;
   top: 0;
@@ -1624,7 +1652,7 @@ body {
 }
 .select-root .img-container .loading-start .gif-container {
   top: 50%;
-  margin-top: -34px;
+  margin-top: -68px;
   width: 100%;
   text-align: center;
   position: absolute;
@@ -1632,12 +1660,15 @@ body {
 .select-root .img-container .loading-start .gif-bg {
   width: 68px;
   height: 68px;
+  z-index: inherit;
 }
 .select-root .img-container .loading-start .gif {
   width: 60px;
   height: 60px;
-  margin-left: -64px;
-  margin-top: -4px;
+  /* margin-left: -64px; */
+  margin-top: 4px;
+  position: relative;
+  z-index: 21;
 }
 img[src=""],
 img:not([src]) {
@@ -1831,6 +1862,22 @@ img:not([src]) {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49);
 }
+.select .loading-start {
+  position: fixed;
+}
+.select .loading-start .gif {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  position: relative;
+  left: -64px;
+  top: -4px;
+}
+.select .loading-start .gif-bg {
+  width: 68px;
+  height: 68px;
+  margin: 0;
+}
 .select .desc {
   display: flex;
   align-items: center;
@@ -1865,6 +1912,7 @@ img:not([src]) {
   /* position: absolute; */
   margin: 3px;
   margin-bottom: 10px;
+  min-height: 80px;
   /* transition: transform 10s; */
   /* bottom: 0; */
 }
