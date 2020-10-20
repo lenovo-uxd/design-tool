@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="expand-animation" ref="expandAnimationDiv">
+      <img src="/test.png" />
+    </div>
     <div class="select-root-container" v-show="!hasSelectRoot">
       <div class="header">
         <span class="logo">
@@ -18,80 +21,62 @@
       </div>
       <div class="bg" />
       <div class="mask" />
-      <div class="select-root-wrapper">
-        <div class="select-root-father">
-          <div class="select-root">
-            <div class="desc">
-              <span class="main">选择一张图继续</span>
-              <span class="sub">点击图片后对其进行多维度智能拓展</span>
-              <!-- <span class="right" @click="onRefresh">
+      <div class="select-root">
+        <div class="desc">
+          <span class="main">选择一张图继续</span>
+          <span class="sub">点击图片后对其进行多维度智能拓展</span>
+          <!-- <span class="right" @click="onRefresh">
             <img src="./assets/refresh.png" alt="cancel" class="icon" />
             <span>换一批</span>
           </span>-->
-            </div>
-            <el-button
-              class="refresh-button"
-              @click="onRefresh"
-              icon="el-icon-refresh-left"
-              type="text"
-              >换一批</el-button
-            >
+        </div>
+        <el-button
+          class="refresh-button"
+          @click="onRefresh"
+          icon="el-icon-refresh-left"
+          type="text"
+        >换一批</el-button>
 
-            <div class="img-container">
-              <div class="loading-start" v-if="loadingStart">
-                <div class="gif-container">
-                  <img src="/icon/loading_bg.png" class="gif-bg" />
-                  <img src="/icon/loading_2.gif" class="gif" />
-                </div>
-              </div>
-              <div
-                class="img-box"
-                v-for="(item, index) in startChoices"
-                :key="index"
-              >
-                <img
-                  :src="item.image"
-                  @click="onSelectRoot"
-                  @mouseover="changeBg"
-                  @mouseout="resetZIndex"
-                />
-              </div>
-            </div>
-          </div>
-          <!-- <el-radio-group v-model="ratio">
+        <div
+          class="img-container"
+          v-loading="loadingStart"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(43, 42, 47, 0)"
+        >
+          <img
+            v-for="(item, index) in startChoices"
+            :key="index"
+            :src="item.image"
+            @click="onSelectRoot"
+            @mouseover="changeBg"
+          />
+        </div>
+      </div>
+      <!-- <el-radio-group v-model="ratio">
         <el-radio-button label="1:1"></el-radio-button>
         <el-radio-button label="4:3"></el-radio-button>
         <el-radio-button label="16:9"></el-radio-button>
         <el-radio-button label="2:1"></el-radio-button>
       </el-radio-group>-->
-          <el-radio-group
-            class="radio-group"
-            v-model="ratio"
-            @change="setRatio"
-          >
-            <el-radio label="1:1">
-              <img class="radio-icon" ref="size1" src="/icon/btn_size1_n.png" />
-              <span>1:1</span>
-            </el-radio>
-            <el-radio label="4:3">
-              <img class="radio-icon" ref="size2" src="/icon/btn_size2_n.png" />
-              <span>4:3</span>
-            </el-radio>
-            <el-radio label="16:9">
-              <img class="radio-icon" ref="size3" src="/icon/btn_size3_n.png" />
-              <span>16:9</span>
-            </el-radio>
-            <el-radio label="2:1">
-              <img
-                class="radio-icon"
-                ref="size4"
-                src="/icon/btn_size4_n_selected.png"
-              />
-              <span>2:1</span>
-            </el-radio>
-          </el-radio-group>
-        </div>
-      </div>
+      <el-radio-group class="radio-group" v-model="ratio" @change="setRatio">
+        <el-radio label="1:1">
+          <img class="radio-icon" ref="size1" src="/icon/btn_size1_n.png" />
+          <span>1:1</span>
+        </el-radio>
+        <el-radio label="4:3">
+          <img class="radio-icon" ref="size2" src="/icon/btn_size2_n.png" />
+          <span>4:3</span>
+        </el-radio>
+        <el-radio label="16:9">
+          <img class="radio-icon" ref="size3" src="/icon/btn_size3_n.png" />
+          <span>16:9</span>
+        </el-radio>
+        <el-radio label="2:1">
+          <img class="radio-icon" ref="size4" src="/icon/btn_size4_n_selected.png" />
+          <span>2:1</span>
+        </el-radio>
+      </el-radio-group>
       <div class="footer">
         <p>Designed by Lenovo Research UXD</p>
       </div>
@@ -104,29 +89,19 @@
             <img src="/icon/btn_menu_n.png" />
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="downloadAll()"
-              >下载全部图片</el-dropdown-item
-            >
+            <el-dropdown-item @click.native="downloadAll()">下载全部图片</el-dropdown-item>
             <el-dropdown-item>调整图片比例</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <div class="mask2" />
       <mindmap
         :nodes="nodes"
         :connections="connections"
         :editable="true"
         :clickBlank="onClickSvgBlank"
-        :removeBtnNodes="removeBtnNodes"
       />
       <div class="close">
-        <img
-          id="close-btn"
-          @click="onClose"
-          src="/icon/btn_close_n.png"
-          alt="close"
-          class="icon"
-        />
+        <img id="close-btn" @click="onClose" src="/icon/btn_close_n.png" alt="close" class="icon" />
       </div>
       <div class="scale">
         <div class="icon-container">
@@ -140,36 +115,20 @@
           <span class="icon-tooltip">查看全部</span>
         </div>
         <div class="icon-container">
-          <img
-            id="in-btn"
-            @click="zoomIn"
-            src="/icon/btn_in_n.png"
-            class="icon"
-            alt="zoom in"
-          />
-          <span class="icon-tooltip">放大脑图</span>
+          <img id="out-btn" @click="zoomOut" src="/icon/btn_out_n.png" class="icon" alt="zoom out" />
+          <span class="icon-tooltip">缩小脑图</span>
         </div>
         <div class="icon-container">
-          <img
-            id="out-btn"
-            @click="zoomOut"
-            src="/icon/btn_out_n.png"
-            class="icon"
-            alt="zoom out"
-          />
-          <span class="icon-tooltip">缩小脑图</span>
+          <img id="in-btn" @click="zoomIn" src="/icon/btn_in_n.png" class="icon" alt="zoom in" />
+          <span class="icon-tooltip">放大脑图</span>
         </div>
       </div>
       <div class="edit">
         <div class="icon-container">
           <img
-            :id="undoStack.isEmpty() ? 'disabled' : 'undo-btn'"
+            :id="undoStack.isEmpty()?'disabled':'undo-btn'"
             @click="onUndo"
-            :src="
-              undoStack.isEmpty()
-                ? '/icon/btn_undo_d.png'
-                : '/icon/btn_undo_n.png'
-            "
+            :src="undoStack.isEmpty()?'/icon/btn_undo_d.png':'/icon/btn_undo_n.png'"
             alt="undo"
             class="icon"
           />
@@ -177,31 +136,23 @@
         </div>
         <div class="icon-container">
           <img
-            :id="redoStack.isEmpty() ? 'disabled' : 'redo-btn'"
+            :id="redoStack.isEmpty()?'disabled':'redo-btn'"
             @click="onRedo"
-            :src="
-              redoStack.isEmpty()
-                ? '/icon/btn_redo_d.png'
-                : '/icon/btn_redo_n.png'
-            "
+            :src="redoStack.isEmpty()?'/icon/btn_redo_d.png':'/icon/btn_redo_n.png'"
             alt="redo"
             class="icon"
-            :class="redoStack.isEmpty() ? 'disabled' : ''"
+            :class="redoStack.isEmpty()?'disabled':''"
           />
           <span class="icon-tooltip">重做</span>
         </div>
         <div class="icon-container">
           <img
-            :id="currentNodeId === -1 ? 'disabled' : 'clear-btn'"
+            :id="currentNodeId===-1?'disabled':'clear-btn'"
             @click="onDelete"
-            :src="
-              currentNodeId === -1
-                ? '/icon/btn_clear_d.png'
-                : '/icon/btn_clear_n.png'
-            "
+            :src="currentNodeId===-1?'/icon/btn_clear_d.png':'/icon/btn_clear_n.png'"
             alt="delete"
             class="icon"
-            :class="currentNodeId === -1 ? 'disabled' : ''"
+            :class="currentNodeId===-1?'disabled':''"
           />
           <span class="icon-tooltip">删除</span>
         </div>
@@ -209,24 +160,19 @@
       <div class="select" v-show="isSelectingExpand">
         <div class="desc">
           <p>
-            <span>{{ leftText }}</span>
-            <span v-if="rightText != ''">&harr;</span>
-            <span>{{ rightText }}</span>
+            <span>{{leftText}}</span>
+            &harr;
+            <span>{{rightText}}</span>
           </p>
-          <img
-            src="/icon/btn_close_n.png"
-            alt="cancel"
-            class="icon"
-            @click="onCancelSelect"
-          />
+          <!-- <img src="/icon/btn_close_n.png" alt="cancel" class="icon" @click="onCancelSelect" /> -->
         </div>
-        <div class="img-container">
-          <div class="loading-start" v-if="loadingExpand">
-            <div class="gif-container">
-              <img src="/icon/loading_bg.png" class="gif-bg" />
-              <img src="/icon/loading_2.gif" class="gif" />
-            </div>
-          </div>
+        <div
+          class="img-container"
+          v-loading="loadingExpand"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(43, 42, 47, 0.8)"
+        >
           <img
             v-for="(item, index) in expandChoices"
             :key="index"
@@ -249,7 +195,8 @@
 </template>
 
 <script>
-// import map from "./assets/map";
+// import map from "./
+assets/map";
 // import { d3.selectAll } from "d3";
 import * as d3 from "d3";
 import { getViewBox } from "./components/vue-mindmap/utils/dimensions";
@@ -285,8 +232,67 @@ export default {
       loadingExpand: true,
       undoStack: new this.Stack(),
       redoStack: new this.Stack(),
-      expandChoices: [],
-      startChoices: [],
+      expandChoices: [
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+      ],
+      startChoices: [
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+        {
+          src: "/test.png",
+        },
+        {
+          src: "/test2.png",
+        },
+      ],
       curves: [
         {
           x: 0,
@@ -342,30 +348,55 @@ export default {
     };
   },
   methods: {
-    addText: function() {
+    addText: function () {
       console.log("添加文本");
     },
+    addMainImg: function () {
+      console.log("添加主图");
+      console.log(this.nodes);
+      if (this.nodes.length > 0) {
+        console.log(this.nodes);
+        this.$confirm("此操作会删除全部节点，是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.loadStartChoices();
+            this.hasSelectRoot = false;
+            this.connections = [];
+            this.nodes = [];
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
+          });
+      } else {
+        this.loadStartChoices();
+        this.hasSelectRoot = false;
+      }
+    },
     changeBg(event) {
-      // event.srcElement.style['z-index']=9999;
       let src = event.srcElement.attributes.src.value;
       // console.log(src);
       document.documentElement.style.setProperty(
         "--background",
         "transparent url(" + src + ") center center no-repeat"
       );
-      event.target.parentElement.style["z-index"] = 11;
-      // console.log(event);
+      // console.log(event)
       // console.log(bg)
-    },
-    resetZIndex(event) {
-      event.target.parentElement.style["z-index"] = 10;
     },
     onClickSvgBlank() {
       // console.log(d3.event);
       const event = d3.event;
       if (!event.srcElement.classList.contains("btn-node")) {
         this.isSelectingExpand = false;
-        this.expandChoices = []
       }
       if (event.srcElement._prevClass === "mindmap-svg") {
         this.connections = [];
@@ -373,12 +404,6 @@ export default {
         this.initialConnections();
         this.currentNodeId = -1;
       }
-    },
-    removeBtnNodes() {
-      this.connections = [];
-      this.nodes = this.nodes.filter((item) => !item.isButtonNode);
-      this.initialConnections();
-      this.currentNodeId = -1;
     },
     onClose() {
       // console.log(this.nodes);
@@ -390,14 +415,11 @@ export default {
         .then(() => {
           this.loadStartChoices();
           this.hasSelectRoot = false;
-          this.isSelectingExpand = false;
-          this.expandChoices = []
-          // Object.assign(this.$data, this.$options.data())
           this.connections = [];
           this.nodes = [];
           this.undoStack.clear();
           this.redoStack.clear();
-          localStorage.removeItem("transform");
+          // localStorage.removeItem("transform");
           this.$message({
             type: "success",
             message: "删除成功!",
@@ -424,32 +446,7 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg
-        .transition()
-        .duration(300)
-        .attr("viewBox", getViewBox(nodes.data()));
-      setTimeout(() => {
-        this.resetViewBox2();
-      }, 600);
-    },
-    resetViewBox2() {
-      const svg = d3.select(".mindmap-svg");
-      const nodes = d3.selectAll("foreignObject");
-      let wheelEvent = new WheelEvent("wheel", {
-        deltaY: 0 - parseFloat(localStorage.getItem("deltaY")),
-        clientX: document.body.clientWidth / 2,
-        clientY: document.body.clientHeight / 2,
-      });
-      document
-        .getElementsByClassName("mindmap-svg")[0]
-        .dispatchEvent(wheelEvent);
-      localStorage.setItem("deltaY", "0");
-      d3.zoom().transform(svg, d3.zoomIdentity);
-      d3.selectAll("g").attr("transform", "");
-      svg
-        .transition()
-        .duration(300)
-        .attr("viewBox", getViewBox(nodes.data()));
+      svg.transition().duration(700).attr("viewBox", getViewBox(nodes.data()));
     },
     zoomIn() {
       let wheelEvent = new WheelEvent("wheel", {
@@ -471,7 +468,7 @@ export default {
         .getElementsByClassName("mindmap-svg")[0]
         .dispatchEvent(wheelEvent);
     },
-    setRatio: function() {
+    setRatio: function () {
       switch (this.ratio) {
         case "1:1": {
           // this.width = this.height;
@@ -570,12 +567,9 @@ export default {
         })
           .then(() => {
             this.loadStartChoices();
-            this.isSelectingExpand = false;
-            this.expandChoices = []
-            // Object.assign(this.$data, this.$options.data())
             this.hasSelectRoot = false;
             // 删除操作入栈
-            this.undoStack.push(this.nodes.slice());
+            // this.undoStack.push(this.nodes.slice());
             this.undoStack.clear();
             this.redoStack.clear();
             this.recursionDelete(this.currentNodeId);
@@ -620,7 +614,7 @@ export default {
       this.loadExpandChoices(currentNodeData.text, parentNodeData);
       this.leftText = currentNodeData.text.slice(0, 2);
       this.rightText =
-        this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "";
+        this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "相似";
       this.isSelectingExpand = true;
       // console.log(this.nodes.filter(item=>(item.id === this.currentNodeId || !item.isButtonNode)))
 
@@ -632,33 +626,32 @@ export default {
 
       // console.log(d3.select(""))
 
-      // let g = d3.select("#mindmap-connections-container");
-      // // console.log(g);
-      // let dx = 10,
-      //   dy = 100,
-      //   x1 = document.body.clientWidth / 2,
-      //   y1 = document.body.clientHeight / 2,
-      //   x2 = x1 + 299,
-      //   y2 = y1 + 90;
-      // let path = d3.path();
-      // let cpx1 = x1 - dx;
-      // let cpy1 = y1 + dy;
-      // let cpx2 = x2 + dx;
-      // let cpy2 = y2 - dy;
-      // path.moveTo(x1, y1);
-      // path.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
+      let g = d3.select("#mindmap-connections-container");
+      // console.log(g);
+      let dx = 10,
+        dy = 100,
+        x1 = document.body.clientWidth / 2,
+        y1 = document.body.clientHeight / 2,
+        x2 = x1 + 299,
+        y2 = y1 + 90;
+      let path = d3.path();
+      let cpx1 = x1 - dx;
+      let cpy1 = y1 + dy;
+      let cpx2 = x2 + dx;
+      let cpy2 = y2 - dy;
+      path.moveTo(x1, y1);
+      path.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
 
-      // g.append("path")
-      //   .attr("d", path.toString())
-      //   .style("fill", "none")
-      //   .style("stroke", "red")
-      //   .style("stroke-width", "1");
+      g.append("path")
+        .attr("d", path.toString())
+        .style("fill", "none")
+        .style("stroke", "red")
+        .style("stroke-width", "1");
       // console.log(g);
     },
     onSelectExpand(event) {
       // console.log(event);
       this.isSelectingExpand = false;
-      this.expandChoices = []
       let currentButtonNode = this.nodes.find(
         (item) => this.currentNodeId === item.id
       );
@@ -666,8 +659,8 @@ export default {
       let pathText =
         parseInt(event.srcElement.dataset["index"]) <
         this.expandChoices.length / 2
-          ? currentButtonNode.text.substring(2, 4)
-          : currentButtonNode.text.substring(0, 2);
+          ? currentButtonNode.text.substring(0, 2)
+          : currentButtonNode.text.substring(2, 4);
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
@@ -676,7 +669,7 @@ export default {
         (item) => item.image === event.target.src
       );
 
-      let randomDis = Math.random() * Math.random() * 150;
+      let randomDis = 10 + Math.random() * 20;
       let node = {
         id: this.nodes[this.nodes.length - 1].id + 1,
         parentId: currentButtonNode.parentId,
@@ -694,19 +687,41 @@ export default {
           this.nodeRelativeLocations[currentButtonNode.locationIndex].fy +
           randomDis,
       };
-      this.connections = [];
-      this.addNode(node);
-      // console.log(this.nodes);
-      this.nodes = this.nodes.filter((item) => !item.isButtonNode);
-      this.initialConnections();
-      this.currentNodeId = -1;
+
+      // 点击拓展图片后的动画
+      let aniDiv = this.$refs.expandAnimationDiv;
+      let mainNode = document.getElementById(this.nodes[0].id);
+      let mainNodeRect = mainNode.getBoundingClientRect();
+      let clickedExpandItem = event.target;
+      let clickedExpandItemRect = clickedExpandItem.getBoundingClientRect();
+      let startX = clickedExpandItemRect.x;
+      let startY = clickedExpandItemRect.y;
+      let endX = node.fx - mainNodeRect.width / 2;
+      let endY = node.fy - mainNodeRect.height / 2;
+      aniDiv.style.display = "block";
+      aniDiv.style.left = startX + "px";
+      aniDiv.style.top = startY + "px";
+      aniDiv.firstElementChild.style.width = clickedExpandItemRect.width + "px";
+      aniDiv.firstElementChild.style.height = clickedExpandItemRect.height + "px";
+      aniDiv.firstElementChild.src = expandItem.image;
+      console.log(startX,startY, endX, endY)
       setTimeout(() => {
-        this.moveNodeToCenter(node.id);
-      }, 200);
+        aniDiv.style.transform =
+          "translate(" + (endX - startX) + "px," + (endY - startY) + "px) scale(+"+(mainNodeRect.width/clickedExpandItemRect.width)+")";
+      }, 150);
+      aniDiv.addEventListener("transitionend", () => {
+        aniDiv.style.display = "none";
+
+        // 完成动画后再更新脑图
+        this.connections = [];
+        this.addNode(node);
+        this.nodes = this.nodes.filter((item) => !item.isButtonNode);
+        this.initialConnections();
+        this.currentNodeId = -1;
+      });
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
-      this.expandChoices = [];
       // console.log("cancel select");
     },
     onClickNode(event) {
@@ -735,7 +750,6 @@ export default {
         currentNode.classList.remove("active");
         this.currentNodeId = -1;
         this.isSelectingExpand = false;
-        this.expandChoices = [];
         this.connections = [];
         this.nodes = this.nodes.filter((item) => !item.isButtonNode);
         this.initialConnections();
@@ -764,10 +778,7 @@ export default {
           this.connections = [];
           this.addButtonNode(event);
           this.initialConnections();
-          setTimeout(()=>{
-            this.moveNodeToCenter(this.currentNodeId);
-          },200)
-          // this.moveNodeToCenter(this.currentNodeId);
+          this.moveCurrentNodeToCenter(event);
           // this.currentNodeId = -1;
         }
       }
@@ -866,77 +877,25 @@ export default {
         locationIndex: 5,
       });
     },
-    moveNodeToCenter(nodeId) {
-      let currentNode = document.getElementById(nodeId);
+    moveCurrentNodeToCenter() {
+      let currentNode = document.getElementById(this.currentNodeId);
       let rect = currentNode.getBoundingClientRect();
-      let x = rect.left;
-      let y = rect.top;
-      // let x = currentNode.offsetLeft;
-      // let y = currentNode.offsetTop;
+      let x = rect.x;
+      let y = rect.y;
       // console.log(rect);
       let svg = document.getElementsByClassName("mindmap-svg")[0];
-      let ratio = this.getRatio();
+      let mousedown = document.createEvent("MouseEvents");
       // let x = currentNodeData.fx;
       // let y = currentNodeData.fy;
       // console.log(x,y)
-
-      let windowWidth = document.body.clientWidth;
-      let windowHeight = document.body.clientHeight;
-      // windowWidth = window.screen.availWidth
-      // windowHeight = window.screen.availHeight
-      // let nodeWidth = rect.width/ratio;
-      // let nodeHeight = rect.height/ratio;
-      let nodeWidth = currentNode.offsetWidth;
-      let nodeHeight = currentNode.offsetHeight;
-      let finalX = windowWidth / 2 - nodeWidth / 2;
-      let finalY = windowHeight / 2 - nodeHeight / 2;
-      // ratio=ratio*ratio
-      finalX = Math.floor(finalX);
-      finalY = Math.floor(finalY);
-      x = Math.floor(x/ratio);
-      y = Math.floor(y/ratio);
-      // finalX = Math.floor(finalX*ratio);
-      // finalY = Math.floor(finalY*ratio);
-      // x = Math.floor(x*ratio);
-      // y = Math.floor(y*ratio);
-      // let finalX = windowWidth / 2;
-      // let finalY = windowHeight / 2;
-      
-      // console.log(ratio);
-      // finalX /= ratio;
-      // finalY /= ratio;
-      // x /= ratio;
-      // y /= ratio;
-      // const disX = finalX - x;
-      // const disY = finalY - y;
-      // console.log(disX, disY);
-      // let gs = d3.select("g")
-      // console.log(gs.attr("x"),gs.attr("y"))
-      // if (
-      //   Math.abs(disX) < windowWidth * 0.015 &&
-      //   Math.abs(disY) < windowHeight * 0.015
-      // ) {
-      //   return;
-      // }
-      // console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
-      // console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
-      // console.log("node rect",rect)
-      // console.log("nodeWidth,height:",nodeWidth,nodeHeight);
-      // console.log("finalX,Y",finalX,finalY)
-      // console.log("ratio:",ratio)
-      // console.log("x,y",x,y)
-      // console.log("disX,Y:",disX,disY)
-      // console.log(" ")
-      // console.log(" ")
-      let mousedown = document.createEvent("MouseEvents");
       mousedown.initMouseEvent(
         "mousedown",
         true,
         true,
         window,
         0,
-        0,
-        0,
+        x,
+        y,
         x,
         y,
         false,
@@ -948,192 +907,68 @@ export default {
       );
       svg.dispatchEvent(mousedown);
 
-      // let _x = x;
-      // let _y = y;
-      // // console.log(finalX, finalY);
-      // const times = 20;
-      // let times_index = 0;
-      
-      
-      let mousemove1 = document.createEvent("MouseEvents");
-      mousemove1.initMouseEvent(
-        "mousemove",
-        true,
-        true,
-        window,
-        0,
-        0,
-        0,
-        x,
-        y,
-        false,
-        false,
-        false,
-        false,
-        0,
-        null
-      );
+      const finalX = document.body.clientWidth / 2 - rect.width / 2;
+      const finalY = document.body.clientHeight / 2 - rect.height / 2;
+      const disX = finalX - x;
+      const disY = finalY - y;
+      let _x = x;
+      let _y = y;
+      // console.log(finalX, finalY);
+      let interval = setInterval(function () {
+        // console.log(d3.event)
+        let mousemove = document.createEvent("MouseEvents");
+        mousemove.initMouseEvent(
+          "mousemove",
+          true,
+          true,
+          window,
+          0,
+          _x,
+          _y,
+          _x,
+          _y,
+          false,
+          false,
+          false,
+          false,
+          0,
+          null
+        );
+        _x += disX / 20;
+        _y += disY / 20;
+        svg.dispatchEvent(mousemove);
+        // console.log(_x, _y);
+        // svg.dispatchEvent(mousemove);
+        if (Math.abs(finalX - _x) < 3) {
+          clearInterval(interval);
+          let mouseup = document.createEvent("MouseEvents");
+          mouseup.initMouseEvent(
+            "mouseup",
+            true,
+            true,
+            window,
+            0,
+            finalX,
+            finalY,
+            finalX,
+            finalY,
+            false,
+            false,
+            false,
+            false,
+            0,
+            null
+          );
+          svg.dispatchEvent(mouseup);
 
-      svg.dispatchEvent(mousemove1);
-      let mousemove2 = document.createEvent("MouseEvents");
-      mousemove2.initMouseEvent(
-        "mousemove",
-        true,
-        true,
-        window,
-        0,
-        0,
-        0,
-        (x+finalX)/2,
-        (y+finalY)/2,
-        false,
-        false,
-        false,
-        false,
-        0,
-        null
-      );
-
-      svg.dispatchEvent(mousemove2);
-      let mousemove3 = document.createEvent("MouseEvents");
-      mousemove3.initMouseEvent(
-        "mousemove",
-        true,
-        true,
-        window,
-        0,
-        0,
-        0,
-        finalX,
-        finalY,
-        false,
-        false,
-        false,
-        false,
-        0,
-        null
-      );
-
-      svg.dispatchEvent(mousemove3);
-      let mouseup = document.createEvent("MouseEvents");
-      mouseup.initMouseEvent(
-        "mouseup",
-        true,
-        true,
-        window,
-        0,
-        0,
-        0,
-        finalX,
-        finalY,
-        false,
-        false,
-        false,
-        false,
-        0,
-        null
-      );
-      svg.dispatchEvent(mouseup);
-      // let interval = setInterval(function() {
-      //   // console.log(d3.event)
-
-      //   times_index += 1;
-      //   let rect = document.getElementById(nodeId).getBoundingClientRect();
-      //   let curX = Math.floor(rect.left);
-      //   let curY = Math.floor(rect.top);
-      //   _x = Math.floor(_x);
-      //   _y = Math.floor(_y);
-
-      //   console.log(_x, _y);
-      //   console.log(curX, curY);
-      //   console.log(finalX, finalY);
-      //   console.log(" ");
-      //   if (
-      //     times_index > times + 1 ||
-      //     (Math.abs(finalX - _x) < windowWidth * 0.01 &&
-      //       Math.abs(finalY - _y) < windowHeight * 0.01)
-      //   ) {
-      //     clearInterval(interval);
-      //     let mouseup = document.createEvent("MouseEvents");
-      //     mouseup.initMouseEvent(
-      //       "mouseup",
-      //       true,
-      //       true,
-      //       window,
-      //       0,
-      //       0,
-      //       0,
-      //       _x,
-      //       _y,
-      //       false,
-      //       false,
-      //       false,
-      //       false,
-      //       0,
-      //       null
-      //     );
-      //     svg.dispatchEvent(mouseup);
-      //     let rect1 = document.getElementById(nodeId).getBoundingClientRect();
-      //     console.log(rect1);
-      //     // setTimeout(function () {
-      //     //   if (svg.className.indexOf("btn_ok") > -1) {
-      //     //     console.log(svg.className);
-      //     //     document.getElementById("verify").click();
-      //     //   }
-      //     // }, 1000);
-      //   }
-
-      //   let mousemove = document.createEvent("MouseEvents");
-      //   mousemove.initMouseEvent(
-      //     "mousemove",
-      //     true,
-      //     true,
-      //     window,
-      //     0,
-      //     0,
-      //     0,
-      //     _x,
-      //     _y,
-      //     false,
-      //     false,
-      //     false,
-      //     false,
-      //     0,
-      //     null
-      //   );
-
-      //   svg.dispatchEvent(mousemove);
-      //   _x += disX / times;
-      //   _y += disY / times;
-      //   // console.log(_x, _y);
-      //   // svg.dispatchEvent(mousemove);
-      // }, 1);
-    },
-    //获取浏览器显示比例
-    getRatio() {
-      var ratio = 0;
-      var screen = window.screen;
-      var ua = navigator.userAgent.toLowerCase();
-      // console.log(window.screen)
-      // console.log(navigator.userAgent.toLowerCase())
-      // console.log(window.devicePixelRatio)
-      // console.log(screen.deviceXDP)
-      // console.log(screen.logicalXDPI)
-      // console.log(window.outerWidth)
-      // console.log(window.innerWidth)
-      if (window.devicePixelRatio !== undefined) {
-        ratio = window.devicePixelRatio;
-      } else if (~ua.indexOf("msie")) {
-        if (screen.deviceXDPI && screen.logicalXDPI) {
-          ratio = screen.deviceXDPI / screen.logicalXDPI;
+          // setTimeout(function () {
+          //   if (svg.className.indexOf("btn_ok") > -1) {
+          //     console.log(svg.className);
+          //     document.getElementById("verify").click();
+          //   }
+          // }, 1000);
         }
-      } else if (
-        window.outerWidth !== undefined &&
-        window.innerWidth !== undefined
-      ) {
-        ratio = window.outerWidth / window.innerWidth;
-      }
-      return ratio;
+      }, 5);
     },
     onSelectRoot(event) {
       // console.log(event);
@@ -1232,7 +1067,7 @@ export default {
     mouseoverPath(event) {
       let pathId = event.target.id;
       let pathLabelId = pathId.substring(0, 4) + "Label" + pathId.substring(4);
-      // console.log(pathLabelId);
+      console.log(pathLabelId);
       document.getElementById(pathLabelId).style.visibility = "visible";
     },
     mouseoutPath(event) {
@@ -1294,7 +1129,7 @@ export default {
       // console.log("downloadAll")
       // img.file("smile.gif", imgData, { base64: true });
 
-      zip.generateAsync({ type: "blob" }).then(function(content) {
+      zip.generateAsync({ type: "blob" }).then(function (content) {
         // see FileSaver.js
         saveAs(content, "xiaohui-images.zip");
       });
@@ -1302,37 +1137,37 @@ export default {
     Stack() {
       let items = [];
       // 向栈添加新元素
-      this.push = function(element) {
+      this.push = function (element) {
         items.push(element);
       };
 
       // 从栈内弹出一个元素
-      this.pop = function() {
+      this.pop = function () {
         return items.pop();
       };
 
       // 返回栈顶的元素
-      this.peek = function() {
+      this.peek = function () {
         return items[items.length - 1];
       };
 
       // 判断栈是否为空
-      this.isEmpty = function() {
+      this.isEmpty = function () {
         return items.length === 0;
       };
 
       // 返回栈的长度
-      this.size = function() {
+      this.size = function () {
         return items.length;
       };
 
       // 清空栈
-      this.clear = function() {
+      this.clear = function () {
         items = [];
       };
 
       // 打印栈内的所有元素
-      this.print = function() {
+      this.print = function () {
         console.log(items.toString());
       };
     },
@@ -1343,16 +1178,14 @@ export default {
       this.loadingStart = true;
       // eslint-disable-next-line no-unused-vars
       var reqData = {
-        number: 10,
-        size: "small",
-        ifDlatents: true,
-        ratio:"(2:1)"
-      };
+        "number": 10,
+        "size": "small",
+        "ifDlatents": true
+      }
       this.$ajax
         //.get("/json/random.json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
-        //.post("http://10.120.16.111:3002/style-gan-random",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
+        .post("http://10.120.16.111:3002/style-gan-random",reqData)
           .then((res) => {
           // console.log(res);
           this.startChoices = res.data.result;
@@ -1367,7 +1200,7 @@ export default {
           console.log("加载失败");
           this.loadingStart = false;
         });
-    },
+    },    
     loadExpandChoices(expandType, parentNodeData) {
       this.loadingExpand = true;
       const expandTypeMap = {
@@ -1379,35 +1212,28 @@ export default {
         模糊清晰: "clearness",
       };
 
+      
       var reqData = {
-        dlatentsData: parentNodeData.dlatent,
-        style: expandTypeMap[expandType],
-        number: 4,
-        size: "small",
-        styleScale: 2,
-        ifDlatents: true,
-        ratio:"(2:1)"
-      };
+        "dlatentsData": parentNodeData.dlatent,
+        "style": expandTypeMap[expandType],
+        "number": 4,
+        "size": "small",
+        "styleScale": 2,
+        "ifDlatents": true
+      }
 
-      if (reqData.style == "similarity") reqData.number = reqData.number * 2;
+      if (reqData.style=="similarity")
+         reqData.number = reqData.number*2
 
       this.$ajax
         //.get("/json/" + expandTypeMap[expandType] + ".json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-withtag/1.0.0",reqData)
-        //.post("http://10.120.16.111:3002/style-gan-extend",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
+        .post("http://10.120.16.111:3002/style-gan-extend",reqData)
           .then((res) => {
           this.expandChoices = res.data.result;
           for (let i = 0; i < this.expandChoices.length; i++) {
             this.expandChoices[i].image =
               "data:image/png;base64," + this.expandChoices[i].image;
-          }
-          if (
-            expandType === "淡雅多彩" ||
-            expandType === "简单复杂" ||
-            expandType === "模糊清晰"
-          ) {
-            this.expandChoices.reverse();
           }
           this.expandChoices.splice(this.expandChoices.length / 2, 0, {
             image: parentNodeData.imgSrc,
@@ -1418,15 +1244,15 @@ export default {
           console.log("加载失败", res);
           this.loadingExpand = false;
         });
-    },
+    }
   },
-  created: function() {
+  created: function () {
     this.initialConnections();
     localStorage.setItem("deltaY", "0");
     this.loadStartChoices();
     // window.addEventListener("beforeunload", this.clearLocalStorage);
   },
-  mounted: function() {
+  mounted: function () {
     window.oncontextmenu = (event) => {
       this.lastNodeId = this.currentNodeId;
       let imgDiv = event.target.getElementsByClassName("img-div")[0];
@@ -1440,7 +1266,7 @@ export default {
       menu.style.top = event.clientY + "px";
     };
     // eslint-disable-next-line no-unused-vars
-    window.onclick = function(e) {
+    window.onclick = function (e) {
       //点击窗口，右键菜单隐藏
       let menu = document.getElementById("right-menu");
       menu.style.display = "none";
@@ -1448,7 +1274,7 @@ export default {
     this.addNodeClick();
     this.addConnectionHover();
   },
-  updated: function() {
+  updated: function () {
     // console.log("updated");
     // 给新加的node节点添加点击事件,并设置宽高
     this.addNodeClick();
@@ -1462,7 +1288,7 @@ export default {
       }
     }
   },
-  destroyed: function() {
+  destroyed: function () {
     // window.removeEventListener("beforeunload", this.clearLocalStorage);
   },
 };
@@ -1476,6 +1302,11 @@ body {
   margin: 0;
   overflow: hidden;
   background: rgba(43, 42, 47, 1);
+}
+.expand-animation {
+  position: fixed;
+  transition: transform 0.5s;
+  display: none;
 }
 .bg {
   /* width: 1920px;
@@ -1518,15 +1349,6 @@ body {
   background: rgba(0, 0, 0, 0.74);
   z-index: -1;
 }
-.mask2 {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.74);
-  z-index: -1;
-}
 .header {
   display: flex;
   align-items: center;
@@ -1546,19 +1368,9 @@ body {
 .select-root-container {
   width: 100%;
 }
-.select-root-wrapper {
-  position: absolute;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-}
-.select-root-father {
-  width: 100%;
-}
 .select-root {
   /* display: none; */
-  /* margin-top: 8%; */
+  margin-top: 8%;
   /* margin-top: 20%; */
   /* background: #efefef; */
 }
@@ -1618,75 +1430,19 @@ body {
   justify-content: center;
   /* margin: 30px; */
   width: 100%;
-  /* min-height: 200px; */
+  min-height: 200px;
   margin-top: 30px;
 }
-.select-root .img-container .img-box {
-  width: 17.6%;
-  position: relative;
-  transition: transform 0.5s;
-}
-.select-root .img-container .img-box:hover {
-  position: relative;
-  z-index: 10;
-  transform: scale(1.32);
-}
-.select-root .img-container .img-box::before {
-  content: "";
-  display: inline-block;
-  padding-bottom: 48%;
-  width: 0.01px; /*必须要有数值，否则无法把高度撑起来*/
-}
 .select-root .img-container img {
-  /* width: 17.6%;
-  transition: transform 0.5s; */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  margin: auto;
+  width: 17.6%;
+  transition: transform 0.5s;
   /* height: 300px; */
   /* margin: 2px; */
   /* padding: 5px; */
 }
-.select-root .img-container .loading-start {
-  position: absolute;
-  z-index: 20;
-  background-color: rgba(43, 42, 47, 0);
-  margin: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  transition: opacity 0.3s;
+.select-root .img-container img:hover {
+  transform: scale(1.32);
 }
-.select-root .img-container .loading-start .gif-container {
-  top: 50%;
-  margin-top: -68px;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-}
-.select-root .img-container .loading-start .gif-bg {
-  width: 68px;
-  height: 68px;
-  z-index: inherit;
-}
-.select-root .img-container .loading-start .gif {
-  width: 60px;
-  height: 60px;
-  /* margin-left: -64px; */
-  margin-top: 4px;
-  position: relative;
-  z-index: 21;
-}
-img[src=""],
-img:not([src]) {
-  opacity: 0;
-}
-
 /* .select-root .img-container img:active {
   box-shadow: inset 0 0 1000px rgba(252, 1, 1, 0.5);
 } */
@@ -1717,10 +1473,11 @@ img:not([src]) {
 }
 .footer {
   position: absolute;
-  display: flex;
-  justify-content: center;
   bottom: 15px;
-  width: 100%;
+  /* text-align: center; */
+  left: 50%;
+  width: 220px;
+  margin-left: -110px;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -1869,31 +1626,14 @@ img:not([src]) {
   bottom: 70%;
   left: 0;
   width: 100%;
-  /* height: 158px; */
+  height: 158px;
   background: rgba(63, 62, 70, 1);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49);
 }
-.select .loading-start {
-  position: fixed;
-}
-.select .loading-start .gif {
-  width: 60px;
-  height: 60px;
-  margin: 0;
-  position: relative;
-  left: -64px;
-  top: -4px;
-}
-.select .loading-start .gif-bg {
-  width: 68px;
-  height: 68px;
-  margin: 0;
-}
 .select .desc {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 37px;
   color: rgba(255, 255, 255, 0.8);
   /* margin: 6px; */
@@ -1901,7 +1641,7 @@ img:not([src]) {
   margin-block-end: 0;
 }
 .select .desc p {
-  margin: 0 1%;
+  margin: 6px;
   margin-block-start: 0;
   margin-block-end: 0;
 }
@@ -1913,34 +1653,32 @@ img:not([src]) {
   line-height: 20px;
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
 }
-.select .desc img {
-  margin: 0 1%;
-  cursor: pointer;
-}
+/* .select .desc img {
+  position: absolute;
+  right: 0;
+  margin-right: 20px;
+  margin: 10px 20px 10px 20px;
+} */
 .select .img-container {
   display: flex;
   justify-content: center;
-  align-items: center;
   /* position: absolute; */
   margin: 3px;
-  margin-bottom: 10px;
-  min-height: 80px;
-  /* transition: transform 10s; */
+  transition: transform 10s;
   /* bottom: 0; */
 }
 .select .img-container img {
-  width: 10.5%;
-  /* height: 103px; */
-  margin: 4px;
-  /* transition: transform 10s; */
+  /* width: 10%; */
+  height: 103px;
+  margin: 3px;
+  transition: transform 10s;
   /* padding: 5px; */
 }
 .select .img-container img:hover {
-  width: 10.5%;
-  /* height: 103px; */
-  /* margin: 3px; */
-  /* border: 2px solid rgba(255, 255, 255, 0.5); */
-  outline: 2px solid rgba(255, 255, 255, 0.5);
+  /* width: 10%; */
+  height: 103px;
+  margin: 3px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   /* padding: 5px; */
 }
 .select .img-container img:active {
@@ -1953,18 +1691,20 @@ img:not([src]) {
 
 #right-menu {
   position: absolute;
-  width: 112px;
+  width: 200px;
   height: auto;
+  border: 1px #ccc solid;
   display: none;
-  background: #3f3e46;
+  padding: 2px 0;
+  /* box-shadow: 5px 5px 5px #ccc; */
+  background: rgba(63, 62, 100, 1);
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
 .menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 38.5px;
+  height: 25px;
+  margin: 4px 0;
+  padding: 0 10px;
   cursor: pointer;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -1973,11 +1713,11 @@ img:not([src]) {
   line-height: 20px;
 }
 .menu-item:hover {
-  border-radius: 4px;
-  background: #595860;
+  /* background-color: #ccc; */
+  background: rgba(89, 88, 96, 1);
 }
 .menu-item-separator {
-  border-top: 1px #525158 solid;
+  border-top: 1px #ccc solid;
   height: 1px;
 }
 </style>
