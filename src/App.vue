@@ -365,6 +365,7 @@ export default {
       const event = d3.event;
       if (!event.srcElement.classList.contains("btn-node")) {
         this.isSelectingExpand = false;
+        this.expandChoices = []
       }
       if (event.srcElement._prevClass === "mindmap-svg") {
         this.connections = [];
@@ -390,6 +391,7 @@ export default {
           this.loadStartChoices();
           this.hasSelectRoot = false;
           this.isSelectingExpand = false;
+          this.expandChoices = []
           // Object.assign(this.$data, this.$options.data())
           this.connections = [];
           this.nodes = [];
@@ -569,6 +571,7 @@ export default {
           .then(() => {
             this.loadStartChoices();
             this.isSelectingExpand = false;
+            this.expandChoices = []
             // Object.assign(this.$data, this.$options.data())
             this.hasSelectRoot = false;
             // 删除操作入栈
@@ -655,6 +658,7 @@ export default {
     onSelectExpand(event) {
       // console.log(event);
       this.isSelectingExpand = false;
+      this.expandChoices = []
       let currentButtonNode = this.nodes.find(
         (item) => this.currentNodeId === item.id
       );
@@ -702,6 +706,7 @@ export default {
     },
     onCancelSelect() {
       this.isSelectingExpand = false;
+      this.expandChoices = [];
       // console.log("cancel select");
     },
     onClickNode(event) {
@@ -730,6 +735,7 @@ export default {
         currentNode.classList.remove("active");
         this.currentNodeId = -1;
         this.isSelectingExpand = false;
+        this.expandChoices = [];
         this.connections = [];
         this.nodes = this.nodes.filter((item) => !item.isButtonNode);
         this.initialConnections();
