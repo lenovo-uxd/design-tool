@@ -658,7 +658,7 @@ export default {
     onSelectExpand(event) {
       // console.log(event);
       this.isSelectingExpand = false;
-      this.expandChoices = []
+      
       let currentButtonNode = this.nodes.find(
         (item) => this.currentNodeId === item.id
       );
@@ -671,6 +671,7 @@ export default {
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
+      console.log(event.target.src)
       // 获取被点击的拓展图片在nodes中的数据
       let expandItem = this.expandChoices.find(
         (item) => item.image === event.target.src
@@ -694,6 +695,7 @@ export default {
           this.nodeRelativeLocations[currentButtonNode.locationIndex].fy +
           randomDis,
       };
+      this.expandChoices = []
       this.connections = [];
       this.addNode(node);
       // console.log(this.nodes);
