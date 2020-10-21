@@ -615,15 +615,15 @@ export default {
       this.leftText = currentNodeData.text.slice(0, 2);
       this.rightText =
         this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "";
-      if (
-        currentNodeData.text === "淡雅多彩" ||
-        currentNodeData.text === "简单复杂" ||
-        currentNodeData.text === "模糊清晰"
-      ) {
-        let tmp = this.leftText;
-        this.leftText = this.rightText;
-        this.rightText = tmp;
-      }
+      // if (
+      //   currentNodeData.text === "淡雅多彩" ||
+      //   currentNodeData.text === "简单复杂" ||
+      //   currentNodeData.text === "模糊清晰"
+      // ) {
+      //   let tmp = this.leftText;
+      //   this.leftText = this.rightText;
+      //   this.rightText = tmp;
+      // }
       this.isSelectingExpand = true;
       // console.log(this.nodes.filter(item=>(item.id === this.currentNodeId || !item.isButtonNode)))
 
@@ -633,30 +633,6 @@ export default {
       );
       this.initialConnections();
 
-      // console.log(d3.select(""))
-
-      // let g = d3.select("#mindmap-connections-container");
-      // // console.log(g);
-      // let dx = 10,
-      //   dy = 100,
-      //   x1 = document.body.clientWidth / 2,
-      //   y1 = document.body.clientHeight / 2,
-      //   x2 = x1 + 299,
-      //   y2 = y1 + 90;
-      // let path = d3.path();
-      // let cpx1 = x1 - dx;
-      // let cpy1 = y1 + dy;
-      // let cpx2 = x2 + dx;
-      // let cpy2 = y2 - dy;
-      // path.moveTo(x1, y1);
-      // path.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
-
-      // g.append("path")
-      //   .attr("d", path.toString())
-      //   .style("fill", "none")
-      //   .style("stroke", "red")
-      //   .style("stroke-width", "1");
-      // console.log(g);
     },
     onSelectExpand(event) {
       // console.log(event);
@@ -669,8 +645,8 @@ export default {
       let pathText =
         parseInt(event.srcElement.dataset["index"]) <
         this.expandChoices.length / 2
-          ? currentButtonNode.text.substring(2, 4)
-          : currentButtonNode.text.substring(0, 2);
+          ? currentButtonNode.text.substring(0, 2)
+          : currentButtonNode.text.substring(2, 4);
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
@@ -1418,7 +1394,7 @@ export default {
           if (
             expandType === "淡雅多彩" ||
             expandType === "简单复杂" ||
-            expandType === "模糊清晰"
+            expandType === "模糊清晰"  
           ) {
             this.expandChoices.reverse();
           }
