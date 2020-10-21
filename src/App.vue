@@ -671,7 +671,7 @@ export default {
       if (currentButtonNode.text === "相似图片") {
         pathText = "相似";
       }
-      console.log(event.target.src)
+      // console.log(event.target.src)
       // 获取被点击的拓展图片在nodes中的数据
       let expandItem = this.expandChoices.find(
         (item) => item.image === event.target.src
