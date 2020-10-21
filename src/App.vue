@@ -342,7 +342,7 @@ export default {
     };
   },
   methods: {
-    addText: function() {
+    addText: function () {
       console.log("添加文本");
     },
     changeBg(event) {
@@ -365,7 +365,7 @@ export default {
       const event = d3.event;
       if (!event.srcElement.classList.contains("btn-node")) {
         this.isSelectingExpand = false;
-        this.expandChoices = []
+        this.expandChoices = [];
       }
       if (event.srcElement._prevClass === "mindmap-svg") {
         this.connections = [];
@@ -391,7 +391,7 @@ export default {
           this.loadStartChoices();
           this.hasSelectRoot = false;
           this.isSelectingExpand = false;
-          this.expandChoices = []
+          this.expandChoices = [];
           // Object.assign(this.$data, this.$options.data())
           this.connections = [];
           this.nodes = [];
@@ -424,10 +424,7 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg
-        .transition()
-        .duration(300)
-        .attr("viewBox", getViewBox(nodes.data()));
+      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
       setTimeout(() => {
         this.resetViewBox2();
       }, 600);
@@ -446,10 +443,7 @@ export default {
       localStorage.setItem("deltaY", "0");
       d3.zoom().transform(svg, d3.zoomIdentity);
       d3.selectAll("g").attr("transform", "");
-      svg
-        .transition()
-        .duration(300)
-        .attr("viewBox", getViewBox(nodes.data()));
+      svg.transition().duration(300).attr("viewBox", getViewBox(nodes.data()));
     },
     zoomIn() {
       let wheelEvent = new WheelEvent("wheel", {
@@ -471,7 +465,7 @@ export default {
         .getElementsByClassName("mindmap-svg")[0]
         .dispatchEvent(wheelEvent);
     },
-    setRatio: function() {
+    setRatio: function () {
       switch (this.ratio) {
         case "1:1": {
           // this.width = this.height;
@@ -571,7 +565,7 @@ export default {
           .then(() => {
             this.loadStartChoices();
             this.isSelectingExpand = false;
-            this.expandChoices = []
+            this.expandChoices = [];
             // Object.assign(this.$data, this.$options.data())
             this.hasSelectRoot = false;
             // 删除操作入栈
@@ -621,6 +615,15 @@ export default {
       this.leftText = currentNodeData.text.slice(0, 2);
       this.rightText =
         this.leftText !== "相似" ? currentNodeData.text.slice(2, 4) : "";
+      if (
+        currentNodeData.text === "淡雅多彩" ||
+        currentNodeData.text === "简单复杂" ||
+        currentNodeData.text === "模糊清晰"
+      ) {
+        let tmp = this.leftText;
+        this.leftText = this.rightText;
+        this.rightText = tmp;
+      }
       this.isSelectingExpand = true;
       // console.log(this.nodes.filter(item=>(item.id === this.currentNodeId || !item.isButtonNode)))
 
@@ -658,7 +661,7 @@ export default {
     onSelectExpand(event) {
       // console.log(event);
       this.isSelectingExpand = false;
-      
+
       let currentButtonNode = this.nodes.find(
         (item) => this.currentNodeId === item.id
       );
@@ -695,7 +698,7 @@ export default {
           this.nodeRelativeLocations[currentButtonNode.locationIndex].fy +
           randomDis,
       };
-      this.expandChoices = []
+      this.expandChoices = [];
       this.connections = [];
       this.addNode(node);
       // console.log(this.nodes);
@@ -766,9 +769,9 @@ export default {
           this.connections = [];
           this.addButtonNode(event);
           this.initialConnections();
-          setTimeout(()=>{
+          setTimeout(() => {
             this.moveNodeToCenter(this.currentNodeId);
-          },200)
+          }, 200);
           // this.moveNodeToCenter(this.currentNodeId);
           // this.currentNodeId = -1;
         }
@@ -895,15 +898,15 @@ export default {
       // ratio=ratio*ratio
       finalX = Math.floor(finalX);
       finalY = Math.floor(finalY);
-      x = Math.floor(x/ratio);
-      y = Math.floor(y/ratio);
+      x = Math.floor(x / ratio);
+      y = Math.floor(y / ratio);
       // finalX = Math.floor(finalX*ratio);
       // finalY = Math.floor(finalY*ratio);
       // x = Math.floor(x*ratio);
       // y = Math.floor(y*ratio);
       // let finalX = windowWidth / 2;
       // let finalY = windowHeight / 2;
-      
+
       // console.log(ratio);
       // finalX /= ratio;
       // finalY /= ratio;
@@ -955,8 +958,7 @@ export default {
       // // console.log(finalX, finalY);
       // const times = 20;
       // let times_index = 0;
-      
-      
+
       let mousemove1 = document.createEvent("MouseEvents");
       mousemove1.initMouseEvent(
         "mousemove",
@@ -986,8 +988,8 @@ export default {
         0,
         0,
         0,
-        (x+finalX)/2,
-        (y+finalY)/2,
+        (x + finalX) / 2,
+        (y + finalY) / 2,
         false,
         false,
         false,
@@ -1153,9 +1155,9 @@ export default {
         fx: window.screen.availWidth / 2,
         fy: window.innerHeight / 2,
       });
-      setTimeout(()=>{
-        this.moveNodeToCenter(0)
-      },100)
+      setTimeout(() => {
+        this.moveNodeToCenter(0);
+      }, 100);
     },
     onRefresh() {
       this.loadStartChoices();
@@ -1299,7 +1301,7 @@ export default {
       // console.log("downloadAll")
       // img.file("smile.gif", imgData, { base64: true });
 
-      zip.generateAsync({ type: "blob" }).then(function(content) {
+      zip.generateAsync({ type: "blob" }).then(function (content) {
         // see FileSaver.js
         saveAs(content, "xiaohui-images.zip");
       });
@@ -1307,37 +1309,37 @@ export default {
     Stack() {
       let items = [];
       // 向栈添加新元素
-      this.push = function(element) {
+      this.push = function (element) {
         items.push(element);
       };
 
       // 从栈内弹出一个元素
-      this.pop = function() {
+      this.pop = function () {
         return items.pop();
       };
 
       // 返回栈顶的元素
-      this.peek = function() {
+      this.peek = function () {
         return items[items.length - 1];
       };
 
       // 判断栈是否为空
-      this.isEmpty = function() {
+      this.isEmpty = function () {
         return items.length === 0;
       };
 
       // 返回栈的长度
-      this.size = function() {
+      this.size = function () {
         return items.length;
       };
 
       // 清空栈
-      this.clear = function() {
+      this.clear = function () {
         items = [];
       };
 
       // 打印栈内的所有元素
-      this.print = function() {
+      this.print = function () {
         console.log(items.toString());
       };
     },
@@ -1351,14 +1353,17 @@ export default {
         number: 10,
         size: "small",
         ifDlatents: true,
-        ratio:"(2:1)"
+        ratio: "(2:1)",
       };
       this.$ajax
         //.get("/json/random.json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-random",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
-          .then((res) => {
+        .post(
+          "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",
+          reqData
+        )
+        .then((res) => {
           // console.log(res);
           this.startChoices = res.data.result;
           for (let i = 0; i < this.startChoices.length; i++) {
@@ -1391,7 +1396,7 @@ export default {
         size: "small",
         styleScale: 2,
         ifDlatents: true,
-        ratio:"(2:1)"
+        ratio: "(2:1)",
       };
 
       if (reqData.style == "similarity") reqData.number = reqData.number * 2;
@@ -1400,8 +1405,11 @@ export default {
         //.get("/json/" + expandTypeMap[expandType] + ".json")
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-withtag/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-extend",reqData)
-        .post("https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",reqData)
-          .then((res) => {
+        .post(
+          "https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",
+          reqData
+        )
+        .then((res) => {
           this.expandChoices = res.data.result;
           for (let i = 0; i < this.expandChoices.length; i++) {
             this.expandChoices[i].image =
@@ -1425,13 +1433,13 @@ export default {
         });
     },
   },
-  created: function() {
+  created: function () {
     this.initialConnections();
     localStorage.setItem("deltaY", "0");
     this.loadStartChoices();
     // window.addEventListener("beforeunload", this.clearLocalStorage);
   },
-  mounted: function() {
+  mounted: function () {
     window.oncontextmenu = (event) => {
       this.lastNodeId = this.currentNodeId;
       let imgDiv = event.target.getElementsByClassName("img-div")[0];
@@ -1445,7 +1453,7 @@ export default {
       menu.style.top = event.clientY + "px";
     };
     // eslint-disable-next-line no-unused-vars
-    window.onclick = function(e) {
+    window.onclick = function (e) {
       //点击窗口，右键菜单隐藏
       let menu = document.getElementById("right-menu");
       menu.style.display = "none";
@@ -1453,7 +1461,7 @@ export default {
     this.addNodeClick();
     this.addConnectionHover();
   },
-  updated: function() {
+  updated: function () {
     // console.log("updated");
     // 给新加的node节点添加点击事件,并设置宽高
     this.addNodeClick();
@@ -1467,7 +1475,7 @@ export default {
       }
     }
   },
-  destroyed: function() {
+  destroyed: function () {
     // window.removeEventListener("beforeunload", this.clearLocalStorage);
   },
 };
@@ -1625,6 +1633,7 @@ body {
   width: 100%;
   /* min-height: 200px; */
   margin-top: 30px;
+  position: relative;
 }
 .select-root .img-container .img-box {
   width: 17.6%;
@@ -1666,10 +1675,12 @@ body {
   bottom: 0;
   left: 0;
   transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
 }
 .select-root .img-container .loading-start .gif-container {
-  top: 50%;
-  margin-top: -68px;
+  /* top: 50%;
+  margin-top: -68px; */
   width: 100%;
   text-align: center;
   position: absolute;
@@ -1880,20 +1891,24 @@ img:not([src]) {
   border: 1px solid rgba(151, 151, 151, 0.49);
 }
 .select .loading-start {
-  position: fixed;
+  position: absolute;
+  width: 100%;
+  text-align: center;
 }
 .select .loading-start .gif {
   width: 60px;
   height: 60px;
   margin: 0;
   position: relative;
-  left: -64px;
+  left: -34px;
   top: -4px;
 }
 .select .loading-start .gif-bg {
   width: 68px;
   height: 68px;
   margin: 0;
+  position: relative;
+  right: -30px;
 }
 .select .desc {
   display: flex;
@@ -1930,6 +1945,7 @@ img:not([src]) {
   margin: 3px;
   margin-bottom: 10px;
   min-height: 80px;
+  align-items: center;
   /* transition: transform 10s; */
   /* bottom: 0; */
 }
