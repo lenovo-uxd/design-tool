@@ -1153,6 +1153,9 @@ export default {
         fx: window.screen.availWidth / 2,
         fy: window.innerHeight / 2,
       });
+      setTimeout(()=>{
+        this.moveNodeToCenter(0)
+      },100)
     },
     onRefresh() {
       this.loadStartChoices();
