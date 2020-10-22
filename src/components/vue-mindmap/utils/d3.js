@@ -152,14 +152,21 @@ export const onTick = (conns, nodes, pathLabels) => {
  * Return drag behavior to use on d3.selection.call().
  */
 // eslint-disable-next-line no-unused-vars
-export const d3Drag = (simulation, svg, nodes, removeBtnNodes) => {
+export const d3Drag = (simulation, svg, nodes, removeBtnNodes,nodesData) => {
   // eslint-disable-next-line no-unused-vars
-  let active = 0
+  let flag = 0
+  // let oldEvent=null
+  // if(nodesData[nodesData.length-1].isButtonNode && event.type == 'drag'){
+  //   console.log("remove")
+  //   removeBtnNodes()
+  // }
+  // if(event != null){
+  //   console.log(event.type)
+  // }
   const dragStart = (node) => {
     if (!event.active) {
       simulation.alphaTarget(0.2).restart()
     }
-    active = event.active
     // console.log(event)
     // console.log("drag start")
     node.fx = node.x
@@ -169,18 +176,18 @@ export const d3Drag = (simulation, svg, nodes, removeBtnNodes) => {
 
   const dragged = (node) => {
     // console.log(event)
-    // if(active != event.active){
-      // console.log("draging")
-      // removeBtnNodes()
-    // }
-
-    if(Math.abs(event.dx)+Math.abs(event.dy) < 100){  
-      // console.log("run")
-      // console.log(event)
-      node.fx = event.x
-      node.fy = event.y
+    if(nodesData[nodesData.length-1].isButtonNode && flag==0){
+      console.log("draging")
+      flag = 1
+      removeBtnNodes()
+      return;
     }
-    active = event.active
+    // node.fx = event.x
+    // node.fy = event.y
+    if(Math.abs(event.dx) <= 20 && Math.abs(event.dy) <= 20){
+      node.fx += event.dx
+      node.fy += event.dy
+    }
   }
 
   const dragEnd = () => {

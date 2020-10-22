@@ -100,7 +100,7 @@ export default {
           node.fy = null
         })
 
-      nodes.call(d3Drag(this.simulation, svg, nodes, this.removeBtnNodes))
+      nodes.call(d3Drag(this.simulation, svg, nodes, this.removeBtnNodes,this.nodes))
 
       // Tick the simulation 100 times
       for (let i = 0; i < 100; i += 1) {
