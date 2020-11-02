@@ -215,7 +215,7 @@ export const d3PanZoom = el => {
   return (
     zoom().scaleExtent([0.3, 5])
       .on('zoom', () => {
-        // console.log(event)
+        console.log(event)
         // console.log(event.transform)
 
         if (event.sourceEvent && event.sourceEvent.deltaY) {

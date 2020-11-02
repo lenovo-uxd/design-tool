@@ -233,6 +233,7 @@
             :data-index="index"
             :src="item.image"
             @click="onSelectExpand"
+            class="expand-item"
           />
         </div>
       </div>
@@ -848,57 +849,32 @@ export default {
       });
     },
     moveNodeToCenter(nodeId) {
+      let ratio = this.getRatio();
       let currentNode = document.getElementById(nodeId);
       let rect = currentNode.getBoundingClientRect();
       let x = rect.left;
       let y = rect.top;
-      // let x = currentNode.offsetLeft;
-      // let y = currentNode.offsetTop;
-      // console.log(rect);
+      let nodeWidth = rect.width;
+      let nodeHeight = rect.height;
+      if(this.detectOS() != "Mac"){
+        x /= ratio;
+        y /= ratio;
+        nodeWidth /= ratio;
+        nodeHeight /= ratio;
+      }
       let svg = document.getElementsByClassName("mindmap-svg")[0];
-      let ratio = this.getRatio();
-      // let x = currentNodeData.fx;
-      // let y = currentNodeData.fy;
-      // console.log(x,y)
 
       let windowWidth = document.body.clientWidth;
       let windowHeight = document.body.clientHeight;
-      // windowWidth = window.screen.availWidth
-      // windowHeight = window.screen.availHeight
-      // let nodeWidth = rect.width/ratio;
-      // let nodeHeight = rect.height/ratio;
-      let nodeWidth = currentNode.offsetWidth;
-      let nodeHeight = currentNode.offsetHeight;
+
       let finalX = windowWidth / 2 - nodeWidth / 2;
       let finalY = windowHeight / 2 - nodeHeight / 2;
-      // ratio=ratio*ratio
-      finalX = Math.floor(finalX);
-      finalY = Math.floor(finalY);
-      x = Math.floor(x / ratio);
-      y = Math.floor(y / ratio);
-      // finalX = Math.floor(finalX*ratio);
-      // finalY = Math.floor(finalY*ratio);
-      // x = Math.floor(x*ratio);
-      // y = Math.floor(y*ratio);
-      // let finalX = windowWidth / 2;
-      // let finalY = windowHeight / 2;
-
-      // console.log(ratio);
-      // finalX /= ratio;
-      // finalY /= ratio;
-      // x /= ratio;
-      // y /= ratio;
-      // const disX = finalX - x;
-      // const disY = finalY - y;
-      // console.log(disX, disY);
-      // let gs = d3.select("g")
-      // console.log(gs.attr("x"),gs.attr("y"))
-      // if (
-      //   Math.abs(disX) < windowWidth * 0.015 &&
-      //   Math.abs(disY) < windowHeight * 0.015
-      // ) {
-      //   return;
-      // }
+      
+      // finalX = Math.floor(finalX);
+      // finalY = Math.floor(finalY);
+      // x = Math.floor(x);
+      // y = Math.floor(y);
+      
       // console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
       // console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
       // console.log("node rect",rect)
@@ -906,7 +882,7 @@ export default {
       // console.log("finalX,Y",finalX,finalY)
       // console.log("ratio:",ratio)
       // console.log("x,y",x,y)
-      // console.log("disX,Y:",disX,disY)
+      // // console.log("disX,Y:",disX,disY)
       // console.log(" ")
       // console.log(" ")
       let mousedown = document.createEvent("MouseEvents");
@@ -927,14 +903,6 @@ export default {
         0,
         null
       );
-      svg.dispatchEvent(mousedown);
-
-      // let _x = x;
-      // let _y = y;
-      // // console.log(finalX, finalY);
-      // const times = 20;
-      // let times_index = 0;
-
       let mousemove1 = document.createEvent("MouseEvents");
       mousemove1.initMouseEvent(
         "mousemove",
@@ -953,8 +921,6 @@ export default {
         0,
         null
       );
-
-      svg.dispatchEvent(mousemove1);
       let mousemove2 = document.createEvent("MouseEvents");
       mousemove2.initMouseEvent(
         "mousemove",
@@ -972,9 +938,7 @@ export default {
         false,
         0,
         null
-      );
-
-      svg.dispatchEvent(mousemove2);
+      );  
       let mousemove3 = document.createEvent("MouseEvents");
       mousemove3.initMouseEvent(
         "mousemove",
@@ -992,9 +956,7 @@ export default {
         false,
         0,
         null
-      );
-
-      svg.dispatchEvent(mousemove3);
+      );     
       let mouseup = document.createEvent("MouseEvents");
       mouseup.initMouseEvent(
         "mouseup",
@@ -1013,81 +975,12 @@ export default {
         0,
         null
       );
+      
+      svg.dispatchEvent(mousedown);
+      svg.dispatchEvent(mousemove1);
+      svg.dispatchEvent(mousemove2);
+      svg.dispatchEvent(mousemove3);
       svg.dispatchEvent(mouseup);
-      // let interval = setInterval(function() {
-      //   // console.log(d3.event)
-
-      //   times_index += 1;
-      //   let rect = document.getElementById(nodeId).getBoundingClientRect();
-      //   let curX = Math.floor(rect.left);
-      //   let curY = Math.floor(rect.top);
-      //   _x = Math.floor(_x);
-      //   _y = Math.floor(_y);
-
-      //   console.log(_x, _y);
-      //   console.log(curX, curY);
-      //   console.log(finalX, finalY);
-      //   console.log(" ");
-      //   if (
-      //     times_index > times + 1 ||
-      //     (Math.abs(finalX - _x) < windowWidth * 0.01 &&
-      //       Math.abs(finalY - _y) < windowHeight * 0.01)
-      //   ) {
-      //     clearInterval(interval);
-      //     let mouseup = document.createEvent("MouseEvents");
-      //     mouseup.initMouseEvent(
-      //       "mouseup",
-      //       true,
-      //       true,
-      //       window,
-      //       0,
-      //       0,
-      //       0,
-      //       _x,
-      //       _y,
-      //       false,
-      //       false,
-      //       false,
-      //       false,
-      //       0,
-      //       null
-      //     );
-      //     svg.dispatchEvent(mouseup);
-      //     let rect1 = document.getElementById(nodeId).getBoundingClientRect();
-      //     console.log(rect1);
-      //     // setTimeout(function () {
-      //     //   if (svg.className.indexOf("btn_ok") > -1) {
-      //     //     console.log(svg.className);
-      //     //     document.getElementById("verify").click();
-      //     //   }
-      //     // }, 1000);
-      //   }
-
-      //   let mousemove = document.createEvent("MouseEvents");
-      //   mousemove.initMouseEvent(
-      //     "mousemove",
-      //     true,
-      //     true,
-      //     window,
-      //     0,
-      //     0,
-      //     0,
-      //     _x,
-      //     _y,
-      //     false,
-      //     false,
-      //     false,
-      //     false,
-      //     0,
-      //     null
-      //   );
-
-      //   svg.dispatchEvent(mousemove);
-      //   _x += disX / times;
-      //   _y += disY / times;
-      //   // console.log(_x, _y);
-      //   // svg.dispatchEvent(mousemove);
-      // }, 1);
     },
     //获取浏览器显示比例
     getRatio() {
@@ -1114,6 +1007,29 @@ export default {
         ratio = window.outerWidth / window.innerWidth;
       }
       return ratio;
+    },
+    detectOS() {
+      var sUserAgent = navigator.userAgent;
+      
+      var isWin = (navigator.platform == "Win32") || (navigator.platform == "Windows");
+      
+      if(isWin) return "Win"
+
+      var isMac = (navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel");
+      if (isMac) return "Mac";
+
+      var isUnix = (navigator.platform == "X11") && !isWin && !isMac;
+      if (isUnix) return "Unix";
+      
+      var isLinux = (String(navigator.platform).indexOf("Linux") > -1);
+      
+      var bIsAndroid = sUserAgent.toLowerCase().match(/android/i) == "android";
+      if (isLinux) {
+        if(bIsAndroid) 
+          return "Android";
+        else 
+          return "Linux";
+      }
     },
     onSelectRoot(event) {
       // console.log(event);
@@ -1662,15 +1578,19 @@ body {
   position: absolute;
 }
 .select-root .img-container .loading-start .gif-bg {
-  width: 68px;
-  height: 68px;
-  z-index: inherit;
+  width: 4.05%;
+  height: 4.05%;
+  /* z-index: 20; */
+  /* right: -5.03%; */
+  left: 2.02%;
+  position: relative;
 }
 .select-root .img-container .loading-start .gif {
-  width: 60px;
-  height: 60px;
+  width: 3.57%;
+  height: 3.57%;
   /* margin-left: -64px; */
-  margin-top: 4px;
+  margin-bottom: 0.24%;
+  left: -1.905%;
   position: relative;
   z-index: 21;
 }
@@ -1872,19 +1792,20 @@ img:not([src]) {
   text-align: center;
 }
 .select .loading-start .gif {
-  width: 60px;
-  height: 60px;
-  margin: 0;
+  width: 3.57%;
+  height: 3.57%;
+  /* margin-left: -64px; */
+  margin-bottom: 0.24%;
+  left: -1.78%;
   position: relative;
-  left: -34px;
-  top: -4px;
 }
 .select .loading-start .gif-bg {
-  width: 68px;
-  height: 68px;
-  margin: 0;
+  width: 4.05%;
+  height: 4.05%;
+  /* z-index: 20; */
+  /* right: -5.03%; */
+  left: 2.02%;
   position: relative;
-  right: -30px;
 }
 .select .desc {
   display: flex;
@@ -1925,14 +1846,14 @@ img:not([src]) {
   /* transition: transform 10s; */
   /* bottom: 0; */
 }
-.select .img-container img {
+.select .img-container .expand-item {
   width: 10.5%;
   /* height: 103px; */
   margin: 4px;
   /* transition: transform 10s; */
   /* padding: 5px; */
 }
-.select .img-container img:hover {
+.select .img-container .expand-item:hover {
   width: 10.5%;
   /* height: 103px; */
   /* margin: 3px; */
@@ -1940,7 +1861,7 @@ img:not([src]) {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   /* padding: 5px; */
 }
-.select .img-container img:active {
+.select .img-container .expand-item:active {
   box-shadow: inset 0 0 1000px rgba(252, 1, 1, 0.5);
 }
 
