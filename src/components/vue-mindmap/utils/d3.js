@@ -229,7 +229,7 @@ export const d3PanZoom = el => {
         }
         
         return el.selectAll('svg > g').transition()
-        .duration(0).ease(easeLinear).attr('transform', event.transform)
+        .duration(300).ease(easeLinear).attr('transform', event.transform)
       })
   )
 } 
