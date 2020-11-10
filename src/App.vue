@@ -206,7 +206,9 @@
           <span class="icon-tooltip">删除</span>
         </div>
       </div>
+      <div class="overlay" v-show="isSelectingExpand"></div>
       <div class="select" v-show="isSelectingExpand">
+        
         <div class="desc">
           <p>
             <span>{{ leftText }}</span>
@@ -1523,7 +1525,7 @@ body {
   justify-content: center;
   /* margin: 30px; */
   width: 100%;
-  /* min-height: 200px; */
+  min-height: 20%;
   margin-top: 30px;
   position: relative;
 }
@@ -1785,6 +1787,19 @@ img:not([src]) {
   background: rgba(63, 62, 70, 1);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49);
+}
+.overlay{
+  /* display: none; */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  /* width: 100%; */
+  /* height: 158px; */
+  background: rgba(0, 0, 0, .7);
+  /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(151, 151, 151, 0.49); */
 }
 .select .loading-start {
   position: absolute;
