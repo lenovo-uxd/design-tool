@@ -876,7 +876,7 @@ export default {
       // finalY = Math.floor(finalY);
       // x = Math.floor(x);
       // y = Math.floor(y);
-      
+      // console.log("os:",this.detectOS(),navigator.platform)
       // console.log("window.width,height:",window.screen.availWidth,window.screen.availHeight)
       // console.log("document.body.width,height:",document.body.clientWidth,document.body.clientHeight)
       // console.log("node rect",rect)
@@ -1245,7 +1245,7 @@ export default {
       // eslint-disable-next-line no-unused-vars
       var reqData = {
         number: 10,
-        size: "small",
+        size: "large",
         ifDlatents: true,
         ratio: "(2:1)",
       };
@@ -1287,7 +1287,7 @@ export default {
         dlatentsData: parentNodeData.dlatent,
         style: expandTypeMap[expandType],
         number: 4,
-        size: "small",
+        size: "large",
         styleScale: 2,
         ifDlatents: true,
         ratio: "(2:1)",
