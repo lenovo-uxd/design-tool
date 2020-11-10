@@ -223,7 +223,7 @@ export const d3PanZoom = el => {
           deltaY += event.sourceEvent.deltaY
           localStorage.setItem("deltaY", deltaY)
         }
-        if(event.sourceEvent.type == "wheel"){
+        if(event.sourceEvent && event.sourceEvent.type == "wheel"){
           return el.selectAll('svg > g').transition()
           .duration(500).ease(easeExpOut).attr('transform', event.transform)
         }
