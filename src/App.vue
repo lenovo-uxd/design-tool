@@ -29,6 +29,19 @@
             <span>换一批</span>
           </span>-->
             </div>
+            <div class="filters-container">
+            <div class="filters">
+              <div class="filter color-filter">
+                <span class="demonstration">色彩筛选</span>
+                <i class="el-icon-arrow-down"/>
+                <!-- <el-color-picker v-model="color"></el-color-picker> -->
+              </div>
+              <div class="filter style-filter">
+                <span class="demonstration">风格筛选</span>
+                <i class="el-icon-arrow-down"/>
+                <!-- <el-color-picker v-model="color"></el-color-picker> -->
+              </div>
+            </div>
             <el-button
               class="refresh-button"
               @click="onRefresh"
@@ -36,7 +49,7 @@
               type="text"
               >换一批</el-button
             >
-
+            </div>
             <div class="img-container">
               <div class="loading-start" v-if="loadingStart">
                 <div class="gif-container">
@@ -290,32 +303,6 @@ export default {
       redoStack: new this.Stack(),
       expandChoices: [],
       startChoices: [],
-      curves: [
-        {
-          x: 0,
-          y: -200,
-        },
-        {
-          x: 0,
-          y: -200,
-        },
-        {
-          x: 0,
-          y: -200,
-        },
-        {
-          x: 0,
-          y: -200,
-        },
-        {
-          x: 0,
-          y: -200,
-        },
-        {
-          x: 0,
-          y: -200,
-        },
-      ],
       nodeRelativeLocations: [
         {
           fx: 299,
@@ -342,6 +329,8 @@ export default {
           fy: 90,
         },
       ],
+      color: '#409EFF',
+      recommendColors: ['#45C8E1','#3E8DDD','#8246AF','#F04087','#E1130A','#FF6A00','#FEE600','#6AC246','#C4BEB6','#6F7170','#232729','#000000']
     };
   },
   methods: {
@@ -1495,9 +1484,43 @@ body {
   color: rgba(255, 255, 255, 0.5);
   line-height: 28px;
 }
+.select-root .filter-container{
+  display: flex;
+  width: 88%;
+  height: 4.4%;
+}
+.select-root .filters{
+  display: flex;
+  /* position: absolute;
+  left: 6%; */
+  align-items: center;
+  width: 20.1%;
+  height: 4.4%;
+  
+  /* margin: 10px 20px 10px 20px; */
+}
+.select-root .filter{
+  /* display: inline; */
+  opacity: 0.8;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.56);
+}
+.select-root .filter .focus{
+  /* display: inline; */
+  border-radius: 8px;
+  border: 2px solid #918EFF;
+}
+.select-root .filter span{
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 25px;
+}
+
 .select-root .refresh-button {
-  position: absolute;
-  right: 6%;
+  /* position: absolute;
+  right: 6%; */
   font-size: 17px;
   color: #ffffff;
   opacity: 0.7;
@@ -1508,8 +1531,8 @@ body {
   /* margin: 10px 20px 10px 20px; */
 }
 .select-root .refresh-button:hover {
-  position: absolute;
-  right: 6%;
+  /* position: absolute;
+  right: 6%; */
   font-size: 17px;
   /* color: #ffffff; */
   /* opacity: 0.7; */
@@ -1526,7 +1549,7 @@ body {
   /* margin: 30px; */
   width: 100%;
   min-height: 20%;
-  margin-top: 30px;
+  /* margin-top: 30px; */
   position: relative;
 }
 .select-root .img-container .img-box {
