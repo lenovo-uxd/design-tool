@@ -1330,7 +1330,7 @@ export default {
       // eslint-disable-next-line no-unused-vars
       var reqData = {
         number: 10,
-        size: "large",
+        size: "small",
         ifDlatents: true,
         ratio: "(2:1)",
       };
@@ -1372,7 +1372,7 @@ export default {
         dlatentsData: parentNodeData.dlatent,
         style: expandTypeMap[expandType],
         number: 4,
-        size: "large",
+        size: "small",
         styleScale: 2,
         ifDlatents: true,
         ratio: "(2:1)",
