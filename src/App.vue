@@ -30,25 +30,27 @@
           </span>-->
             </div>
             <div class="filters-container">
-            <div class="filters">
-              <div class="filter color-filter">
-                <span class="demonstration">色彩筛选</span>
-                <i class="el-icon-arrow-down"/>
-                <!-- <el-color-picker v-model="color"></el-color-picker> -->
+              <div class="filters">
+                <div class="filter color-filter">
+                  <img class="filter-icon" src="/icon/color_filter.png" />
+                  <span class="demonstration">色彩筛选</span>
+                  <i class="el-icon-arrow-down" />
+                  <!-- <el-color-picker v-model="color"></el-color-picker> -->
+                </div>
+                <div class="filter style-filter">
+                  <img class="filter-icon" src="/icon/style_filter.png" />
+                  <span class="demonstration">风格筛选</span>
+                  <i class="el-icon-arrow-down" />
+                  <!-- <el-color-picker v-model="color"></el-color-picker> -->
+                </div>
               </div>
-              <div class="filter style-filter">
-                <span class="demonstration">风格筛选</span>
-                <i class="el-icon-arrow-down"/>
-                <!-- <el-color-picker v-model="color"></el-color-picker> -->
-              </div>
-            </div>
-            <el-button
-              class="refresh-button"
-              @click="onRefresh"
-              icon="el-icon-refresh-left"
-              type="text"
-              >换一批</el-button
-            >
+              <el-button
+                class="refresh-button"
+                @click="onRefresh"
+                icon="el-icon-refresh-left"
+                type="text"
+                >换一批</el-button
+              >
             </div>
             <div class="img-container">
               <div class="loading-start" v-if="loadingStart">
@@ -70,6 +72,7 @@
                 />
               </div>
             </div>
+            <div class="color-pan"></div>
           </div>
           <!-- <el-radio-group v-model="ratio">
         <el-radio-button label="1:1"></el-radio-button>
@@ -107,6 +110,19 @@
       </div>
       <div class="footer">
         <p>Designed by Lenovo Research UXD</p>
+      </div>
+      <div class="example">
+        <div class="bubble">
+          <span class="text">没灵感？看看应用案例吧！</span>
+        </div>
+        <span class="tri"></span>
+        <div class="circle-face" @click="showExamplePage = true">
+          <img
+            :src="circleFaceUrl"
+            @mouseover="circleFaceUrl = '/icon/icon_yyal_h.png'"
+            @mouseout="circleFaceUrl = '/icon/icon_yyal.png'"
+          />
+        </div>
       </div>
     </div>
     <div v-if="hasSelectRoot">
@@ -221,7 +237,6 @@
       </div>
       <div class="overlay" v-show="isSelectingExpand"></div>
       <div class="select" v-show="isSelectingExpand">
-        
         <div class="desc">
           <p>
             <span>{{ leftText }}</span>
@@ -253,11 +268,61 @@
         </div>
       </div>
     </div>
+    <div class="example-page" v-if="showExamplePage">
+      <div class="header">应用案例</div>
+      <img
+        class="cancel"
+        src="/icon/btn_close_n.png"
+        @click="showExamplePage = false"
+      />
+      <div class="gallery">
+        <img
+          v-for="item in exampleList"
+          :src="item"
+          :key="item"
+          class="gallery-item"
+          @click="
+            previewExample = item;
+            showExampleDetail = true;
+          "
+        />
+      </div>
+      <div class="example-detail-page" v-show="showExampleDetail">
+        <div class="example-detail-container">
+          <div class="detail-header">
+            <span class="text">热心网友 <span>2020.04.01</span></span>
+            <img
+              class="detail-cancel"
+              src="/icon/btn_close_n.png"
+              @click="showExampleDetail = false"
+            />
+          </div>
+          <img class="example-detail" :src="previewExample" />
+        </div>
+      </div>
+    </div>
+    <div class="preview-page" v-if="showPreviewPage">
+      <div class="header">应用案例</div>
+      <img
+        class="cancel"
+        src="/icon/btn_close_n.png"
+        @click="showPreviewPage = false"
+      />
 
+      <div class="body">
+        <div class="main-container">
+          <button @click="downloadSingle">下载素材</button>
+          <img class="main" src="" />
+        </div>
+        <div class="example-container">
+          <span>应用示例</span>
+        </div>
+      </div>
+    </div>
     <div id="right-menu">
       <div class="menu-item" @click="onClickNode">智能拓展</div>
       <div class="menu-item-separator"></div>
-      <div class="menu-item" @click="downloadSingle">下载图片</div>
+      <div class="menu-item" @click="showPreviewPage = true">预览并下载</div>
       <div class="menu-item-separator"></div>
       <div class="menu-item" @click="onDelete">删除图片</div>
     </div>
@@ -289,6 +354,12 @@ export default {
       currentNodeId: -1,
       lastNodeId: -1,
       hasSelectRoot: false,
+      showExamplePage: false,
+      showPreviewPage: false,
+      circleFaceUrl: "/icon/icon_yyal.png",
+      showExampleDetail: false,
+      previewExample: "",
+      showPreview: false,
       isSelectingExpand: false,
       leftText: "",
       rightText: "",
@@ -329,8 +400,31 @@ export default {
           fy: 90,
         },
       ],
-      color: '#409EFF',
-      recommendColors: ['#45C8E1','#3E8DDD','#8246AF','#F04087','#E1130A','#FF6A00','#FEE600','#6AC246','#C4BEB6','#6F7170','#232729','#000000']
+      color: "#409EFF",
+      recommendColors: [
+        "#45C8E1",
+        "#3E8DDD",
+        "#8246AF",
+        "#F04087",
+        "#E1130A",
+        "#FF6A00",
+        "#FEE600",
+        "#6AC246",
+        "#C4BEB6",
+        "#6F7170",
+        "#232729",
+        "#000000",
+      ],
+      exampleList: [
+        "/picture/example1.png",
+        "/picture/example2.png",
+        "/picture/example3.png",
+        "/picture/example4.png",
+        "/picture/example5.png",
+        "/picture/example6.png",
+        "/picture/example7.png",
+        "/picture/example8.png",
+      ],
     };
   },
   methods: {
@@ -624,7 +718,6 @@ export default {
         (item) => item.id === this.currentNodeId || !item.isButtonNode
       );
       this.initialConnections();
-
     },
     onSelectExpand(event) {
       // console.log(event);
@@ -847,7 +940,7 @@ export default {
       let y = rect.top;
       let nodeWidth = rect.width;
       let nodeHeight = rect.height;
-      if(this.detectOS() != "Mac"){
+      if (this.detectOS() != "Mac") {
         x /= ratio;
         y /= ratio;
         nodeWidth /= ratio;
@@ -860,7 +953,7 @@ export default {
 
       let finalX = windowWidth / 2 - nodeWidth / 2;
       let finalY = windowHeight / 2 - nodeHeight / 2;
-      
+
       // finalX = Math.floor(finalX);
       // finalY = Math.floor(finalY);
       // x = Math.floor(x);
@@ -929,7 +1022,7 @@ export default {
         false,
         0,
         null
-      );  
+      );
       let mousemove3 = document.createEvent("MouseEvents");
       mousemove3.initMouseEvent(
         "mousemove",
@@ -947,7 +1040,7 @@ export default {
         false,
         0,
         null
-      );     
+      );
       let mouseup = document.createEvent("MouseEvents");
       mouseup.initMouseEvent(
         "mouseup",
@@ -966,7 +1059,7 @@ export default {
         0,
         null
       );
-      
+
       svg.dispatchEvent(mousedown);
       svg.dispatchEvent(mousemove1);
       svg.dispatchEvent(mousemove2);
@@ -1001,25 +1094,28 @@ export default {
     },
     detectOS() {
       var sUserAgent = navigator.userAgent;
-      
-      var isWin = (navigator.platform == "Win32") || (navigator.platform == "Windows");
-      
-      if(isWin) return "Win"
 
-      var isMac = (navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel");
+      var isWin =
+        navigator.platform == "Win32" || navigator.platform == "Windows";
+
+      if (isWin) return "Win";
+
+      var isMac =
+        navigator.platform == "Mac68K" ||
+        navigator.platform == "MacPPC" ||
+        navigator.platform == "Macintosh" ||
+        navigator.platform == "MacIntel";
       if (isMac) return "Mac";
 
-      var isUnix = (navigator.platform == "X11") && !isWin && !isMac;
+      var isUnix = navigator.platform == "X11" && !isWin && !isMac;
       if (isUnix) return "Unix";
-      
-      var isLinux = (String(navigator.platform).indexOf("Linux") > -1);
-      
+
+      var isLinux = String(navigator.platform).indexOf("Linux") > -1;
+
       var bIsAndroid = sUserAgent.toLowerCase().match(/android/i) == "android";
       if (isLinux) {
-        if(bIsAndroid) 
-          return "Android";
-        else 
-          return "Linux";
+        if (bIsAndroid) return "Android";
+        else return "Linux";
       }
     },
     onSelectRoot(event) {
@@ -1301,7 +1397,7 @@ export default {
           if (
             expandType === "淡雅多彩" ||
             expandType === "简单复杂" ||
-            expandType === "模糊清晰"  
+            expandType === "模糊清晰"
           ) {
             this.expandChoices.reverse();
           }
@@ -1484,40 +1580,65 @@ body {
   color: rgba(255, 255, 255, 0.5);
   line-height: 28px;
 }
-.select-root .filter-container{
+.select-root .filters-container {
   display: flex;
-  width: 88%;
   height: 4.4%;
+  justify-content: space-between;
+  width: 88%;
+  margin-left: 6%;
+  margin-top: 3%;
+  margin-bottom: 1.5%;
 }
-.select-root .filters{
+.select-root .filters {
   display: flex;
   /* position: absolute;
   left: 6%; */
   align-items: center;
-  width: 20.1%;
-  height: 4.4%;
-  
+  /* width: 20.1%; */
+  /* height: 4.4%; */
   /* margin: 10px 20px 10px 20px; */
 }
-.select-root .filter{
-  /* display: inline; */
+.select-root .filter-icon {
+  width: 24px;
+  height: 24px;
+}
+.select-root .filter {
+  display: flex;
+  height: 150%;
+  width: 181px;
+  justify-content: center;
+  align-items: center;
   opacity: 0.8;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.56);
 }
-.select-root .filter .focus{
+.select-root .filter .focus {
   /* display: inline; */
   border-radius: 8px;
-  border: 2px solid #918EFF;
+  border: 2px solid #918eff;
 }
-.select-root .filter span{
+.select-root .filter span {
   font-size: 18px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 25px;
+  margin: 0 12px;
 }
-
+.select-root .filter i {
+  margin-left: 27px;
+}
+.select-root .color-pan {
+  position: fixed;
+  background: #ffffff;
+  width: 100px;
+  height: 100px;
+  top: 0;
+  left: 0;
+}
+.select-root .style-filter {
+  margin-left: 24px;
+}
 .select-root .refresh-button {
   /* position: absolute;
   right: 6%; */
@@ -1652,6 +1773,57 @@ img:not([src]) {
 .select-root-container .el-radio__input {
   display: none;
 }
+
+.select-root-container .example {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 24px;
+  bottom: 24px;
+}
+.select-root-container .example .bubble {
+  width: 252px;
+  height: 48px;
+  background: #808390;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border-width: 0;
+}
+.select-root-container .example .tri {
+  width: 0;
+  height: 0;
+  border: solid;
+  border-width: 10px 15px;
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)
+    rgba(128, 131, 144, 0.6);
+}
+.select-root-container .example .bubble .text {
+  width: 220px;
+  height: 25px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
+}
+.select-root-container .example .circle-face {
+  /* width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  border-width: 0;
+  background: #3c3a53;
+  display: flex;
+  align-items: center;
+  justify-content: center; */
+  cursor: pointer;
+}
+.select-root-container .example .circle-face img {
+  width: 60px;
+}
 .footer {
   position: absolute;
   display: flex;
@@ -1663,6 +1835,115 @@ img:not([src]) {
   font-weight: 400;
   color: rgba(255, 255, 255, 0.74);
   line-height: 17px;
+}
+.example-page {
+  width: 100%;
+  height: 100%;
+  background: #2b2a2f;
+  position: fixed;
+  z-index: 20;
+}
+.example-page .header {
+  font-size: 24px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 33px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.example-page .cancel {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  left: 1.61%;
+  top: 2.78%;
+  cursor: pointer;
+}
+.example-page .gallery {
+  position: absolute;
+  left: 15%;
+  width: 70%;
+  top: 26.67%;
+}
+.example-page .gallery .gallery-item {
+  width: 24.9%;
+  vertical-align: top;
+}
+.example-page .gallery .gallery-item:hover {
+  width: 24.9%;
+  vertical-align: top;
+  /* outline: 2px solid rgba(255, 255, 255, 0.8); */
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+.example-page .example-detail-page {
+  background: rgba(0, 0, 0, 0.9);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.example-page .example-detail-page .example-detail-container {
+  width: 54.17%;
+}
+.example-page .example-detail-page .detail-header {
+  /* width: 54.17%; */
+  display: flex;
+  justify-content: space-between;
+}
+.example-page .example-detail-page .detail-header .text {
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
+  opacity: 0.8;
+}
+.example-page .example-detail-page .detail-header .text span {
+  opacity: 0.4;
+}
+.example-page .example-detail-page .detail-cancel {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.example-page .example-detail-page .example-detail {
+  width: 100%;
+}
+.preview-page {
+  width: 100%;
+  height: 100%;
+  background: #2b2a2f;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-page .header {
+  font-size: 24px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 33px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.preview-page .cancel {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  left: 1.61%;
+  top: 2.78%;
+  cursor: pointer;
 }
 .menu-container {
   position: fixed;
@@ -1811,7 +2092,7 @@ img:not([src]) {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49);
 }
-.overlay{
+.overlay {
   /* display: none; */
   position: absolute;
   bottom: 0;
@@ -1820,7 +2101,7 @@ img:not([src]) {
   right: 0;
   /* width: 100%; */
   /* height: 158px; */
-  background: rgba(0, 0, 0, .7);
+  background: rgba(0, 0, 0, 0.7);
   /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(151, 151, 151, 0.49); */
 }
