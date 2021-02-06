@@ -31,13 +31,21 @@
             </div>
             <div class="filters-container">
               <div class="filters">
-                <div class="filter color-filter">
+                <div
+                  class="filter color-filter"
+                  ref="colorFilter"
+                  @click="handleColorFilter"
+                >
                   <img class="filter-icon" src="/icon/color_filter.png" />
                   <span class="demonstration">色彩筛选</span>
                   <i class="el-icon-arrow-down" />
                   <!-- <el-color-picker v-model="color"></el-color-picker> -->
                 </div>
-                <div class="filter style-filter">
+                <div
+                  class="filter style-filter"
+                  ref="styleFilter"
+                  @click="handleStyleFilter"
+                >
                   <img class="filter-icon" src="/icon/style_filter.png" />
                   <span class="demonstration">风格筛选</span>
                   <i class="el-icon-arrow-down" />
@@ -72,7 +80,36 @@
                 />
               </div>
             </div>
-            <div class="color-pan"></div>
+            <div class="color-pan" ref="colorPan">
+              <div class="color-container">
+                <div class="recommend-color">
+                  <span>推荐色彩</span>
+                  <div class="recommend-color-list">
+                    <div
+                      class="recommend-color-item"
+                      v-for="color in recommendColorList"
+                      :key="color"
+                      :style="'background:' + color + ';'"
+                    >
+                      <img src="/icon/checked.png" />
+                    </div>
+                  </div>
+                </div>
+                <div class="whole-color">
+                  <span>全部色彩</span>
+                  <div class="whole-color-list">
+                    <div
+                      class="whole-color-item"
+                      v-for="color in wholeColorList"
+                      :key="color"
+                      :style="'background:' + color + ';'"
+                    >
+                      <img src="/icon/checked.png" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- <el-radio-group v-model="ratio">
         <el-radio-button label="1:1"></el-radio-button>
@@ -401,7 +438,7 @@ export default {
         },
       ],
       color: "#409EFF",
-      recommendColors: [
+      recommendColorList: [
         "#45C8E1",
         "#3E8DDD",
         "#8246AF",
@@ -415,19 +452,149 @@ export default {
         "#232729",
         "#000000",
       ],
+      wholeColorList: [
+        "#CDF3FC",
+        "#CEDFFD",
+        "#C1BAFC",
+        "#D7B9FD",
+        "#E9C7DB",
+        "#F1CED2",
+        "#F4D5CD",
+        "#F8E4CB",
+        "#F9E7CB",
+        "#FEF6D6",
+        "#F9F7D5",
+        "#E0EACA",
+        "#9FE8F7",
+        "#A2C1F8",
+        "#998DF8",
+        "#BD8CF9",
+        "#DCA3C5",
+        "#E4AAAE",
+        "#EBB4A5",
+        "#F1CCA2",
+        "#F2D2A1",
+        "#FBEAA8",
+        "#F2EEAB",
+        "#CCDBA7",
+        "#73DCF4",
+        "#77A4F4",
+        "#7261F6",
+        "#A460F5",
+        "#D080B1",
+        "#DB838C",
+        "#E3947E",
+        "#ECB577",
+        "#EEBF77",
+        "#F5DD7D",
+        "#ECE681",
+        "#BAD083",
+        "#4AD1F0",
+        "#4C89F0",
+        "#4E38F0",
+        "#8A39F0",
+        "#C75B9D",
+        "#D55C68",
+        "#DE7355",
+        "#E8A14D",
+        "#EBAC4C",
+        "#F0D154",
+        "#E8E056",
+        "#A9C75F",
+        "#23C5EB",
+        "#256EEB",
+        "#2B10EB",
+        "#7311EB",
+        "#C1358B",
+        "#CF3643",
+        "#DC532C",
+        "#E88B21",
+        "#EA9B20",
+        "#EBC72E",
+        "#E7DC2C",
+        "#99C03A",
+        "#02B8E3",
+        "#0054E5",
+        "#1900D3",
+        "#5E01D2",
+        "#AB2077",
+        "#C21727",
+        "#D0390B",
+        "#DE7800",
+        "#DF8802",
+        "#E6BA07",
+        "#E6D903",
+        "#86AD23",
+        "#0297BB",
+        "#0145BC",
+        "#1400A9",
+        "#4D00A9",
+        "#8E165F",
+        "#A2101B",
+        "#AF2B04",
+        "#B56101",
+        "#B66F00",
+        "#C49D02",
+        "#BFB500",
+        "#6D8F18",
+        "#007793",
+        "#003895",
+        "#0F0082",
+        "#3A0082",
+        "#6E0E4A",
+        "#820813",
+        "#8B2000",
+        "#8F4C00",
+        "#8F5701",
+        "#9D7F01",
+        "#979000",
+        "#55710E",
+        "#00586D",
+        "#00296F",
+        "#0A005D",
+        "#2B005D",
+        "#4F0734",
+        "#61030A",
+        "#661700",
+        "#6A3800",
+        "#6A4000",
+        "#776001",
+        "#716B00",
+        "#3D530A",
+        "#FFFFFF",
+        "#EAEAEA",
+        "#D5D5D5",
+        "#C0C0C0",
+        "#AAAAAA",
+        "#959595",
+        "#808080",
+        "#6B6B6B",
+        "#565656",
+        "#343434",
+        "#242424",
+        "#161616",
+      ],
       exampleList: [
-        "/picture/example1.png",
-        "/picture/example2.png",
-        "/picture/example3.png",
-        "/picture/example4.png",
-        "/picture/example5.png",
-        "/picture/example6.png",
-        "/picture/example7.png",
-        "/picture/example8.png",
+        "/picture/example1@2x.png",
+        "/picture/example2@2x.png",
+        "/picture/example3@2x.png",
+        "/picture/example4@2x.png",
+        "/picture/example5@2x.png",
+        "/picture/example6@2x.png",
+        "/picture/example7@2x.png",
+        "/picture/example8@2x.png",
       ],
     };
   },
   methods: {
+    handleColorFilter() {
+      let cp = this.$refs.colorPan;
+      let cf = this.$refs.colorFilter;
+      cp.style.display = cp.style.display == "block" ? "none" : "block";
+      cp.style.left = cf.offsetLeft + "px";
+      cp.style.top = cf.offsetTop + 6 + cf.offsetHeight + "px";
+    },
+    handleStyleFilter() {},
     addText: function () {
       console.log("添加文本");
     },
@@ -1630,11 +1797,68 @@ body {
 }
 .select-root .color-pan {
   position: fixed;
-  background: #ffffff;
-  width: 100px;
-  height: 100px;
+  width: 30%;
+  height: 40%;
+  background: #3f3e46;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
   top: 0;
   left: 0;
+  display: none;
+  z-index: 1000;
+
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
+}
+.select-root .color-pan .color-container {
+  margin: 5%;
+  width: 90%;
+  height: 90%;
+}
+.select-root .color-pan .color-container .recommend-color {
+  width: 100%;
+  height: 27%;
+}
+.select-root .color-pan .color-container .recommend-color-list {
+  width: 100%;
+  height: 50%;
+}
+.select-root .color-pan .color-container .recommend-color-item {
+  width: 8.33%;
+  height: 50%;
+  margin: 4% 0;
+  display: inline-block;
+}
+.select-root .color-pan .color-container .recommend-color-item img {
+  margin: 12.5% 20%;
+  width: 60%;
+  height: 75%;
+}
+
+.select-root .color-pan .color-container .whole-color {
+  width: 100%;
+  height: 73%;
+}
+.select-root .color-pan .color-container .whole-color-list {
+  width: 100%;
+  height: 90%;
+  font-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+.select-root .color-pan .color-container .whole-color-item {
+  width: 8.33%;
+  height: 8%;
+  /* margin: 4% 0; */
+  /* display: inline-block; */
+}
+.select-root .color-pan .color-container .whole-color-item img {
+  margin: 0 20%;
+  width: 60%;
+  /* height: 75%; */
 }
 .select-root .style-filter {
   margin-left: 24px;
