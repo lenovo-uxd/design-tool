@@ -38,7 +38,12 @@
                 >
                   <img class="filter-icon" src="/icon/color_filter.png" />
                   <span class="demonstration">色彩筛选</span>
-                  <i class="el-icon-arrow-down" />
+                  <img
+                    src="/icon/arrow_down.png"
+                    :class="
+                      isShowingColorPan ? 'arrow-down showing' : 'arrow-down'
+                    "
+                  />
                   <!-- <el-color-picker v-model="color"></el-color-picker> -->
                 </div>
                 <div
@@ -48,7 +53,13 @@
                 >
                   <img class="filter-icon" src="/icon/style_filter.png" />
                   <span class="demonstration">风格筛选</span>
-                  <i class="el-icon-arrow-down" />
+                  <!-- <i class="el-icon-arrow-down" /> -->
+                  <img
+                    src="/icon/arrow_down.png"
+                    :class="
+                      isShowingStylePan ? 'arrow-down showing' : 'arrow-down'
+                    "
+                  />
                   <!-- <el-color-picker v-model="color"></el-color-picker> -->
                 </div>
               </div>
@@ -80,7 +91,7 @@
                 />
               </div>
             </div>
-            <div class="color-pan" ref="colorPan">
+            <div class="color-pan" ref="colorPan" v-show="isShowingColorPan">
               <div class="color-container">
                 <div class="recommend-color">
                   <span>推荐色彩</span>
@@ -89,9 +100,20 @@
                       class="recommend-color-item"
                       v-for="color in recommendColorList"
                       :key="color"
-                      :style="'background:' + color + ';'"
+                      :style="
+                        'background:' +
+                        color +
+                        ';' +
+                        (checkedColor == color
+                          ? 'outline: #FFFFFF solid 2px;'
+                          : '')
+                      "
+                      @click="handleClickRecommendColor"
                     >
-                      <img src="/icon/checked.png" />
+                      <img
+                        v-show="checkedColor == color"
+                        src="/icon/checked.png"
+                      />
                     </div>
                   </div>
                 </div>
@@ -102,10 +124,46 @@
                       class="whole-color-item"
                       v-for="color in wholeColorList"
                       :key="color"
-                      :style="'background:' + color + ';'"
+                      :style="
+                        'background:' +
+                        color +
+                        ';' +
+                        (checkedColor == color
+                          ? 'outline: #FFFFFF solid 2px;'
+                          : '')
+                      "
+                      @click="handleClickWholeColor"
                     >
-                      <img src="/icon/checked.png" />
+                      <img
+                        v-show="checkedColor == color"
+                        src="/icon/checked.png"
+                      />
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="style-pan" ref="stylePan" v-show="isShowingStylePan">
+              <div class="style-container">
+                <div class="style-list">
+                  <div
+                    class="style-item"
+                    v-for="style in styleList"
+                    :key="style"
+                    :style="
+                      'background: transparent url(' +
+                      style +
+                      ') center center no-repeat;' +
+                      (checkedStyle == style
+                        ? 'outline: #FFFFFF solid 2px;'
+                        : '')
+                    "
+                    @click="handleClickStyle"
+                  >
+                    <img
+                      v-show="checkedStyle == style"
+                      src="/icon/checked.png"
+                    />
                   </div>
                 </div>
               </div>
@@ -153,7 +211,7 @@
           <span class="text">没灵感？看看应用案例吧！</span>
         </div>
         <span class="tri"></span>
-        <div class="circle-face" @click="showExamplePage = true">
+        <div class="circle-face" @click="handleShowExamplePage">
           <img
             :src="circleFaceUrl"
             @mouseover="circleFaceUrl = '/icon/icon_yyal_h.png'"
@@ -349,7 +407,10 @@
       <div class="body">
         <div class="main-container">
           <button @click="downloadSingle">下载素材</button>
-          <img class="main" src="" />
+          <img
+            class="main"
+            :src="nodes.find((item) => item.id === currentNodeId).imgSrc"
+          />
         </div>
         <div class="example-container">
           <span>应用示例</span>
@@ -452,6 +513,9 @@ export default {
         "#232729",
         "#000000",
       ],
+      isShowingColorPan: false,
+      isShowingStylePan: false,
+      checkedColor: "",
       wholeColorList: [
         "#CDF3FC",
         "#CEDFFD",
@@ -574,6 +638,17 @@ export default {
         "#242424",
         "#161616",
       ],
+      checkedStyle: "",
+      styleList: [
+        "/picture/style_cd.png",
+        "/picture/style_cy.png",
+        "/picture/style_ch.png",
+        "/picture/style_cj.png",
+        "/picture/style_bl.png",
+        "/picture/style_bw.png",
+        "/picture/style_sd.png",
+        "/picture/style_mh.png",
+      ],
       exampleList: [
         "/picture/example1@2x.png",
         "/picture/example2@2x.png",
@@ -588,13 +663,64 @@ export default {
   },
   methods: {
     handleColorFilter() {
+      this.isShowingStylePan = false;
+      this.isShowingColorPan = !this.isShowingColorPan;
+      // this.$refs.stylePan.style.display = "none";
       let cp = this.$refs.colorPan;
       let cf = this.$refs.colorFilter;
-      cp.style.display = cp.style.display == "block" ? "none" : "block";
+      // cp.style.display = cp.style.display == "block" ? "none" : "block";
       cp.style.left = cf.offsetLeft + "px";
       cp.style.top = cf.offsetTop + 6 + cf.offsetHeight + "px";
     },
-    handleStyleFilter() {},
+    handleClickRecommendColor(e) {
+      // console.log(e.target.style);
+      // e.target.style.outline = "#0000FF dotted thin";
+      // e.target.style.outline = "#FFFFFF solid 2px"
+      // console.log(e.target.style.background);
+      this.checkedColor = e.target.style.background.colorHex().toUpperCase();
+      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      setTimeout(() => {
+        // this.$refs.colorPan.style.display = "none";
+        this.isShowingColorPan = false;
+      }, 300);
+    },
+    handleClickWholeColor(e) {
+      // e.target.style.outline = "#FFFFFF solid 2px"
+      this.checkedColor = e.target.style.background.colorHex().toUpperCase();
+      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      setTimeout(() => {
+        // this.$refs.colorPan.style.display = "none";
+        this.isShowingColorPan = false;
+      }, 300);
+    },
+    handleStyleFilter() {
+      this.isShowingColorPan = false;
+      this.isShowingStylePan = !this.isShowingStylePan;
+      // this.$refs.colorPan.style.display = "none";
+      let sp = this.$refs.stylePan;
+      let sf = this.$refs.styleFilter;
+      // console.log(sp,sf)
+      // sp.style.display = sp.style.display == "block" ? "none" : "block";
+      sp.style.left = sf.offsetLeft + "px";
+      sp.style.top = sf.offsetTop + 6 + sf.offsetHeight + "px";
+    },
+    handleClickStyle(e) {
+      this.checkedStyle = e.target.style.background.substring(5, 26);
+      // console.log(e.target.style.background);
+      // e.target.style.outline = "#0000FF dotted thin";
+      e.target.style.outline = "#FFFFFF solid 2px";
+      // console.log(e.target.style.background);
+      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      setTimeout(() => {
+        // this.$refs.stylePan.style.display = "none";
+        this.isShowingStylePan = false;
+      }, 300);
+    },
+    handleShowExamplePage() {
+      this.showExamplePage = true;
+      this.$refs.colorPan.style.display = "none";
+      this.$refs.stylePan.style.display = "none";
+    },
     addText: function () {
       console.log("添加文本");
     },
@@ -641,7 +767,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          this.loadStartChoices();
+          this.loadStartChoices("", "");
           this.hasSelectRoot = false;
           this.isSelectingExpand = false;
           this.expandChoices = [];
@@ -816,7 +942,7 @@ export default {
           type: "warning",
         })
           .then(() => {
-            this.loadStartChoices();
+            this.loadStartChoices("", "");
             this.isSelectingExpand = false;
             this.expandChoices = [];
             // Object.assign(this.$data, this.$options.data())
@@ -1306,7 +1432,8 @@ export default {
       }, 100);
     },
     onRefresh() {
-      this.loadStartChoices();
+      // this.loadStartChoices("", "");
+      this.loadStartChoices(this.checkedColor, this.checkedStyle);
       // console.log("click refresh");
     },
 
@@ -1492,7 +1619,19 @@ export default {
     clearLocalStorage() {
       localStorage.removeItem("deltaY");
     },
-    loadStartChoices() {
+    loadStartChoices(color, style) {
+      let styleMap = {
+        "/picture/style_cd.png": "",
+        "/picture/style_cy.png": "",
+        "/picture/style_ch.png": "",
+        "/picture/style_cj.png": "",
+        "/picture/style_bl.png": "",
+        "/picture/style_bw.png": "",
+        "/picture/style_sd.png": "",
+        "/picture/style_mh.png": "",
+      };
+      style = styleMap[style];
+      console.log(color, style);
       this.loadingStart = true;
       // eslint-disable-next-line no-unused-vars
       var reqData = {
@@ -1582,8 +1721,31 @@ export default {
   created: function () {
     this.initialConnections();
     localStorage.setItem("deltaY", "0");
-    this.loadStartChoices();
+    this.loadStartChoices("", "");
     // window.addEventListener("beforeunload", this.clearLocalStorage);
+    String.prototype.colorHex = function () {
+      // RGB颜色值的正则
+      var reg = /^(rgb|RGB)/;
+      var color = this;
+      if (reg.test(color)) {
+        var strHex = "#";
+        // 把RGB的3个数值变成数组
+        var colorArr = color.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+        // 转成16进制
+        for (var i = 0; i < colorArr.length; i++) {
+          var hex = Number(colorArr[i]).toString(16);
+          if (hex === "0") {
+            hex += hex;
+          } else if (hex.length === 1) {
+            hex = "0" + hex;
+          }
+          strHex += hex;
+        }
+        return strHex;
+      } else {
+        return String(color);
+      }
+    };
   },
   mounted: function () {
     window.oncontextmenu = (event) => {
@@ -1768,16 +1930,18 @@ body {
 .select-root .filter-icon {
   width: 24px;
   height: 24px;
+  margin: 0 8px;
 }
 .select-root .filter {
   display: flex;
   height: 150%;
   width: 181px;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   opacity: 0.8;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.56);
+  cursor: pointer;
 }
 .select-root .filter .focus {
   /* display: inline; */
@@ -1790,7 +1954,7 @@ body {
   font-weight: 400;
   color: #ffffff;
   line-height: 25px;
-  margin: 0 12px;
+  margin: 0 30px 0 4px;
 }
 .select-root .filter i {
   margin-left: 27px;
@@ -1804,7 +1968,7 @@ body {
   border-radius: 8px;
   top: 0;
   left: 0;
-  display: none;
+  /* display: none; */
   z-index: 1000;
 
   font-size: 18px;
@@ -1820,22 +1984,32 @@ body {
 }
 .select-root .color-pan .color-container .recommend-color {
   width: 100%;
-  height: 27%;
+  height: 25%;
 }
 .select-root .color-pan .color-container .recommend-color-list {
   width: 100%;
   height: 50%;
+  font-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4%;
 }
 .select-root .color-pan .color-container .recommend-color-item {
   width: 8.33%;
   height: 50%;
-  margin: 4% 0;
-  display: inline-block;
+  outline-offset: -2px;
+  cursor: pointer;
+  /* margin: 4% 0;
+  display: inline-block; */
 }
 .select-root .color-pan .color-container .recommend-color-item img {
-  margin: 12.5% 20%;
-  width: 60%;
-  height: 75%;
+  margin: 5% 20%;
+  /* width: 60%;
+  height: 75%; */
+  width: auto;
+  height: auto;
+  max-width: 60%;
+  /* max-height: 75%; */
 }
 
 .select-root .color-pan .color-container .whole-color {
@@ -1852,16 +2026,70 @@ body {
 .select-root .color-pan .color-container .whole-color-item {
   width: 8.33%;
   height: 8%;
+  outline-offset: -2px;
+  cursor: pointer;
   /* margin: 4% 0; */
   /* display: inline-block; */
 }
 .select-root .color-pan .color-container .whole-color-item img {
   margin: 0 20%;
-  width: 60%;
+  /* width: 60%; */
+  width: auto;
+  height: auto;
+  max-width: 60%;
   /* height: 75%; */
+}
+.arrow-down {
+  width: 16px;
+  height: 16px;
+  transition: all 0.5s;
+}
+.showing {
+  width: 16px;
+  height: 16px;
+  transform: rotate(180deg);
+  transition: all 0.5s;
 }
 .select-root .style-filter {
   margin-left: 24px;
+}
+.select-root .style-pan {
+  position: fixed;
+  width: 34%;
+  height: 18%;
+  background: #3f3e46;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  top: 0;
+  left: 0;
+  /* display: none; */
+  z-index: 1000;
+  color: #ffffff;
+}
+.select-root .style-pan .style-container {
+  margin: 2%;
+  /* width: 92.66%; */
+  height: 80%;
+}
+.select-root .style-pan .style-container .style-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-top: 4%; */
+}
+.select-root .style-pan .style-container .style-item {
+  width: 24%;
+  height: 50%;
+  outline-offset: -2px;
+  margin: 0.5%;
+  cursor: pointer;
+  /* margin: 4% 0;
+  display: inline-block; */
+}
+.select-root .style-pan .style-container .style-item img {
+  margin: 3%;
+  float: right;
 }
 .select-root .refresh-button {
   /* position: absolute;
@@ -2099,7 +2327,9 @@ img:not([src]) {
   width: 24.9%;
   vertical-align: top;
   /* outline: 2px solid rgba(255, 255, 255, 0.8); */
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* border: 1px solid rgba(255, 255, 255, 0.8); */
+  outline: 4px solid rgba(255, 255, 255, 1);
+  outline-offset: -4px;
 }
 .example-page .example-detail-page {
   background: rgba(0, 0, 0, 0.9);
@@ -2117,6 +2347,7 @@ img:not([src]) {
   /* width: 54.17%; */
   display: flex;
   justify-content: space-between;
+  margin-bottom: 6px;
 }
 .example-page .example-detail-page .detail-header .text {
   font-size: 18px;
@@ -2168,6 +2399,37 @@ img:not([src]) {
   left: 1.61%;
   top: 2.78%;
   cursor: pointer;
+}
+.preview-page .body {
+  display: flex;
+  width: 92%;
+}
+.preview-page .body .main-container {
+  display: flex;
+  flex-direction: column;
+  width: 59%;
+}
+.preview-page .body .main-container button {
+  width: 25%;
+  height: 40px;
+  margin-bottom: 10px;
+  border: 0;
+  background: #6d69e5;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
+}
+.preview-page .body .example-container {
+  margin-left: 2%;
+  font-size: 15px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
 }
 .menu-container {
   position: fixed;
