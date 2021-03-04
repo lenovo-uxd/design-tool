@@ -405,15 +405,50 @@
       />
 
       <div class="body">
-        <div class="main-container">
+        <div class="top-container">
           <button @click="downloadSingle">下载素材</button>
+          <div class="text">应用示例</div>
+        </div>
+        <div class="bottom-container">
           <img
             class="main"
             :src="nodes.find((item) => item.id === currentNodeId).imgSrc"
           />
-        </div>
-        <div class="example-container">
-          <span>应用示例</span>
+          <div class="example-list">
+            <div
+              class="example-item"
+              :style="
+                'background: transparent url(' +
+                nodes.find((item) => item.id === currentNodeId).imgSrc +
+                ') center center no-repeat'
+              "
+            >
+            <img src="/picture/mockup_1.png"/></div>
+            <div
+              class="example-item"
+              :style="
+                'background: transparent url(' +
+                nodes.find((item) => item.id === currentNodeId).imgSrc +
+                ') center center no-repeat'
+              "
+            ><img src="/picture/mockup_2.png"/></div>
+            <div
+              class="example-item"
+              :style="
+                'background: transparent url(' +
+                nodes.find((item) => item.id === currentNodeId).imgSrc +
+                ') center center no-repeat'
+              "
+            ><img src="/picture/mockup_3.png"/></div>
+            <div
+              class="example-item"
+              :style="
+                'background: transparent url(' +
+                nodes.find((item) => item.id === currentNodeId).imgSrc +
+                ') center center no-repeat'
+              "
+            ><img src="/picture/mockup_4.png"/></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1984,15 +2019,15 @@ body {
 }
 .select-root .color-pan .color-container .recommend-color {
   width: 100%;
-  height: 25%;
+  height: 23%;
 }
 .select-root .color-pan .color-container .recommend-color-list {
   width: 100%;
-  height: 50%;
+  height: 60%;
   font-size: 0;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 4%;
+  margin-top: 3%;
 }
 .select-root .color-pan .color-container .recommend-color-item {
   width: 8.33%;
@@ -2014,25 +2049,26 @@ body {
 
 .select-root .color-pan .color-container .whole-color {
   width: 100%;
-  height: 73%;
+  height: 75%;
 }
 .select-root .color-pan .color-container .whole-color-list {
   width: 100%;
-  height: 90%;
+  height: 85%;
+  margin-top: 3%;
   font-size: 0;
   display: flex;
   flex-wrap: wrap;
 }
 .select-root .color-pan .color-container .whole-color-item {
   width: 8.33%;
-  height: 8%;
+  height: 10%;
   outline-offset: -2px;
   cursor: pointer;
   /* margin: 4% 0; */
   /* display: inline-block; */
 }
 .select-root .color-pan .color-container .whole-color-item img {
-  margin: 0 20%;
+  margin: 10% 20%;
   /* width: 60%; */
   width: auto;
   height: auto;
@@ -2401,18 +2437,14 @@ img:not([src]) {
   cursor: pointer;
 }
 .preview-page .body {
-  display: flex;
+  /* display: flex; */
   width: 92%;
+  height: 54%;
 }
-.preview-page .body .main-container {
-  display: flex;
-  flex-direction: column;
-  width: 59%;
-}
-.preview-page .body .main-container button {
-  width: 25%;
+.preview-page .body button {
+  width: 10%;
   height: 40px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   border: 0;
   background: #6d69e5;
   border-radius: 8px;
@@ -2423,13 +2455,44 @@ img:not([src]) {
   color: #ffffff;
   line-height: 25px;
 }
-.preview-page .body .example-container {
-  margin-left: 2%;
+.preview-page .body .top-container {
+  width: 100%;
+  height: 9%;
+  margin-bottom: 1%;
+  display: flex;
+  align-items: flex-end;
+}
+.preview-page .body .top-container .text {
   font-size: 15px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #ffffff;
   line-height: 25px;
+  margin-left: 51%;
+}
+.preview-page .body .bottom-container {
+  width: 100%;
+  height: 90%;
+  display: flex;
+}
+.preview-page .body .bottom-container .main {
+  width: 59%;
+}
+.preview-page .body .bottom-container .example-list {
+  width: 39%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 2%;
+}
+.preview-page .body .bottom-container .example-item {
+  width: 49%;
+  height: 49%;
+  margin: 0 1% 1% 0;
+}
+.preview-page .body .bottom-container .example-item img{
+  width: 100%;
+  height: 100%;
 }
 .menu-container {
   position: fixed;
