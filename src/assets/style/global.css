@@ -1,0 +1,119 @@
+.el-dropdown-menu {
+    background: #3F3E46;
+    opacity: 0.7;
+    color: #fff;
+    border: 0;
+}
+
+.el-dropdown-menu__item {
+    color: #fff;
+}
+
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+    background: rgba(0, 0, 0, 0);
+    color: #7BBBFF;
+}
+.el-popper[x-placement^=bottom] .popper__arrow{
+    border-bottom-color: #3F3E46;
+}
+.el-popper[x-placement^=bottom] .popper__arrow::after{
+    border-bottom-color: #3F3E46;
+}
+.el-message-box {
+    width: 422px;
+    height: 138px;
+    background: #3F3E46;
+    border-radius: 4px;
+    border: 0;
+
+}
+
+.el-message-box__title {
+    color: #fff;
+    opacity: 0.7;
+}
+
+.el-message-box__content {
+    color: #fff;
+    opacity: 0.7;
+}
+
+.el-button--primary {
+    width: 80px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #ffffFF;
+    background: #3F3E46;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    font-family: PingFangSC-Regular, PingFang SC;
+    opacity: 0.4;
+}
+
+.el-button--primary:focus,
+.el-button--primary:hover {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #918EFF;
+    line-height: 14px;
+    background: #3F3E46;
+    border: 1px solid #918eFF;
+    opacity: 1;
+}
+
+.el-button {
+    background: #3F3E46;
+    width: 80px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #ffffFF;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    font-family: PingFangSC-Regular, PingFang SC;
+    opacity: 0.4;
+}
+
+.el-button:focus,
+.el-button:hover {
+    background: #3F3E46;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #918EFF;
+    line-height: 14px;
+    border: 1px solid #918eFF;
+    opacity: 1;
+}
+
+.el-message--success{
+    width: 381px;
+    height: 49px;
+    background: #3F3E46;
+    border-radius: 4px;
+    
+}
+.el-message--success .el-message__content{
+    font-size: 16px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #FFFFFF;
+    line-height: 16px;
+}
+.el-message--info{
+    width: 381px;
+    height: 49px;
+    background: #3F3E46;
+    border-radius: 4px;
+    
+}
+.el-message--info .el-message__content{
+    font-size: 16px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #FFFFFF;
+    line-height: 16px;
+}

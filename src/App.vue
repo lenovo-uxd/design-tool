@@ -63,13 +63,17 @@
                   <!-- <el-color-picker v-model="color"></el-color-picker> -->
                 </div>
               </div>
-              <el-button
+              <!-- <el-button
                 class="refresh-button"
                 @click="onRefresh"
                 icon="el-icon-refresh-left"
                 type="text"
                 >换一批</el-button
-              >
+              > -->
+              <div class="refresh-button" @click="onRefresh">
+                <img src="/icon/btn_refresh.png"/>
+                <span>换一批</span>
+              </div>
             </div>
             <div class="img-container">
               <div class="loading-start" v-if="loadingStart">
@@ -153,7 +157,7 @@
                     :style="
                       'background: transparent url(' +
                       style +
-                      ') center center no-repeat;' +
+                      ') center center/100% no-repeat;' +
                       (checkedStyle == style
                         ? 'outline: #FFFFFF solid 2px;'
                         : '')
@@ -247,7 +251,7 @@
         <img
           id="close-btn"
           @click="onClose"
-          src="/icon/btn_close_n.png"
+          src="/icon/btn_close_n@2x.png"
           alt="close"
           class="icon"
         />
@@ -257,7 +261,7 @@
           <img
             id="global-btn"
             @click="resetViewBox"
-            src="/icon/btn_global_n.png"
+            src="/icon/btn_global_n@2x.png"
             class="icon"
             alt="global"
           />
@@ -267,7 +271,7 @@
           <img
             id="in-btn"
             @click="zoomIn"
-            src="/icon/btn_in_n.png"
+            src="/icon/btn_in_n@2x.png"
             class="icon"
             alt="zoom in"
           />
@@ -277,7 +281,7 @@
           <img
             id="out-btn"
             @click="zoomOut"
-            src="/icon/btn_out_n.png"
+            src="/icon/btn_out_n@2x.png"
             class="icon"
             alt="zoom out"
           />
@@ -291,8 +295,8 @@
             @click="onUndo"
             :src="
               undoStack.isEmpty()
-                ? '/icon/btn_undo_d.png'
-                : '/icon/btn_undo_n.png'
+                ? '/icon/btn_undo_d@2x.png'
+                : '/icon/btn_undo_n@2x.png'
             "
             alt="undo"
             class="icon"
@@ -305,8 +309,8 @@
             @click="onRedo"
             :src="
               redoStack.isEmpty()
-                ? '/icon/btn_redo_d.png'
-                : '/icon/btn_redo_n.png'
+                ? '/icon/btn_redo_d@2x.png'
+                : '/icon/btn_redo_n@2x.png'
             "
             alt="redo"
             class="icon"
@@ -320,8 +324,8 @@
             @click="onDelete"
             :src="
               currentNodeId === -1
-                ? '/icon/btn_clear_d.png'
-                : '/icon/btn_clear_n.png'
+                ? '/icon/btn_clear_d@2x.png'
+                : '/icon/btn_clear_n@2x.png'
             "
             alt="delete"
             class="icon"
@@ -339,7 +343,7 @@
             <span>{{ rightText }}</span>
           </p>
           <img
-            src="/icon/btn_close_n.png"
+            src="/icon/btn_close_n@2x.png"
             alt="cancel"
             class="icon"
             @click="onCancelSelect"
@@ -367,7 +371,7 @@
       <div class="header">应用案例</div>
       <img
         class="cancel"
-        src="/icon/btn_close_n.png"
+        src="/icon/btn_close_n@2x.png"
         @click="showExamplePage = false"
       />
       <div class="gallery">
@@ -388,7 +392,7 @@
             <span class="text">热心网友 <span>2020.04.01</span></span>
             <img
               class="detail-cancel"
-              src="/icon/btn_close_n.png"
+              src="/icon/btn_close_n@2x.png"
               @click="showExampleDetail = false"
             />
           </div>
@@ -400,7 +404,7 @@
       <div class="header">应用案例</div>
       <img
         class="cancel"
-        src="/icon/btn_close_n.png"
+        src="/icon/btn_close_n@2x.png"
         @click="showPreviewPage = false"
       />
 
@@ -420,16 +424,17 @@
               :style="
                 'background: transparent url(' +
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
-                ') center center no-repeat'
+                ') center no-repeat; background-size: 60% 90%;'
               "
             >
+            <!-- <img :src="nodes.find((item) => item.id === currentNodeId).imgSrc" style="width:60%;height:90%;left:20%;top:5%"/> -->
             <img src="/picture/mockup_1.png"/></div>
             <div
               class="example-item"
               :style="
                 'background: transparent url(' +
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
-                ') center center no-repeat'
+                ') center center no-repeat; background-size: 50% 90%;'
               "
             ><img src="/picture/mockup_2.png"/></div>
             <div
@@ -437,7 +442,7 @@
               :style="
                 'background: transparent url(' +
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
-                ') center center no-repeat'
+                ') center center no-repeat; background-size: 90% 90%;'
               "
             ><img src="/picture/mockup_3.png"/></div>
             <div
@@ -445,7 +450,7 @@
               :style="
                 'background: transparent url(' +
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
-                ') center center no-repeat'
+                ') center center no-repeat; background-size: 50% 90%;'
               "
             ><img src="/picture/mockup_4.png"/></div>
           </div>
@@ -453,11 +458,11 @@
       </div>
     </div>
     <div id="right-menu">
-      <div class="menu-item" @click="onClickNode">智能拓展</div>
+      <div class="menu-item first" @click="onClickNode">智能拓展</div>
       <div class="menu-item-separator"></div>
-      <div class="menu-item" @click="showPreviewPage = true">预览并下载</div>
+      <div class="menu-item mid" @click="showPreviewPage = true">预览并下载</div>
       <div class="menu-item-separator"></div>
-      <div class="menu-item" @click="onDelete">删除图片</div>
+      <div class="menu-item last" @click="onDelete">删除图片</div>
     </div>
   </div>
 </template>
@@ -551,6 +556,7 @@ export default {
       isShowingColorPan: false,
       isShowingStylePan: false,
       checkedColor: "",
+      checkedColorRGB: "",
       wholeColorList: [
         "#CDF3FC",
         "#CEDFFD",
@@ -675,14 +681,14 @@ export default {
       ],
       checkedStyle: "",
       styleList: [
-        "/picture/style_cd.png",
-        "/picture/style_cy.png",
-        "/picture/style_ch.png",
-        "/picture/style_cj.png",
-        "/picture/style_bl.png",
-        "/picture/style_bw.png",
-        "/picture/style_sd.png",
-        "/picture/style_mh.png",
+        "/picture/style_cd@2x.png",
+        "/picture/style_cy@2x.png",
+        "/picture/style_ch@2x.png",
+        "/picture/style_cj@2x.png",
+        "/picture/style_bl@2x.png",
+        "/picture/style_bw@2x.png",
+        "/picture/style_sd@2x.png",
+        "/picture/style_mh@2x.png",
       ],
       exampleList: [
         "/picture/example1@2x.png",
@@ -712,8 +718,9 @@ export default {
       // e.target.style.outline = "#0000FF dotted thin";
       // e.target.style.outline = "#FFFFFF solid 2px"
       // console.log(e.target.style.background);
+      this.checkedColorRGB = e.target.style.background;
       this.checkedColor = e.target.style.background.colorHex().toUpperCase();
-      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      this.loadStartChoices();
       setTimeout(() => {
         // this.$refs.colorPan.style.display = "none";
         this.isShowingColorPan = false;
@@ -721,8 +728,9 @@ export default {
     },
     handleClickWholeColor(e) {
       // e.target.style.outline = "#FFFFFF solid 2px"
+      this.checkedColorRGB = e.target.style.background;
       this.checkedColor = e.target.style.background.colorHex().toUpperCase();
-      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      this.loadStartChoices();
       setTimeout(() => {
         // this.$refs.colorPan.style.display = "none";
         this.isShowingColorPan = false;
@@ -740,12 +748,12 @@ export default {
       sp.style.top = sf.offsetTop + 6 + sf.offsetHeight + "px";
     },
     handleClickStyle(e) {
-      this.checkedStyle = e.target.style.background.substring(5, 26);
+      this.checkedStyle = e.target.style.background.substring(5, 29);
       // console.log(e.target.style.background);
       // e.target.style.outline = "#0000FF dotted thin";
       e.target.style.outline = "#FFFFFF solid 2px";
       // console.log(e.target.style.background);
-      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      this.loadStartChoices();
       setTimeout(() => {
         // this.$refs.stylePan.style.display = "none";
         this.isShowingStylePan = false;
@@ -802,7 +810,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          this.loadStartChoices("", "");
+          this.loadStartChoices();
           this.hasSelectRoot = false;
           this.isSelectingExpand = false;
           this.expandChoices = [];
@@ -977,7 +985,7 @@ export default {
           type: "warning",
         })
           .then(() => {
-            this.loadStartChoices("", "");
+            this.loadStartChoices();
             this.isSelectingExpand = false;
             this.expandChoices = [];
             // Object.assign(this.$data, this.$options.data())
@@ -1468,7 +1476,7 @@ export default {
     },
     onRefresh() {
       // this.loadStartChoices("", "");
-      this.loadStartChoices(this.checkedColor, this.checkedStyle);
+      this.loadStartChoices();
       // console.log("click refresh");
     },
 
@@ -1654,18 +1662,20 @@ export default {
     clearLocalStorage() {
       localStorage.removeItem("deltaY");
     },
-    loadStartChoices(color, style) {
+    loadStartChoices() {
       let styleMap = {
-        "/picture/style_cd.png": "",
-        "/picture/style_cy.png": "",
-        "/picture/style_ch.png": "",
-        "/picture/style_cj.png": "",
-        "/picture/style_bl.png": "",
-        "/picture/style_bw.png": "",
-        "/picture/style_sd.png": "",
-        "/picture/style_mh.png": "",
+        "/picture/style_cd@2x.png": 1,
+        "/picture/style_cy@2x.png": 2,
+        "/picture/style_ch@2x.png": 3,
+        "/picture/style_cj@2x.png": 4,
+        "/picture/style_bl@2x.png": 5,
+        "/picture/style_bw@2x.png": 6,
+        "/picture/style_sd@2x.png": 7,
+        "/picture/style_mh@2x.png": 0,
       };
-      style = styleMap[style];
+      let color = this.checkedColorRGB == '' ? '' :'['+ this.checkedColorRGB.substring(4,this.checkedColorRGB.length-1).split(",").toString()+']';
+      console.log(this.checkedColorRGB,color)
+      let style = this.checkedStyle == '' ? '' : styleMap[this.checkedStyle];
       console.log(color, style);
       this.loadingStart = true;
       // eslint-disable-next-line no-unused-vars
@@ -1675,9 +1685,16 @@ export default {
         ifDlatents: true,
         ratio: "(2:1)",
       };
+      if(color != ''){
+        reqData.color = color
+      }
+      if(style != ''){
+        reqData.style = style
+      }
+      console.log(reqData)
       this.$ajax
         //.get("/json/random.json")
-        //.post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
+        // .post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-random",reqData)
         .post(
           "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=c5f583ba-d03c-4e84-bc7a-7a4250037c87",
@@ -1756,7 +1773,7 @@ export default {
   created: function () {
     this.initialConnections();
     localStorage.setItem("deltaY", "0");
-    this.loadStartChoices("", "");
+    this.loadStartChoices();
     // window.addEventListener("beforeunload", this.clearLocalStorage);
     String.prototype.colorHex = function () {
       // RGB颜色值的正则
@@ -1930,15 +1947,15 @@ body {
   margin-left: 20px; */
   /* width:314px; */
   height: 55px;
-  font-size: 39px;
+  font-size: 46px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.69);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 55px;
 }
 .select-root .desc .sub {
   height: 28px;
-  font-size: 20px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.5);
@@ -1970,10 +1987,11 @@ body {
 .select-root .filter {
   display: flex;
   height: 150%;
-  width: 181px;
+  width: 180px;
+  height: 40px;
   /* justify-content: center; */
   align-items: center;
-  opacity: 0.8;
+  /* opacity: 0.8; */
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.56);
   cursor: pointer;
@@ -1984,10 +2002,10 @@ body {
   border: 2px solid #918eff;
 }
 .select-root .filter span {
-  font-size: 18px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 1);
   line-height: 25px;
   margin: 0 30px 0 4px;
 }
@@ -1997,7 +2015,7 @@ body {
 .select-root .color-pan {
   position: fixed;
   width: 30%;
-  height: 40%;
+  height: 441px;
   background: #3f3e46;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
@@ -2006,10 +2024,10 @@ body {
   /* display: none; */
   z-index: 1000;
 
-  font-size: 18px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #ffffff;
+  color: rgba(255, 255, 255, .7);
   line-height: 25px;
 }
 .select-root .color-pan .color-container {
@@ -2019,31 +2037,34 @@ body {
 }
 .select-root .color-pan .color-container .recommend-color {
   width: 100%;
-  height: 23%;
+  height: 87px;
 }
 .select-root .color-pan .color-container .recommend-color-list {
   width: 100%;
-  height: 60%;
+  height: 26px;
   font-size: 0;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 3%;
+  margin-top: 10px;
 }
 .select-root .color-pan .color-container .recommend-color-item {
   width: 8.33%;
-  height: 50%;
+  /* height: 50%; */
   outline-offset: -2px;
   cursor: pointer;
+      display: flex;
+    align-items: center;
+    justify-content: center;
   /* margin: 4% 0;
   display: inline-block; */
 }
 .select-root .color-pan .color-container .recommend-color-item img {
-  margin: 5% 20%;
+  /* margin: 5% 20%; */
   /* width: 60%;
   height: 75%; */
   width: auto;
   height: auto;
-  max-width: 60%;
+  /* max-width: 60%; */
   /* max-height: 75%; */
 }
 
@@ -2053,8 +2074,8 @@ body {
 }
 .select-root .color-pan .color-container .whole-color-list {
   width: 100%;
-  height: 85%;
-  margin-top: 3%;
+  height: 270px;
+  margin-top: 10px;
   font-size: 0;
   display: flex;
   flex-wrap: wrap;
@@ -2064,15 +2085,18 @@ body {
   height: 10%;
   outline-offset: -2px;
   cursor: pointer;
+      display: flex;
+    align-items: center;
+    justify-content: center;
   /* margin: 4% 0; */
   /* display: inline-block; */
 }
 .select-root .color-pan .color-container .whole-color-item img {
-  margin: 10% 20%;
+  /* margin: 10% 20%; */
   /* width: 60%; */
   width: auto;
   height: auto;
-  max-width: 60%;
+  /* max-width: 60%; */
   /* height: 75%; */
 }
 .arrow-down {
@@ -2130,21 +2154,31 @@ body {
 .select-root .refresh-button {
   /* position: absolute;
   right: 6%; */
-  font-size: 17px;
-  color: #ffffff;
+  font-size: 16px;
+  color: rgba(255, 255, 255, .7);
   opacity: 0.7;
   /* margin-right: 20px; */
   padding: 0;
   display: flex;
   align-items: center;
+  line-height: 29px;
+  cursor: pointer;
   /* margin: 10px 20px 10px 20px; */
+}
+.select-root .refresh-button img{
+  width: 29px;
+  height: 29px;
+  margin-right: 12px;
+}
+.select-root .refresh-button:hover img{
+  content: url('/icon/btn_refresh_h.png');
 }
 .select-root .refresh-button:hover {
   /* position: absolute;
   right: 6%; */
-  font-size: 17px;
-  /* color: #ffffff; */
-  /* opacity: 0.7; */
+  font-size: 16px;
+  color: #AA6EFF;
+  opacity: 0.7;
   /* margin-right: 20px; */
   padding: 0;
   display: flex;
@@ -2240,10 +2274,10 @@ img:not([src]) {
   margin: 8% 0 0 6%;
 }
 .select-root-container .radio-group .el-radio__label {
-  font-size: 18px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 25px;
   margin-left: 4px;
 }
@@ -2251,8 +2285,8 @@ img:not([src]) {
   .radio-group
   .el-radio__input.is-checked
   + .el-radio__label {
-  color: #7bbbff;
-  opacity: 0.5;
+  color: #aa6eff;
+  opacity: 0.7;
 }
 .select-root-container .radio-group img {
   margin-right: 4px;
@@ -2274,7 +2308,7 @@ img:not([src]) {
   width: 252px;
   height: 48px;
   background: #808390;
-  opacity: 0.6;
+  opacity: 0.7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2282,20 +2316,21 @@ img:not([src]) {
   border-width: 0;
 }
 .select-root-container .example .tri {
+  margin-right: -6px;
   width: 0;
   height: 0;
   border: solid;
-  border-width: 10px 15px;
+  border-width: 8px 15px;
   border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)
-    rgba(128, 131, 144, 0.6);
+    rgba(128, 131, 144, 0.7);
 }
 .select-root-container .example .bubble .text {
   width: 220px;
   height: 25px;
-  font-size: 18px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 1);
   line-height: 25px;
 }
 .select-root-container .example .circle-face {
@@ -2321,7 +2356,7 @@ img:not([src]) {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(255, 255, 255, 0.5);
   line-height: 17px;
 }
 .example-page {
@@ -2439,7 +2474,7 @@ img:not([src]) {
 .preview-page .body {
   /* display: flex; */
   width: 92%;
-  height: 54%;
+  /* height: 54%; */
 }
 .preview-page .body button {
   width: 10%;
@@ -2480,7 +2515,7 @@ img:not([src]) {
 }
 .preview-page .body .bottom-container .example-list {
   width: 39%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   flex-wrap: wrap;
   margin-left: 2%;
@@ -2498,6 +2533,9 @@ img:not([src]) {
   position: fixed;
   top: 1.4%;
   right: 2.6%;
+}
+.menu-container .menu .el-dropdown-link img:hover{
+  content: url('/icon/btn_menu_h.png');
 }
 /* body .el-dropdown-menu .el-popper {
   background: rgba(63, 62, 100, 1);
@@ -2532,7 +2570,7 @@ img:not([src]) {
   padding: 11px;
 }
 .close #close-btn:hover {
-  content: url("/icon/btn_close_h.png");
+  content: url("/icon/btn_close_h@2x.png");
 }
 .scale {
   width: 43px;
@@ -2551,13 +2589,13 @@ img:not([src]) {
   padding: 11px;
 }
 .scale #global-btn:hover {
-  content: url("/icon/btn_global_h.png");
+  content: url("/icon/btn_global_h@2x.png");
 }
 .scale #in-btn:hover {
-  content: url("/icon/btn_in_h.png");
+  content: url("/icon/btn_in_h@2x.png");
 }
 .scale #out-btn:hover {
-  content: url("/icon/btn_out_h.png");
+  content: url("/icon/btn_out_h@2x.png");
 }
 .icon-container {
   position: relative;
@@ -2615,7 +2653,7 @@ img:not([src]) {
   padding: 11px;
 }
 .edit #undo-btn:hover {
-  content: url("/icon/btn_undo_h.png");
+  content: url("/icon/btn_undo_h@2x.png");
 }
 .edit .icon #disabled:hover {
   display: block;
@@ -2625,10 +2663,10 @@ img:not([src]) {
   /* margin: 5px; */
 }
 .edit #redo-btn:hover {
-  content: url("/icon/btn_redo_h.png");
+  content: url("/icon/btn_redo_h@2x.png");
 }
 .edit #clear-btn:hover {
-  content: url("/icon/btn_clear_h.png");
+  content: url("/icon/btn_clear_h@2x.png");
 }
 .select {
   /* display: none; */
@@ -2758,12 +2796,19 @@ img:not([src]) {
   color: rgba(255, 255, 255, 1);
   line-height: 20px;
 }
-.menu-item:hover {
-  border-radius: 4px;
+.menu-item.first:hover {
+  border-radius: 4px 4px 0 0;
+  background: #595860;
+}
+.menu-item.mid:hover {
+  background: #595860;
+}
+.menu-item.last:hover {
+  border-radius: 0 0 4px 4px;
   background: #595860;
 }
 .menu-item-separator {
   border-top: 1px #525158 solid;
-  height: 1px;
+  /* height: 1px; */
 }
 </style>

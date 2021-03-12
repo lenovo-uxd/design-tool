@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 // You need a specific loader for CSS files like https://github.com/webpack/css-loader
 import './components/vue-mindmap/vue-mindmap.css'
+import "./assets/style/global.css";
 
 // Vue.use(VueMindmap)
 Vue.use(Mindmap);
