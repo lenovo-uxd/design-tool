@@ -71,7 +71,7 @@
                 >换一批</el-button
               > -->
               <div class="refresh-button" @click="onRefresh">
-                <img src="/icon/btn_refresh.png"/>
+                <img src="/icon/btn_refresh.png" />
                 <span>换一批</span>
               </div>
             </div>
@@ -401,7 +401,7 @@
       </div>
     </div>
     <div class="preview-page" v-if="showPreviewPage">
-      <div class="header">应用案例</div>
+      <div class="header">效果预览和素材下载</div>
       <img
         class="cancel"
         src="/icon/btn_close_n@2x.png"
@@ -410,8 +410,8 @@
 
       <div class="body">
         <div class="top-container">
-          <button @click="downloadSingle">下载素材</button>
-          <div class="text">应用示例</div>
+          <div class="text1">素材图片预览</div>
+          <div class="text2">应用示例</div>
         </div>
         <div class="bottom-container">
           <img
@@ -427,8 +427,9 @@
                 ') center no-repeat; background-size: 60% 90%;'
               "
             >
-            <!-- <img :src="nodes.find((item) => item.id === currentNodeId).imgSrc" style="width:60%;height:90%;left:20%;top:5%"/> -->
-            <img src="/picture/mockup_1.png"/></div>
+              <!-- <img :src="nodes.find((item) => item.id === currentNodeId).imgSrc" style="width:60%;height:90%;left:20%;top:5%"/> -->
+              <img src="/picture/mockup_1.png" />
+            </div>
             <div
               class="example-item"
               :style="
@@ -436,7 +437,9 @@
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
                 ') center center no-repeat; background-size: 50% 90%;'
               "
-            ><img src="/picture/mockup_2.png"/></div>
+            >
+              <img src="/picture/mockup_2.png" />
+            </div>
             <div
               class="example-item"
               :style="
@@ -444,7 +447,9 @@
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
                 ') center center no-repeat; background-size: 90% 90%;'
               "
-            ><img src="/picture/mockup_3.png"/></div>
+            >
+              <img src="/picture/mockup_3.png" />
+            </div>
             <div
               class="example-item"
               :style="
@@ -452,15 +457,20 @@
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
                 ') center center no-repeat; background-size: 50% 90%;'
               "
-            ><img src="/picture/mockup_4.png"/></div>
+            >
+              <img src="/picture/mockup_4.png" />
+            </div>
           </div>
         </div>
+        <button @click="downloadSingle">下载素材图片</button>
       </div>
     </div>
     <div id="right-menu">
       <div class="menu-item first" @click="onClickNode">智能拓展</div>
       <div class="menu-item-separator"></div>
-      <div class="menu-item mid" @click="showPreviewPage = true">预览并下载</div>
+      <div class="menu-item mid" @click="showPreviewPage = true">
+        预览并下载
+      </div>
       <div class="menu-item-separator"></div>
       <div class="menu-item last" @click="onDelete">删除图片</div>
     </div>
@@ -1673,9 +1683,17 @@ export default {
         "/picture/style_sd@2x.png": 7,
         "/picture/style_mh@2x.png": 0,
       };
-      let color = this.checkedColorRGB == '' ? '' :'['+ this.checkedColorRGB.substring(4,this.checkedColorRGB.length-1).split(",").toString()+']';
-      console.log(this.checkedColorRGB,color)
-      let style = this.checkedStyle == '' ? '' : styleMap[this.checkedStyle];
+      let color =
+        this.checkedColorRGB == ""
+          ? ""
+          : "[" +
+            this.checkedColorRGB
+              .substring(4, this.checkedColorRGB.length - 1)
+              .split(",")
+              .toString() +
+            "]";
+      console.log(this.checkedColorRGB, color);
+      let style = this.checkedStyle == "" ? "" : styleMap[this.checkedStyle];
       console.log(color, style);
       this.loadingStart = true;
       // eslint-disable-next-line no-unused-vars
@@ -1685,13 +1703,13 @@ export default {
         ifDlatents: true,
         ratio: "(2:1)",
       };
-      if(color != ''){
-        reqData.color = color
+      if (color != "") {
+        reqData.color = color;
       }
-      if(style != ''){
-        reqData.style = style
+      if (style != "") {
+        reqData.style = style;
       }
-      console.log(reqData)
+      console.log(reqData);
       this.$ajax
         //.get("/json/random.json")
         // .post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
@@ -2027,7 +2045,7 @@ body {
   font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(255, 255, 255, .7);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 25px;
 }
 .select-root .color-pan .color-container {
@@ -2052,9 +2070,9 @@ body {
   /* height: 50%; */
   outline-offset: -2px;
   cursor: pointer;
-      display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* margin: 4% 0;
   display: inline-block; */
 }
@@ -2085,9 +2103,9 @@ body {
   height: 10%;
   outline-offset: -2px;
   cursor: pointer;
-      display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* margin: 4% 0; */
   /* display: inline-block; */
 }
@@ -2155,7 +2173,7 @@ body {
   /* position: absolute;
   right: 6%; */
   font-size: 16px;
-  color: rgba(255, 255, 255, .7);
+  color: rgba(255, 255, 255, 0.7);
   opacity: 0.7;
   /* margin-right: 20px; */
   padding: 0;
@@ -2165,19 +2183,19 @@ body {
   cursor: pointer;
   /* margin: 10px 20px 10px 20px; */
 }
-.select-root .refresh-button img{
+.select-root .refresh-button img {
   width: 29px;
   height: 29px;
   margin-right: 12px;
 }
-.select-root .refresh-button:hover img{
-  content: url('/icon/btn_refresh_h.png');
+.select-root .refresh-button:hover img {
+  content: url("/icon/btn_refresh_h.png");
 }
 .select-root .refresh-button:hover {
   /* position: absolute;
   right: 6%; */
   font-size: 16px;
-  color: #AA6EFF;
+  color: #aa6eff;
   opacity: 0.7;
   /* margin-right: 20px; */
   padding: 0;
@@ -2484,26 +2502,36 @@ img:not([src]) {
   background: #6d69e5;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #ffffff;
-  line-height: 25px;
+  line-height: 22px;
+  margin-top: 13px;
 }
 .preview-page .body .top-container {
   width: 100%;
   height: 9%;
-  margin-bottom: 1%;
+  margin-bottom: 10px;
   display: flex;
   align-items: flex-end;
 }
-.preview-page .body .top-container .text {
+.preview-page .body .top-container .text1 {
+  width: 20%;
   font-size: 15px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #ffffff;
   line-height: 25px;
-  margin-left: 51%;
+  /* margin-left: 51%; */
+}
+.preview-page .body .top-container .text2 {
+  font-size: 15px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 25px;
+  margin-left: 41%;
 }
 .preview-page .body .bottom-container {
   width: 100%;
@@ -2525,7 +2553,7 @@ img:not([src]) {
   height: 49%;
   margin: 0 1% 1% 0;
 }
-.preview-page .body .bottom-container .example-item img{
+.preview-page .body .bottom-container .example-item img {
   width: 100%;
   height: 100%;
 }
@@ -2534,8 +2562,8 @@ img:not([src]) {
   top: 1.4%;
   right: 2.6%;
 }
-.menu-container .menu .el-dropdown-link img:hover{
-  content: url('/icon/btn_menu_h.png');
+.menu-container .menu .el-dropdown-link img:hover {
+  content: url("/icon/btn_menu_h.png");
 }
 /* body .el-dropdown-menu .el-popper {
   background: rgba(63, 62, 100, 1);
