@@ -185,22 +185,34 @@
             @change="setRatio"
           >
             <el-radio label="1:1">
-              <img class="radio-icon" ref="size1" src="/icon/btn_size1_n.png" />
+              <img
+                class="radio-icon"
+                ref="size1"
+                src="/icon/btn_size1_n@2x.png"
+              />
               <span>1:1</span>
             </el-radio>
             <el-radio label="4:3">
-              <img class="radio-icon" ref="size2" src="/icon/btn_size2_n.png" />
+              <img
+                class="radio-icon"
+                ref="size2"
+                src="/icon/btn_size2_n@2x.png"
+              />
               <span>4:3</span>
             </el-radio>
             <el-radio label="16:9">
-              <img class="radio-icon" ref="size3" src="/icon/btn_size3_n.png" />
+              <img
+                class="radio-icon"
+                ref="size3"
+                src="/icon/btn_size3_n@2x.png"
+              />
               <span>16:9</span>
             </el-radio>
             <el-radio label="2:1">
               <img
                 class="radio-icon"
                 ref="size4"
-                src="/icon/btn_size4_n_selected.png"
+                src="/icon/btn_size4_n@2x_selected.png"
               />
               <span>2:1</span>
             </el-radio>
@@ -214,7 +226,7 @@
         <div class="bubble">
           <span class="text">没灵感？看看应用案例吧！</span>
         </div>
-        <span class="tri"></span>
+        <!-- <span class="tri"></span> -->
         <div class="circle-face" @click="handleShowExamplePage">
           <img
             :src="circleFaceUrl"
@@ -424,7 +436,7 @@
               :style="
                 'background: transparent url(' +
                 nodes.find((item) => item.id === currentNodeId).imgSrc +
-                ') center no-repeat; background-size: 60% 90%;'
+                ') center no-repeat; background-size: 60% 95%;'
               "
             >
               <!-- <img :src="nodes.find((item) => item.id === currentNodeId).imgSrc" style="width:60%;height:90%;left:20%;top:5%"/> -->
@@ -901,34 +913,34 @@ export default {
       switch (this.ratio) {
         case "1:1": {
           // this.width = this.height;
-          this.$refs.size1.src = "/icon/btn_size1_n_selected.png";
-          this.$refs.size2.src = "/icon/btn_size2_n.png";
-          this.$refs.size3.src = "/icon/btn_size3_n.png";
-          this.$refs.size4.src = "/icon/btn_size4_n.png";
+          this.$refs.size1.src = "/icon/btn_size1_n@2x_selected.png";
+          this.$refs.size2.src = "/icon/btn_size2_n@2x.png";
+          this.$refs.size3.src = "/icon/btn_size3_n@2x.png";
+          this.$refs.size4.src = "/icon/btn_size4_n@2x.png";
           break;
         }
         case "4:3": {
           // this.width = (this.height * 4) / 3;
-          this.$refs.size1.src = "/icon/btn_size1_n.png";
-          this.$refs.size2.src = "/icon/btn_size2_n_selected.png";
-          this.$refs.size3.src = "/icon/btn_size3_n.png";
-          this.$refs.size4.src = "/icon/btn_size4_n.png";
+          this.$refs.size1.src = "/icon/btn_size1_n@2x.png";
+          this.$refs.size2.src = "/icon/btn_size2_n@2x_selected.png";
+          this.$refs.size3.src = "/icon/btn_size3_n@2x.png";
+          this.$refs.size4.src = "/icon/btn_size4_n@2x.png";
           break;
         }
         case "16:9": {
           // this.width = (this.height * 16) / 9;
-          this.$refs.size1.src = "/icon/btn_size1_n.png";
-          this.$refs.size2.src = "/icon/btn_size2_n.png";
-          this.$refs.size3.src = "/icon/btn_size3_n_selected.png";
-          this.$refs.size4.src = "/icon/btn_size4_n.png";
+          this.$refs.size1.src = "/icon/btn_size1_n@2x.png";
+          this.$refs.size2.src = "/icon/btn_size2_n@2x.png";
+          this.$refs.size3.src = "/icon/btn_size3_n@2x_selected.png";
+          this.$refs.size4.src = "/icon/btn_size4_n@2x.png";
           break;
         }
         case "2:1": {
           // this.width = this.height * 2;
-          this.$refs.size1.src = "/icon/btn_size1_n.png";
-          this.$refs.size2.src = "/icon/btn_size2_n.png";
-          this.$refs.size3.src = "/icon/btn_size3_n.png";
-          this.$refs.size4.src = "/icon/btn_size4_n_selected.png";
+          this.$refs.size1.src = "/icon/btn_size1_n@2x.png";
+          this.$refs.size2.src = "/icon/btn_size2_n@2x.png";
+          this.$refs.size3.src = "/icon/btn_size3_n@2x.png";
+          this.$refs.size4.src = "/icon/btn_size4_n@2x_selected.png";
           break;
         }
       }
@@ -2185,7 +2197,7 @@ body {
 }
 .select-root .refresh-button img {
   width: 29px;
-  height: 29px;
+  height: 26px;
   margin-right: 12px;
 }
 .select-root .refresh-button:hover img {
@@ -2309,6 +2321,7 @@ img:not([src]) {
 .select-root-container .radio-group img {
   margin-right: 4px;
   line-height: 25px;
+  height: 14px;
 }
 .select-root-container .el-radio__input {
   display: none;
@@ -2323,9 +2336,11 @@ img:not([src]) {
   bottom: 24px;
 }
 .select-root-container .example .bubble {
-  width: 252px;
-  height: 48px;
-  background: #808390;
+  width: 200px;
+  height: 40px;
+  /* background: #808390; */
+  background: transparent url(/picture/bubble.png) center center/100% no-repeat;
+  /* background: url(/picture/bubble.png); */
   opacity: 0.7;
   display: flex;
   align-items: center;
@@ -2343,13 +2358,13 @@ img:not([src]) {
     rgba(128, 131, 144, 0.7);
 }
 .select-root-container .example .bubble .text {
-  width: 220px;
-  height: 25px;
-  font-size: 16px;
+  width: 170px;
+  height: 20px;
+  font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: rgba(255, 255, 255, 1);
-  line-height: 25px;
+  color: #ffffff;
+  line-height: 20px;
 }
 .select-root-container .example .circle-face {
   /* width: 64px;
