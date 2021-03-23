@@ -36,7 +36,7 @@
                   ref="colorFilter"
                   @click="handleColorFilter"
                 >
-                  <img class="filter-icon" src="/icon/color_filter.png" />
+                  <img class="filter-icon" src="/icon/color_filter@2x.png" />
                   <span class="demonstration">色彩筛选</span>
                   <img
                     src="/icon/arrow_down.png"
@@ -51,7 +51,7 @@
                   ref="styleFilter"
                   @click="handleStyleFilter"
                 >
-                  <img class="filter-icon" src="/icon/style_filter.png" />
+                  <img class="filter-icon" src="/icon/style_filter@2x.png" />
                   <span class="demonstration">风格筛选</span>
                   <!-- <i class="el-icon-arrow-down" /> -->
                   <img
@@ -71,7 +71,7 @@
                 >换一批</el-button
               > -->
               <div class="refresh-button" @click="onRefresh">
-                <img src="/icon/btn_refresh.png" />
+                <img src="/icon/btn_refresh@2x.png" />
                 <span>换一批</span>
               </div>
             </div>
@@ -2201,12 +2201,13 @@ body {
   margin-right: 12px;
 }
 .select-root .refresh-button:hover img {
-  content: url("/icon/btn_refresh_h.png");
+  content: url("/icon/btn_refresh_h@2x.png");
 }
 .select-root .refresh-button:hover {
   /* position: absolute;
   right: 6%; */
   font-size: 16px;
+  /* color: #918eff; */
   color: #aa6eff;
   opacity: 0.7;
   /* margin-right: 20px; */

@@ -1,18 +1,18 @@
 .el-dropdown-menu {
     background: #3F3E46;
-    opacity: 0.7;
-    color: #fff;
+    /* opacity: 0.7; */
+    color: rgba(255,255,255,.7);
     border: 0;
 }
 
 .el-dropdown-menu__item {
-    color: #fff;
+    color: rgba(255,255,255,.7);
 }
 
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disabled):hover {
     background: rgba(0, 0, 0, 0);
-    color: #7BBBFF;
+    color: #918EFF;
 }
 .el-popper[x-placement^=bottom] .popper__arrow{
     border-bottom-color: #3F3E46;
