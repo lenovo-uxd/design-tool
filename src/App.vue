@@ -1727,7 +1727,7 @@ export default {
         // .post("http://10.110.146.100:11354/apicore/art/style-gan-random/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-random",reqData)
         .post(
-          "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=f35f5c99-a1b3-45ba-8517-0c3837f089f9",
+          "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=ae30c4cd-6a9b-4a03-8448-d30ce2ba56c6",
           reqData
         )
         .then((res) => {
@@ -1773,7 +1773,7 @@ export default {
         //.post("http://10.110.146.100:11354/apicore/art/style-gan-withtag/1.0.0",reqData)
         //.post("http://10.120.16.111:3002/style-gan-extend",reqData)
         .post(
-          "https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=f35f5c99-a1b3-45ba-8517-0c3837f089f9",
+          "https://api.brain.lenovo.com/lenovo/ad/semantic-art-design/1.0?token=ae30c4cd-6a9b-4a03-8448-d30ce2ba56c6",
           reqData
         )
         .then((res) => {
