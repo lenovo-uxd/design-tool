@@ -500,6 +500,8 @@ import { dateFormat, downloadFile } from "./utils/utils";
 // import { filter } from 'vue/types/umd';
 // import download from "./components/vue-mindmap/utils/download";
 
+let tokenStr = "33c08eba-d207-48ca-921b-fae10b22bbac"
+
 export default {
   name: "App",
   // components: {
@@ -1695,7 +1697,7 @@ export default {
         "/picture/style_sd@2x.png": 7,
         "/picture/style_mh@2x.png": 0,
       };
-      let tokenStr = "33c08eba-d207-48ca-921b-fae10b22bbac"
+
       let color =
         this.checkedColorRGB == ""
           ? ""
