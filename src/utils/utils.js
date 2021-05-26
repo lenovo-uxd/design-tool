@@ -1,5 +1,5 @@
 //下载
-export const downloadFile = (fileName, content) => {
+const downloadFile = (fileName, content) => {
     let aLink = document.createElement("a");
     let blob = base64ToBlob(content); //new Blob([content]);
 
@@ -33,7 +33,7 @@ const base64ToBlob = (code)=> {
     return new Blob([uInt8Array], { type: contentType });
 }
 
-export const dateFormat = date =>{
+const dateFormat = date =>{
     let m = date.getMonth()+1;
     let d = date.getDate();
     if(m < 10)
@@ -42,3 +42,49 @@ export const dateFormat = date =>{
         d = '0'+d
     return date.getFullYear()+'-'+m+'-'+d;
 }
+
+class Stack {
+    constructor() {
+        this.items = [];
+    }
+    // let this.items = [];
+    // 向栈添加新元素
+    push(element) {
+      this.items.push(element);
+    }
+
+    // 从栈内弹出一个元素
+    pop () {
+      return this.items.pop();
+    }
+
+    // 返回栈顶的元素
+    peek () {
+      return this.items[this.items.length - 1];
+    }
+
+    // 判断栈是否为空
+    isEmpty () {
+      return this.items.length === 0;
+    }
+
+    // 返回栈的长度
+    size () {
+      return this.items.length;
+    }
+
+    // 清空栈
+    clear () {
+      this.items = [];
+    }
+
+    // 打印栈内的所有元素
+    print () {
+      console.log(this.items.toString());
+    }
+}
+export {
+  downloadFile,
+  dateFormat,
+  Stack
+};

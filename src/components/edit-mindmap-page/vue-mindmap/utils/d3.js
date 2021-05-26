@@ -2,18 +2,6 @@ import { drag, event, zoom, easeExpOut, easeLinear } from 'd3'
 // import { getViewBox } from './dimensions'
 
 /**
- * Bind data to a <TAG>, inside a G element, inside the given root element.
- * Root is a D3 selection, data is an object or array, tag is a string.
- */
-// const bindData = (root, data, tag) => (
-//   root.append('g')
-//     .selectAll(tag)
-//     .data(data)
-//     .enter()
-//     .append(tag)
-// )
-
-/**
  * Bind connections to PATH tags on the given SVG
  */
 export const d3Connections = (svg, connections) => (
@@ -41,7 +29,6 @@ export const d3Nodes = (svg, nodes) => {
 
   const d3nodes = selection
     .append('foreignObject')
-    // .attr('class', 'mindmap-node')
     .attr('width', node => {
       if (!node.isButtonNode)
         return (node.width + 6)
@@ -63,16 +50,8 @@ export const d3Nodes = (svg, nodes) => {
     })
     .html(node => node.html)
 
-  // const d3subnodes = selection
-  //   .append('foreignObject')
-  //   .attr('class', 'mindmap-subnodes')
-  //   .attr('width', node => node.nodesWidth + 4)
-  //   .attr('height', node => node.nodesHeight)
-  //   .html(node => node.nodesHTML)
-
   return {
     nodes: d3nodes,
-    // subnodes: d3subnodes
   }
 }
 
@@ -86,8 +65,6 @@ export const onTick = (conns, nodes, pathLabels) => {
     let startY = conn.source.y;
     let endX = conn.target.x;
     let endY = conn.target.y;
-    // let dx = (conn.curve && conn.curve.x ? conn.curve.x : 0)
-    // let dy = (conn.curve && conn.curve.y ? conn.curve.y : 0)
     let dx = (endX - startX) / 2;
     let dy = (endY - startY) / 2;
     let cpx1 = startX + dx;
@@ -133,54 +110,30 @@ export const onTick = (conns, nodes, pathLabels) => {
       return 'rotate(0)';
     }
   });
-  // console.log(nodes)
-  // nodes
-  //   .attr('x', node => node.x)
-  //   .attr('y', node => node.y)
-
-  // nodes
-  //   .attr('x', node => node.x + (node.width / 2))
-  //   .attr('y', node => node.y + (node.height / 2))
-
-  // Set subnodes groups color and position.
-  // subnodes
-  //   .attr('x', node => node.x + (node.width / 2))
-  //   .attr('y', node => node.y - (node.nodesHeight / 2))
 }
 
 /*
  * Return drag behavior to use on d3.selection.call().
  */
 // eslint-disable-next-line no-unused-vars
-export const d3Drag = (simulation, svg, nodes, removeBtnNodes,nodesData) => {
+export const d3Drag = (simulation, removeBtnNodes, nodesData) => {
   // eslint-disable-next-line no-unused-vars
   let flag = 0
-  // let oldEvent=null
-  // if(nodesData[nodesData.length-1].isButtonNode && event.type == 'drag'){
-  //   console.log("remove")
-  //   removeBtnNodes()
-  // }
-  // if(event != null){
-  //   console.log(event.type)
-  // }
   const dragStart = (node) => {
     if (!event.active) {
       simulation.alphaTarget(0.2).restart()
     }
-    // console.log(event)
-    // console.log("drag start")
     node.fx = node.x
     node.fy = node.y
-    
   }
 
   const dragged = (node) => {
     // console.log(event)
     if(nodesData[nodesData.length-1].isButtonNode && flag==0){
-      console.log("draging")
+      // console.log("draging")
       flag = 1
       removeBtnNodes()
-      return;
+      // return;
     }
     // node.fx = event.x
     // node.fy = event.y
@@ -194,8 +147,6 @@ export const d3Drag = (simulation, svg, nodes, removeBtnNodes,nodesData) => {
     if (!event.active) {
       simulation.alphaTarget(0)
     }
-    // console.log(event) 
-    // console.log("drag end")
     // svg.attr('viewBox', getViewBox(nodes.data()))
   }
   // svg.selectAll('.btn-node').remove();
