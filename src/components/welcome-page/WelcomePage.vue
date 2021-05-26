@@ -548,7 +548,7 @@ export default {
           reqData
         )
         // .post(
-        //   "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token=33c08eba-d207-48ca-921b-fae10b22bbac",
+        //   "https://api.brain.lenovo.com/lenovo/ad/abstract-art-service/1.0?token="+this.globalState.tokenStr,
         //   reqData
         // )
         .then((res) => {

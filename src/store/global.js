@@ -1,6 +1,7 @@
 import { Stack } from "../utils/utils";
 // 简单store模式管理暂存数据 使各个组件共用一个数据模块
 var globalState = {
+  tokenStr : "33c08eba-d207-48ca-921b-fae10b22bbac",
   nodes: [],
   connections: [],
   width: 446,
